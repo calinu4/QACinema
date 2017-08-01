@@ -5,7 +5,7 @@ case class Movie(
                  movie_id: Int,
                  title: String,
                  poster_path: String,
-                 age_rating:String,
+                 var age_rating:String,
                  user_rating:String,
                  release_date:String,
                  run_time:Int,
