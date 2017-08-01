@@ -10,4 +10,8 @@ class Application extends Controller {
     Ok(views.html.index("Home"))
   }
 
+
+  def movieInfoPage = Action {
+    Ok(views.html.movieInfoPage("MovieInfoPage"))
+  }
 }
