@@ -1,0 +1,20 @@
+@import reactivemongo.play.json.collection.JSONCollection
+@(genres:List[Genre])
+
+@main("Genres") {
+
+  <h1>Genres</h1>
+  <table>
+    <thead>
+      <tr><th>Genre ID</th><th>Name</th>
+    </thead>
+    <tbody>
+    @for(g<-genres ) {
+      <tr><td>@g.id</td><td>@g.name</td>
+    }
+    </tbody>
+  </table>
+
+
+
+}
