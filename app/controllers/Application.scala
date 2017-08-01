@@ -9,9 +9,15 @@ class Application extends Controller {
   def index = Action {
     Ok(views.html.index("Home"))
   }
-
-
-  def listnings = Action{
+  
+def listings = Action{
     Ok(views.html.listnings("Listnings"))
+}
+
+
+  def movieInfoPage = Action {
+    Ok(views.html.movieInfoPage("MovieInfoPage"))
   }
+
+  
 }
