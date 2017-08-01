@@ -1,0 +1,20 @@
+@import reactivemongo.play.json.collection.JSONCollection
+@(movies:List[Movie])
+
+@main("Movie Information") {
+
+  <h1>Users</h1>
+  <table>
+    <thead>
+      <tr><th>Movie ID</th><th>Name</th><th>Link of image</th><th>User Rating</th>
+    </thead>
+    <tbody>
+    @for(m<-movies ) {
+      <tr><td>@m.movie_id</td><td>@m.title</td><td>@m.poster_path</td><td>@m.user_rating</td></tr>
+    }
+    </tbody>
+  </table>
+
+
+
+}
