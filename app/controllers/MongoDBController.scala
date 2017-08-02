@@ -22,16 +22,12 @@ import play.api.data.Forms._
 class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with MongoController with ReactiveMongoComponents with I18nSupport {
 
-  // TODO - keep in mind you need to have mongod.exe running before attempting to play around
-  //Read from table persons
+
+  //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("movies"))
 
-  def genrescollection: Future[JSONCollection] = database.map(
-    _.collection[JSONCollection]("genres"))
 
-  def screenscollection: Future[JSONCollection] = database.map(
-    _.collection[JSONCollection]("screens"))
 
   //display Movies from database
   def listMovies: Action[AnyContent] = Action.async {
@@ -56,29 +52,18 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  //display Screens from database
-  def listScreens: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Screen]] = screenscollection.map {
-      _.find(Json.obj())
-        .sort(Json.obj("created" -> -1))
-        .cursor[Screen]
-    }
-    val futureScreensList: Future[List[Screen]] = cursor.flatMap(_.collect[List]())
-    futureScreensList.map { screens =>
-      Ok(views.html.screens(screens))
-    }
-  }
 
-  //
-  def listGenres: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Genre]] = genrescollection.map {
-      _.find(Json.obj())
+
+
+  def movieInfo(id:Int): Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj("movie_id" -> id))  // searching by a particular field
         .sort(Json.obj("created" -> -1))
-        .cursor[Genre]
+        .cursor[Movie]
     }
-    val futureScreensList: Future[List[Genre]] = cursor.flatMap(_.collect[List]())
-    futureScreensList.map { genres =>
-      Ok(views.html.genres(genres))
+    val futureMovieList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureMovieList.map { movie =>
+      Ok(views.html.movieInfoPage(movie.head))
     }
   }
 

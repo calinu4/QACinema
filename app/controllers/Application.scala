@@ -10,8 +10,4 @@ class Application extends Controller {
     Ok(views.html.index("Home"))
   }
 
-/*
-  def listnings = Action{
-    Ok(views.html.listnings("Listnings"))
-  }*/
 }
