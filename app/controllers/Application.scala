@@ -10,4 +10,8 @@ class Application extends Controller {
     Ok(views.html.index("Home"))
   }
 
+  def contact = Action {
+    Ok(views.html.contact("Home"))
+  }
+
 }
