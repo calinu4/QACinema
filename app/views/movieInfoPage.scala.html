@@ -1,51 +1,61 @@
-@(movie:Movie)
+@(movie: Movie)
 
-@main("Movie Info Page"){
+@main("Movie Info Page") {
 
     <div class="row">
 
-        <div class="col-md-12">
-
-                <div class="row">
-
-                    <div class="col-sm-12 col-lg-12 col-md-12">
-                        <div class="thumbnail">
-                            <img src="http://placehold.it/320x150" alt="">
-                            <div class="caption">
-                                <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/> Consesion Ticket £9.99 </h5>
-                                <h4><a href="#">@movie.title</a>
-                                <p>Genre: film bloir</p>
-                                <p>Move synopsis: blah blah blah blah blah blah blah blah blah blah blah blah</p>
-                                <p>Actors: Mr and Mrs Blah</p>
-                                <p>Rating: Blah+</p>
+        <div class="col-lg-12">
 
 
-                            </div>
-                            <div class="ratings">
-                                <p class="pull-right">1,000,000 reviews</p>
-                                <p>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-sm-12 col-lg-12 col-md-12">
-                        <h4><a href="#">Like sound of this Movie?</a>
-                        </h4>
 
-                        <a class="btn btn-primary" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
-                    </div>
 
+
+            <div class="thumbnail" >
+
+
+                <div class="">
+                    <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/>
+                        Consesion Ticket £9.99
+                        <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
+                    </h5>
+                    <h1>@movie.title</h1>
+
+
+                    <p>@for(genre <- movie.genres) {@genre }</p>
+                    <p>Actors: Database Does not have this????</p>
+                    <p>director @movie.director</p>
+                    <p>Cast @movie.cast</p>
+                    <p>Overview: @movie.overview</p>
+                    <h4>Rating</h4>
                 </div>
 
+
+                <div style ="padding-top: 15px" class="ratings">
+                    <p class="pull-right">1,000,000 reviews TODO</p>
+                    <p>
+                    @for(star <- 0 until movie.user_rating.toInt) {
+                        <span class="glyphicon glyphicon-star"></span>
+                    }
+                    </p>
+                </div>
+            </div>
+            <div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/_qIRtFE6aIc" frameborder="0" allowfullscreen></iframe>
+            </div>
+
+            <img src="@movie.poster_path" alt="">
+
+
+            <div class="col-sm-12 col-lg-12 col-md-12">
+                <h4>Do you like this movie? Book to watch it now!</h4>
+                <a class="btn btn-primary" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
             </div>
 
         </div>
+
+    </div>
+    </div>
 
 
 }
