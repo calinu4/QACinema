@@ -11,6 +11,9 @@ html {
 }
 body {
   margin: 0;
+  background: url(http://cdn.wallpapersafari.com/29/5/sD8LWj.jpg)no-repeat center center fixed;
+  background-size: 250% 250%;
+  color: #a7a7a7!important;
 }
 article,
 aside,
@@ -6758,5 +6761,13 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+.container.background, footer {
+  background-color: whitesmoke;
+  padding: 5em;
+  border-radius: 10px;
+}
+footer {
+  font-size: large;
 }
 /*# sourceMappingURL=bootstrap.css.map */
