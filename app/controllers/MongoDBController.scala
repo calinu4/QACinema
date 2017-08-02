@@ -1,5 +1,6 @@
 package controllers
 
+import java.util.Date
 import javax.inject.Inject
 
 import scala.concurrent.{Await, Future}
@@ -57,6 +58,21 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+  //Upcoming movies
+  def upcomingMovies: Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Movie]
+    }
+    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureUsersList.map { movies =>
+      movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
+      val newmovies = for(i<-movies if(isFuture(dateParse(i.release_date)))) yield i
+      Ok(views.html.listings(newmovies))
+    }
+  }
+
   def replaceAgeRating(age: String): String = {
     age match {
       case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
@@ -66,7 +82,12 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+  def dateParse(date: String):Date= {
+    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    format.parse(date)
+  }
 
+  def isFuture(value:Date)=value.after(new Date)
 
 
   def movieInfo(id:Int): Action[AnyContent] = Action.async {
