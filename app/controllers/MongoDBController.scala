@@ -39,7 +39,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      Ok(views.html.listnings(movies))
+      Ok(views.html.listings(movies))
     }
   }
 
