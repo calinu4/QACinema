@@ -9,7 +9,7 @@ case class Movie(
                  user_rating:Float,
                  release_date:String,
                  run_time:Int,
-                 genre_ids:List[Int],
+                 genres:List[String],
                  overview:String,
                  cast:String,
                  director:String,
@@ -21,8 +21,7 @@ case class Movie(
 object JsonFormats {
   import play.api.libs.json.Json
 
-  // Generates Writes and Reads for Feed and User thanks to Json Macros
-  implicit val genreFormat = Json.format[Genre]
+  // Generates Writes and Reads for Movie thanks to Json Macros
   implicit val movieFormat = Json.format[Movie]
 }
 
