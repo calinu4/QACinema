@@ -6,14 +6,14 @@ case class Movie(
                  title: String,
                  poster_path: String,
                  age_rating:String,
-                 user_rating:String,
+                 user_rating:Float,
                  release_date:String,
                  run_time:Int,
                  genre_ids:List[Int],
                  overview:String,
                  cast:String,
                  director:String,
-                 screen:List[Int]
+                 screen:List[String]
 
                )
 
@@ -23,7 +23,6 @@ object JsonFormats {
 
   // Generates Writes and Reads for Feed and User thanks to Json Macros
   implicit val genreFormat = Json.format[Genre]
-  implicit val screenFormat = Json.format[Screen]
   implicit val movieFormat = Json.format[Movie]
 }
 

@@ -30,8 +30,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def genrescollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("genres"))
 
-  def screenscollection: Future[JSONCollection] = database.map(
-    _.collection[JSONCollection]("screens"))
+
 
   //display Movies from database
   def listMovies:Action[AnyContent] = Action.async {
@@ -46,20 +45,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  //display Screens from database
-  def listScreens:Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Screen]] = screenscollection.map {
-      _.find(Json.obj())
-        .sort(Json.obj("created" -> -1))
-        .cursor[Screen]
-    }
-    val futureScreensList: Future[List[Screen]] = cursor.flatMap(_.collect[List]())
-    futureScreensList.map { screens =>
-      Ok(views.html.screens(screens))
-    }
-  }
 
-  //
+  //List genres
   def listGenres:Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Genre]] = genrescollection.map {
       _.find(Json.obj())
