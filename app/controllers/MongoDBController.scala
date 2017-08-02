@@ -43,6 +43,20 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+  //Filter movies by genre
+  def filterMovies(genre: String): Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj("genres" -> genre))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Movie]
+    }
+    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureUsersList.map { movies =>
+      movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
+      Ok(views.html.listings(movies))
+    }
+  }
+
   def replaceAgeRating(age: String): String = {
     age match {
       case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
