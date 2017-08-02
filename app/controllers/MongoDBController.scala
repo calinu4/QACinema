@@ -22,8 +22,8 @@ import play.api.data.Forms._
 class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with MongoController with ReactiveMongoComponents with I18nSupport {
 
-  // TODO - keep in mind you need to have mongod.exe running before attempting to play around
-  //Read from table persons
+
+  //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("movies"))
 
@@ -36,9 +36,21 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
-    futureUsersList.map { movies =>
+    val futureMoviesList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureMoviesList.map { movies =>
       Ok(views.html.listings(movies))
+    }
+  }
+
+  def movieInfo(id:Int): Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj("movie_id" -> id))  // searching by a particular field
+        .sort(Json.obj("created" -> -1))
+        .cursor[Movie]
+    }
+    val futureMovieList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureMovieList.map { movie =>
+      Ok(views.html.movieInfoPage(movie.head))
     }
   }
 
