@@ -6527,6 +6527,7 @@ button.close {
 }
 .pull-right {
   float: right !important;
+  text-align: right;
 }
 .pull-left {
   float: left !important;
