@@ -4,6 +4,9 @@
 
 # Home page/////
 GET        /                    controllers.Application.index
+GET     /bookingConfirmation        controllers.Application.bookingConfirmation
+GET     /write                      controllers.Application.write
+GET     /delete                     controllers.Application.delete
 
 GET        /listings            controllers.MongoDBController.listMovies
 GET        /movieinfo           controllers.MongoDBController.movieInfo(id:Int)
