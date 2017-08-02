@@ -14,4 +14,8 @@ class Application extends Controller {
     Ok(views.html.contact("Home"))
   }
 
+  def classification = Action {
+    Ok(views.html.classification("Classifications"))
+  }
+
 }
