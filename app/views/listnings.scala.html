@@ -1,4 +1,5 @@
-@(message: String)
+@import reactivemongo.play.json.collection.JSONCollection
+@(movies: List[Movie])
 
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/listnings.css")">
@@ -16,72 +17,21 @@
 
 
         <div class = "col-md-9">
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_forest.jpg">
-                    <img src="https://www.w3schools.com/css/img_forest.jpg" alt="Fjords" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_forest.jpg">
-                    Movie 1 Name<img src ="http://4.bp.blogspot.com/-mXYUZr7li1c/T6hXIYH_o5I/AAAAAAAAALI/6coOvjyiOtc/s1600/18.png"></div>
-            </div>
+        @for(m <- movies) {
+
 
             <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_fjords.jpg">
-                    <img src="https://www.w3schools.com/css/img_fjords.jpg" alt="Forest" width="300" height="200">
+                <a target="_blank" href="@m.poster_path">
+                    <img src="@m.poster_path" alt="Fjords" width="300" height="200">
                 </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_fjords.jpg">
-                    Movie 2 Name<img src ="http://4.bp.blogspot.com/-mXYUZr7li1c/T6hXIYH_o5I/AAAAAAAAALI/6coOvjyiOtc/s1600/18.png"></div>
+                <div class="desc"><a href ="@m.poster_path">
+                    @m.title<img src ="@m.age_rating"></div>
             </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_lights.jpg">
-                    <img src="https://www.w3schools.com/css/img_lights.jpg" alt="Northern Lights" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_lights.jpg">
-                    Movie 3 Name <img src="https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"></div>
-            </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_mountains.jpg">
-                    <img src="https://www.w3schools.com/css/img_mountains.jpg" alt="Mountains" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_mountains.jpg">
-                    Movie 4 Name <img src ="https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"></div>
-            </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_mountains.jpg">
-                    <img src="https://www.w3schools.com/css/img_mountains.jpg" alt="Mountains" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_mountains.jpg">
-                    Movie 4 Name <img src ="https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"></div>
-            </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_mountains.jpg">
-                    <img src="https://www.w3schools.com/css/img_mountains.jpg" alt="Mountains" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_mountains.jpg">
-                    Movie 4 Name <img src ="https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"></div>
-            </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_mountains.jpg">
-                    <img src="https://www.w3schools.com/css/img_mountains.jpg" alt="Mountains" width="300" height="200">
-                </a>
-                <div class="desc"><a href ="https://www.w3schools.com/css/img_mountains.jpg">
-                    Movie 4 Name <img src ="https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"></div>
-            </div>
-
-            <div class="gallery">
-                <a target="_blank" href="https://www.w3schools.com/css/img_mountains.jpg">
-                    <img src="https://www.w3schools.com/css/img_mountains.jpg" alt="Mountains" width="300" height="200">
-                </a>
-                <div class="desc"> <a href ="https://www.w3schools.com/css/img_mountains.jpg">
-                    Movie 4 Name <img src ="https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"></div>
-            </div>
+        }
         </div>
 
-
     </div>
+
+
 }
 

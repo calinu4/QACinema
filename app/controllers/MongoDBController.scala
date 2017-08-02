@@ -30,17 +30,30 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //display Movies from database
-  def listMovies:Action[AnyContent] = Action.async {
+  def listMovies: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    val futureMoviesList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
-    futureMoviesList.map { movies =>
-      Ok(views.html.listings(movies))
+    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    futureUsersList.map { movies =>
+      movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
+      Ok(views.html.listnings(movies))
     }
   }
+
+  def replaceAgeRating(age: String): String = {
+    age match {
+      case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
+      case "12A" => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
+      case _ => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
+
+    }
+  }
+
+
+
 
   def movieInfo(id:Int): Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
@@ -53,7 +66,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       Ok(views.html.movieInfoPage(movie.head))
     }
   }
-
 
 
 }
