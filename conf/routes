@@ -6,7 +6,7 @@
 GET        /                    controllers.Application.index
 
 GET        /listings            controllers.MongoDBController.listMovies
-GET        /genres              controllers.MongoDBController.listGenres
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.at(path="/public", file)
@@ -15,5 +15,5 @@ GET        /assets/*file        controllers.Assets.at(path="/public", file)
 
 GET /movieInfoPage                      controllers.Application.movieInfoPage
 
-GET     /listings                  controllers.Application.listings
+
 
