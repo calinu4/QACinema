@@ -7,14 +7,15 @@ GET        /                       controllers.Application.index
 GET        /bookingConfirmation    controllers.Receipt.bookingConfirmation
 GET        /receipt                controllers.Receipt.receipt
 GET        /movieinfo              controllers.MongoDBController.movieInfo(id:Int)
-GET        /contact             controllers.Application.contact
+GET        /contact                controllers.Application.contact
+GET        /localStuff             controllers.Application.localStuff
 
 GET        /listings               controllers.MongoDBController.listMovies
-GET        /listings/upcoming   controllers.MongoDBController.upcomingMovies
-GET        /listings/:gen       controllers.MongoDBController.filterMovies(gen: String)
+GET        /listings/upcoming      controllers.MongoDBController.upcomingMovies
+GET        /listings/:gen          controllers.MongoDBController.filterMovies(gen: String)
 
 GET        /classifications        controllers.Application.classification
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.at(path="/public", file)
+GET        /assets/*file           controllers.Assets.at(path="/public", file)
 

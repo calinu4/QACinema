@@ -18,4 +18,8 @@ class Application extends Controller {
     Ok(views.html.classification("Classifications"))
   }
 
+  def localStuff = Action {
+    Ok(views.html.localStuff("Local Stuff"))
+  }
+
 }
