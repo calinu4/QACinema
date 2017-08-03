@@ -1,0 +1,45 @@
+@(movies: List[Movie],form: Form[Movie],id:Int)(implicit messages: Messages)
+
+
+@main("CDs") {
+
+
+    <h1>Edit Movie</h1>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Title</th><th>Genres</th></tr>
+        </thead>
+        <tbody>
+        @for(movie <- movies) {
+            @if(movies.indexOf(movie)==id){
+                <tr><td>@movie.movie_id</td>
+                    <td>@movie.title</td>
+                    <td>@movie.genres</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+
+    <hr/>
+
+    @helper.form(routes.MongoDBController.updateMovie(id)) {
+
+        @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false)
+        @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false)
+        @helper.inputText(form("poster_path"),'_label->"poster Path",'_showConstraints->false)
+        @helper.inputText(form("landscape"),'_label->"landscape Path",'_showConstraints->false)
+        @helper.inputText(form("video"),'_label->"Trailer Path",'_showConstraints->false)
+        @helper.inputText(form("images"),'_label->"Image Paths",'_showConstraints->false)
+        @helper.inputText(form("age_rating"),'_label->"Age Rating",'_showConstraints->false)
+        @helper.inputText(form("user_rating"),'_label->"User Rating",'_showConstraints->false)
+        @helper.inputText(form("release_date"),'_label->"User Release Date",'_showConstraints->false)
+        @helper.inputText(form("run_time"),'_label->"Run Time",'_showConstraints->false)
+        @helper.inputText(form("genres"),'_label->"Genre Types",'_showConstraints->false)
+        @helper.inputText(form("overview"),'_label->"Overview",'_showConstraints->false)
+        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)
+        @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false)
+        @helper.inputText(form("screen"),'_label->"Screen Types",'_showConstraints->false)
+        <button type="submit">Edit Movie</button>
+    }
+}

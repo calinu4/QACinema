@@ -20,6 +20,8 @@ import play.api.i18n.MessagesApi
 import play.api.data._
 import play.api.data.Forms._
 
+import scala.concurrent.duration.Duration
+
 
 class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with MongoController with ReactiveMongoComponents with I18nSupport {
@@ -59,8 +61,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
 
-
-
   //Filter movies by genre
   def filterMovies(genre: String): Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
@@ -72,7 +72,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     futureUsersList.map { movies =>
 
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newmovies = for(i<-movies if(i.genres.contains(genre))) yield i
+      val newmovies = for (i <- movies if (i.genres.contains(genre))) yield i
       Ok(views.html.listings(newmovies))
     }
   }
@@ -112,7 +112,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
-      val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
       _.find(Json.obj("movie_id" -> id)) // searching by a particular field
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -126,6 +126,16 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def seeAddMovie = Action {
     Ok(views.html.addMovie(Movie.createMovie))
+  }
+
+  def getMovies(): List[Movie] = {
+    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Movie]
+    }
+    val futureMovieList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureMovieList, Duration.Inf)
   }
 
 
@@ -147,5 +157,37 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     })
   }
 
+  def updateMoviePage(id:Int): Action[AnyContent] = Action.async {
+    implicit request =>
+      val cursor: Future[Cursor[Movie]] = moviecollection.map {
+        _.find(Json.obj())
+          .sort(Json.obj("created" -> 1))
+          .cursor[Movie]
+      }
+      val futureMovieList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+      futureMovieList.map(
+        movie =>
+          Ok(views.html.editMovie(movie, Movie.createMovie.fill(movie(id)), id))
+      )
 
+  }
+
+  def updateMovie(id:Int ) = Action {
+
+    implicit request =>
+
+      val formValidationResult = Movie.createMovie.bindFromRequest
+      formValidationResult.fold({ errors =>
+        BadRequest(views.html.listings(getMovies()))
+      }, { movies =>
+        val movieList = getMovies()
+        val selector = movieList(id)
+        val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+        futureResult.map(_ => Ok("Added user " + movies.title))
+        Redirect(routes.MongoDBController.listMovies())
+
+      })
+
+
+  }
 }
