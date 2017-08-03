@@ -26,7 +26,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
-    _.collection[JSONCollection]("movies"))
+    _.collection[JSONCollection]("testMovie"))
 
 
 
@@ -44,17 +44,22 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+
+
+
   //Filter movies by genre
   def filterMovies(genre: String): Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
-      _.find(Json.obj("genres" -> genre))
+      _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
     var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
+
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      Ok(views.html.listings(movies))
+      val newmovies = for(i<-movies if(i.genres.contains(genre))) yield i
+      Ok(views.html.listings(newmovies))
     }
   }
 
@@ -116,7 +121,9 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         println(formValidationResult)
 
         BadRequest(views.html.addMovie(errors))
-    },{movie=> val futureResult = moviecollection.flatMap(_.insert(movie))
+    },{movie=>
+      println(movie)
+      val futureResult = moviecollection.flatMap(_.insert(movie))
 
       futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
       Redirect(routes.MongoDBController.listMovies())

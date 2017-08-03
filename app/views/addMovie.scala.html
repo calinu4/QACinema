@@ -9,15 +9,34 @@
         @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false)
         @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false)
         @helper.inputText(form("poster_path"),'_label->"poster Path",'_showConstraints->false)
+        @helper.inputText(form("landscape"),'_label->"landscape Path",'_showConstraints->false)
+        @helper.inputText(form("video"),'_label->"Trailer Path",'_showConstraints->false)
+        @helper.inputText(form("images"),'_label->"Image Paths",'_showConstraints->false)
         @helper.inputText(form("age_rating"),'_label->"Age Rating",'_showConstraints->false)
         @helper.inputText(form("user_rating"),'_label->"User Rating",'_showConstraints->false)
         @helper.inputText(form("release_date"),'_label->"User Release Date",'_showConstraints->false)
         @helper.inputText(form("run_time"),'_label->"Run Time",'_showConstraints->false)
-        @helper.repeat(form("genres"),min =1){genres => @helper.inputText(genres, '_label -> "Genres", '_showConstraints -> false)}
+        @helper.inputText(form("genres"),'_label->"Genre Types",'_showConstraints->false)
         @helper.inputText(form("overview"),'_label->"Overview",'_showConstraints->false)
-        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)11
+        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)
         @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false)
-        @helper.repeat(form("screen"),min =1){screen => @helper.inputText(screen, '_label -> "Screen Types", '_showConstraints -> false)}
-        <button type="submit">Create CD</button>
+        @helper.inputText(form("screen"),'_label->"Screen Types",'_showConstraints->false)
+        <button type="submit">Create Movie</button>
     }
 }
+
+    "movie_id"->number,
+    "title"->nonEmptyText,
+    "poster_path"->nonEmptyText,
+    "landscape"->nonEmptyText,
+    "video"->nonEmptyText,
+    "images"->list(nonEmptyText),
+    "age_rating"->nonEmptyText,
+    "user_rating"->bigDecimal,
+    "release_date"->nonEmptyText,
+    "run_time"->number,
+    "genres"->list(nonEmptyText),
+    "overview"->nonEmptyText,
+    "cast"->nonEmptyText,
+    "director"->nonEmptyText,
+    "screen"->list(nonEmptyText)

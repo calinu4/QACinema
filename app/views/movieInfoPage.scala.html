@@ -20,7 +20,8 @@
                     <h1>@movie.title</h1>
 
 
-                    <p>@for(genre <- movie.genres) {@genre }</p>
+
+                    <p>Genre: @movie.genres.split(",").map(x=>x + ",")</p>
                     <p>Actors: Database Does not have this????</p>
                     <p>director @movie.director</p>
                     <p>Cast @movie.cast</p>
