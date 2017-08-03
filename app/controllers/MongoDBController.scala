@@ -127,8 +127,23 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     })
   }
 
+  //Display all showings available to book
+  def showingsView: Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    var showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    showingsList.map { showing =>
 
-  //display Movies from database
+      Ok(views.html.showings(showing))
+    }
+  }
+
+
+
+  //display grid for selecting seats
   def seating: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Showing]] = showings.map {
       _.find(Json.obj())

@@ -8,6 +8,7 @@ case class Reservation(
                       email:String,
                       adult:Int,
                       child:Int,
+                      concession:Int,
                       seats:List[List[Int]],
                       total:Int
                       )
