@@ -1,0 +1,23 @@
+@(form:Form[Movie])(implicit messages:Messages)
+@main("AddMovies"){
+
+
+
+
+    @helper.form(routes.MongoDBController.addMovie){
+
+        @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false)
+        @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false)
+        @helper.inputText(form("poster_path"),'_label->"poster Path",'_showConstraints->false)
+        @helper.inputText(form("age_rating"),'_label->"Age Rating",'_showConstraints->false)
+        @helper.inputText(form("user_rating"),'_label->"User Rating",'_showConstraints->false)
+        @helper.inputText(form("release_date"),'_label->"User Release Date",'_showConstraints->false)
+        @helper.inputText(form("run_time"),'_label->"Run Time",'_showConstraints->false)
+        @helper.repeat(form("genres"),min =1){genres => @helper.inputText(genres, '_label -> "Genres", '_showConstraints -> false)}
+        @helper.inputText(form("overview"),'_label->"Overview",'_showConstraints->false)
+        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)11
+        @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false)
+        @helper.repeat(form("screen"),min =1){screen => @helper.inputText(screen, '_label -> "Screen Types", '_showConstraints -> false)}
+        <button type="submit">Create CD</button>
+    }
+}
