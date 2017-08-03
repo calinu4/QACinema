@@ -28,6 +28,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def moviecollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("movies"))
 
+  def showings:Future[JSONCollection] = database.map(
+    _.collection[JSONCollection]("showings"))
 
 
   //display Movies from database
@@ -125,5 +127,19 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     })
   }
 
+
+  //display Movies from database
+  def seating: Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    seatsList.map { showing =>
+
+      Ok(views.html.seating(showing.head))
+    }
+  }
 
 }

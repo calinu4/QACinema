@@ -51,6 +51,8 @@ object JsonFormats {
   import play.api.libs.json.Json
 
   // Generates Writes and Reads for Movie thanks to Json Macros
+  implicit val reservationFormat = Json.format[Reservation]
+  implicit val showingFormat = Json.format[Showing]
   implicit val movieFormat = Json.format[Movie]
 }
 
