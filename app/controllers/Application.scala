@@ -22,4 +22,8 @@ class Application extends Controller {
     Ok(views.html.localStuff("Local Stuff"))
   }
 
+  def findUs = Action {
+    Ok(views.html.findUs("Find Us"))
+  }
+
 }

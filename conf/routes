@@ -9,6 +9,7 @@ GET        /receipt                controllers.Receipt.receipt
 GET        /movieinfo              controllers.MongoDBController.movieInfo(id:Int)
 GET        /contact                controllers.Application.contact
 GET        /localStuff             controllers.Application.localStuff
+GET        /findUs                 controllers.Application.findUs
 
 GET        /listings               controllers.MongoDBController.listMovies
 GET        /listings/upcoming      controllers.MongoDBController.upcomingMovies
