@@ -18,4 +18,8 @@ class Application extends Controller {
     Ok(views.html.classification("Classifications"))
   }
 
+  def brokenLink = Action { implicit request =>
+    NotFound(views.html.notFound())
+  }
+
 }

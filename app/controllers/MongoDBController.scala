@@ -75,13 +75,12 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def replaceAgeRating(age: String): String = {
     age match {
-      case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
-      case "12A" => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
-      case "PG" => "http://4.bp.blogspot.com/-n-v-3tOvk9w/UH6oYzE4aSI/AAAAAAAAAGo/pbyfFw_LQ_I/s1600/pg.png"
-      case "U" => "https://kerriiox.files.wordpress.com/2011/02/u.png"
-      case "15" => "http://entertainment.blurtit.com/var/question/q/q6/q67/q673/q6739/q673952_Lucyburrou_132_BBFC_15.svg"
-      case _ => "https://upload.wikimedia.org/wikipedia/en/thumb/9/9f/BBFC_18.svg/1200px-BBFC_18.svg.png"
-
+      case "U" => "images/u.png"
+      case "PG" => "images/pg.png"
+      case "12" => "images/12.png"
+      case "12A" => "/images/12a.png"
+      case "15" => "images/15.png"
+      case _ => "images/18.png"
     }
   }
 
