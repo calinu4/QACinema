@@ -21,10 +21,34 @@ class ApplicationSpec extends Specification {
 
     "render the index page" in new WithApplication{
       val home = route(FakeRequest(GET, "/")).get
-
       status(home) must equalTo(OK)
       contentType(home) must beSome.which(_ == "text/html")
-      contentAsString(home) must contain ("Your new application is ready.")
+      contentAsString(home) must contain ("QA Cinema")
+    }
+
+    "render the Listings page" in new WithApplication{
+      val listings = route(FakeRequest(GET, "/listings")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain ("Filter Movies")
+    }
+    "render the Contact page" in new WithApplication{
+      val contact = route(FakeRequest(GET, "/contact")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain ("Please do not hesitate to get")
+    }
+    "render the Classifications page" in new WithApplication{
+        val listings = route(FakeRequest(GET, "/classifications")).get
+        status(listings) must equalTo(OK)
+        contentType(listings) must beSome.which(_ == "text/html")
+        contentAsString(listings) must contain ("Parental Guidance")
+    }
+    "render the 404 page" in new WithApplication{
+      val listings = route(FakeRequest(GET, "/404")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain ("404")
     }
   }
 }
