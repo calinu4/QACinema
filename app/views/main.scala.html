@@ -38,10 +38,10 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="http://localhost:9000/listings">Listings</a>
+                            <a href="@routes.MongoDBController.listMovies">Listings</a>
                         </li>
                         <li>
-                            <a href="#">Find</a>
+                            <a href="@routes.Application.findUs">Find</a>
                         </li>
                         <li>
                             <a href="@routes.Application.localStuff">Local Info</a>
@@ -65,19 +65,20 @@
             <footer>
                 <div class="row">
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href="http://localhost:9000"><ul>QACinemas</ul></a>
-                        <a href="http://localhost:9000/contact#contact-us"><ul>Contact us</ul></a>
-                        <a href=#><ul>Locate us </ul></a>
+                        <a href="@routes.Application.index"><ul>Home</ul></a>
+                        <a href="@routes.MongoDBController.listMovies"><ul>Listings</ul></a>
+                        <a href="@routes.Application.classification"><ul>Classifications</ul></a>
+                        <a href="@routes.Application.contact#about-us"><ul>About us</ul></a>
+                        <a href="@routes.Application.contact#contact-us"><ul>Contact us</ul></a>
+                        <a href="@routes.Application.findUs"><ul>Locate us </ul></a>
+                        <a href="@routes.Application.localStuff"><ul>Local Info</ul></a>
                     </div>
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href="http://localhost:9000/classifications"><ul>Classifications</ul></a>
-                        <a href="http://localhost:9000/listings"><ul>Listings</ul></a>
-                        <a href=#><ul>Screens </ul></a>
+                        <ul><b>Open:</b></ul>
+                        <ul>Mon-Sun 09:00-23:00</ul>
                     </div>
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href=#><ul>Where to eat</ul></a>
-                        <a href="http://localhost:9000/contact#about-us"><ul>About us</ul></a>
-                        <a href=#><ul>Legal stuff</ul></a>
+
                     </div>
                 </div>
             </footer>
