@@ -75,10 +75,12 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def replaceAgeRating(age: String): String = {
     age match {
-      case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
-      case "12A" => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
-      case _ => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
-
+      case "U" => "images/u.png"
+      case "PG" => "images/pg.png"
+      case "12" => "images/12.png"
+      case "12A" => "/images/12a.png"
+      case "15" => "images/15.png"
+      case _ => "images/18.png"
     }
   }
 
@@ -100,6 +102,27 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     futureMovieList.map { movie =>
       Ok(views.html.movieInfoPage(movie.head))
     }
+  }
+
+  def seeAddMovie=Action{
+    Ok(views.html.addMovie(Movie.createMovie))
+  }
+
+
+
+  //adds Movies to database
+  def addMovie=Action{ implicit request=>
+    val formValidationResult= Movie.createMovie.bindFromRequest
+    formValidationResult.fold({
+      errors =>
+        println(formValidationResult)
+
+        BadRequest(views.html.addMovie(errors))
+    },{movie=> val futureResult = moviecollection.flatMap(_.insert(movie))
+
+      futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
+      Redirect(routes.MongoDBController.listMovies())
+    })
   }
 
 

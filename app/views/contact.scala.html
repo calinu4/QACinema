@@ -1,24 +1,52 @@
 @(message: String)
 
 @main("QA Cinema") {
-
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/contact.css")">
 
 
 
 
         <div class="row">
-            <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="400" height="100" />
+
+            <div id="about-us">
+
+            <div class="logo">
+            <img src="@routes.Assets.at("images/qa-cinemas_c.png")" />
+                <br>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>About Us</h2>
+
+                    <p>QACinema is an independent Cinema located in Manchester, UK. Our Cinema is within the Lowry Outlet in Salford Quays.  </p>
+                    <p>Lorem ipsum dolor sit amet, ei has velit timeam tractatos. Ea labores menandri oportere qui, te cum illum integre. Duo ei mazim evertitur, sed wisi indoctum ut. At per iisque efficiendi philosophia. Quo et tale meis electram, impetus appellantur quo ea. Ad viris nonumy argumentum sea, ea per liber postulant philosophia. Qui ei meis saperet mandamus.</p>
+                    <br>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="about">
+                    <img src="@routes.Assets.at("images/lowry_external.png")" width="750" height="100"  />
+                        <br>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="row">
                 <div class="col-md-2">
                     <h2>Contact us</h2>
                 </div>
             </div>
+            </div>
 
+            <div id="contact-us">
             <div class="row">
-
-
-
+                    <br>
                     <div class="col-md-4">
                         <h4>Email</h4>
                         <p>Please do not hesitate to get in contact with us. You can contact us via email for any queries that you may have. </p>
@@ -40,6 +68,7 @@
                     </div>
 
                 </div>
+            </div>
         </div>
 
 
