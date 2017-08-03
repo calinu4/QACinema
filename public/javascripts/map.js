@@ -24,7 +24,7 @@ function initialize() {
         ['QA Cinema', 53.470843,-2.295886],
         ['Lime Restaurant', 53.471012,-2.294400],
         ['Nandos', 53.471292,-2.294805],
-        ['Pizz Express', 53.470404,-2.294526],
+        ['Pizza Express', 53.470404,-2.294526],
         ['MediaCityUKTS', 53.472131, -2.297373],
         ['MediaCityUKBS', 53.471768, -2.295256]
     ];
