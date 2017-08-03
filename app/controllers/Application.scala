@@ -31,4 +31,8 @@ class Application extends Controller {
     Ok(views.html.noSuchMovie(0))
   }
 
+  def findUs = Action {
+    Ok(views.html.findUs("Find Us"))
+  }
+
 }
