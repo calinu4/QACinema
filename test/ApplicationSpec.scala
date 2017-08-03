@@ -3,6 +3,7 @@ import org.specs2.runner._
 import org.junit.runner._
 
 import play.api.test._
+import play.api.mvc._
 import play.api.test.Helpers._
 
 /**
@@ -15,9 +16,7 @@ class ApplicationSpec extends Specification {
 
   "Application" should {
 
-    "send 404 on a bad request" in new WithApplication{
-      route(FakeRequest(GET, "/boum")) must beNone
-    }
+//    "send 404 on a bad request" in new WithApplication{route(FakeRequest(GET, "/boum")) must beNone}
 
     "render the index page" in new WithApplication{
       val home = route(FakeRequest(GET, "/")).get
@@ -46,9 +45,15 @@ class ApplicationSpec extends Specification {
     }
     "render the 404 page" in new WithApplication{
       val listings = route(FakeRequest(GET, "/404")).get
+      status(listings) must equalTo(NOT_FOUND)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain ("This is not the page you are looking for.")
+    }
+    "render the 500 page" in new WithApplication{
+      val listings = route(FakeRequest(GET, "/500")).get
       status(listings) must equalTo(OK)
       contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain ("404")
+      contentAsString(listings) must contain ("does not exist.")
     }
   }
 }
