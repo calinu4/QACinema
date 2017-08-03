@@ -7,7 +7,9 @@ GET        /                       controllers.Application.index
 GET        /bookingConfirmation    controllers.Receipt.bookingConfirmation
 GET        /receipt                controllers.Receipt.receipt
 GET        /movieinfo              controllers.MongoDBController.movieInfo(id:Int)
-GET        /contact             controllers.Application.contact
+GET        /contact                controllers.Application.contact
+
+GET         /404                   controllers.Application.brokenLink
 
 GET        /listings               controllers.MongoDBController.listMovies
 GET        /listings/upcoming   controllers.MongoDBController.upcomingMovies
