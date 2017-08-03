@@ -21,7 +21,6 @@
 
 
                     <p>@for(genre <- movie.genres) {@genre }</p>
-                    <p>Actors: Database Does not have this????</p>
                     <p>director @movie.director</p>
                     <p>Cast @movie.cast</p>
                     <p>Overview: @movie.overview</p>
@@ -39,7 +38,7 @@
                 </div>
             </div>
             <div>
-                <iframe width="560" height="315" src="@movie.video" frameborder="5" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
             </div>
 
             @for(i<- 0 until movie.images.length){

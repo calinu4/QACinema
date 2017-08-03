@@ -3,6 +3,7 @@ package controllers
 import java.util.Date
 import javax.inject.Inject
 
+import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api._
 import play.api.mvc._
@@ -27,7 +28,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("movies"))
-
 
 
   //display Movies from database
@@ -68,7 +68,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newmovies = for(i<-movies if(isFuture(dateParse(i.release_date)))) yield i
+      val newmovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
       Ok(views.html.listings(newmovies))
     }
   }
@@ -84,41 +84,42 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  def dateParse(date: String):Date= {
+  def dateParse(date: String): Date = {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
     format.parse(date)
   }
 
-  def isFuture(value:Date)=value.after(new Date)
+  def isFuture(value: Date): Boolean = value.after(new Date)
 
 
-  def movieInfo(id:Int): Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
-      _.find(Json.obj("movie_id" -> id))  // searching by a particular field
+  def movieInfo(id: Int): Action[AnyContent] = Action.async {
+      val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj("movie_id" -> id)) // searching by a particular field
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
     val futureMovieList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureMovieList.map { movie =>
-      Ok(views.html.movieInfoPage(movie.head))
+      Try(Ok(views.html.movieInfoPage(movie.head))).getOrElse(Ok(views.html.noSuchMovie(id)))
     }
+
   }
 
-  def seeAddMovie=Action{
+  def seeAddMovie = Action {
     Ok(views.html.addMovie(Movie.createMovie))
   }
 
 
-
   //adds Movies to database
-  def addMovie=Action{ implicit request=>
-    val formValidationResult= Movie.createMovie.bindFromRequest
+  def addMovie = Action { implicit request =>
+    val formValidationResult = Movie.createMovie.bindFromRequest
     formValidationResult.fold({
       errors =>
         println(formValidationResult)
 
         BadRequest(views.html.addMovie(errors))
-    },{movie=> val futureResult = moviecollection.flatMap(_.insert(movie))
+    }, { movie =>
+      val futureResult = moviecollection.flatMap(_.insert(movie))
 
       futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
       Redirect(routes.MongoDBController.listMovies())

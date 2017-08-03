@@ -10,6 +10,7 @@ GET        /movieinfo              controllers.MongoDBController.movieInfo(id:In
 GET        /contact                controllers.Application.contact
 
 GET         /404                   controllers.Application.brokenLink
+GET         /500                   controllers.Application.noSuchMovie
 
 GET        /listings               controllers.MongoDBController.listMovies
 GET        /listings/upcoming   controllers.MongoDBController.upcomingMovies
