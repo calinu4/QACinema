@@ -6,6 +6,8 @@ import java.io._
 
 class Application extends Controller {
 
+
+
   def contact = Action {
     Ok(views.html.contact("Contact"))
   }
@@ -13,7 +15,6 @@ class Application extends Controller {
   def classification = Action {
     Ok(views.html.classification("Classifications"))
   }
-
 
   def localStuff = Action {
 
