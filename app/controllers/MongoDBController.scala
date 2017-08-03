@@ -3,6 +3,7 @@ package controllers
 import java.util.Date
 import javax.inject.Inject
 
+import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api._
 import play.api.mvc._
@@ -27,7 +28,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("testMovie"))
-
 
 
   //display Movies from database
@@ -73,31 +73,33 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newmovies = for(i<-movies if(isFuture(dateParse(i.release_date)))) yield i
+      val newmovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
       Ok(views.html.listings(newmovies))
     }
   }
 
   def replaceAgeRating(age: String): String = {
     age match {
-      case "12" => "https://jonkuhrt.files.wordpress.com/2014/01/bbfc_12_rating1.png"
-      case "12A" => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
-      case _ => "https://userscontent2.emaze.com/images/076748b8-6db0-4f13-879b-84d05d4ef68f/7799a9d75c014ad46716a1d53a52edfd.png"
-
+      case "U" => "images/u.png"
+      case "PG" => "images/pg.png"
+      case "12" => "images/12.png"
+      case "12A" => "/images/12a.png"
+      case "15" => "images/15.png"
+      case _ => "images/18.png"
     }
   }
 
-  def dateParse(date: String):Date= {
+  def dateParse(date: String): Date = {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
     format.parse(date)
   }
 
-  def isFuture(value:Date)=value.after(new Date)
+  def isFuture(value: Date): Boolean = value.after(new Date)
 
 
-  def movieInfo(id:Int): Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
-      _.find(Json.obj("movie_id" -> id))  // searching by a particular field
+  def movieInfo(id: Int): Action[AnyContent] = Action.async {
+      val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      _.find(Json.obj("movie_id" -> id)) // searching by a particular field
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
@@ -105,25 +107,24 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     futureMovieList.map { movie =>
       Ok(views.html.movieInfoPage(movie.head))
     }
+
   }
 
-  def seeAddMovie=Action{
+  def seeAddMovie = Action {
     Ok(views.html.addMovie(Movie.createMovie))
   }
 
 
 
   //adds Movies to database
-  def addMovie=Action{ implicit request=>
-    val formValidationResult= Movie.createMovie.bindFromRequest
+  def addMovie = Action { implicit request =>
+    val formValidationResult = Movie.createMovie.bindFromRequest
     formValidationResult.fold({
       errors =>
         println(formValidationResult)
 
         BadRequest(views.html.addMovie(errors))
-    },{movie=>
-      println(movie)
-      val futureResult = moviecollection.flatMap(_.insert(movie))
+    },{movie=> val futureResult = moviecollection.flatMap(_.insert(movie))
 
       futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
       Redirect(routes.MongoDBController.listMovies())

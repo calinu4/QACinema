@@ -23,6 +23,7 @@
 
                     <p>Genre: @movie.genres.split(",").map(x=>x + ",")</p>
                     <p>Actors: Database Does not have this????</p>
+                    <p>@for(genre <- movie.genres) {@genre }</p>
                     <p>director @movie.director</p>
                     <p>Cast @movie.cast</p>
                     <p>Overview: @movie.overview</p>
@@ -40,16 +41,15 @@
                 </div>
             </div>
             <div>
-                <iframe width="560" height="315" src="@movie.video" frameborder="5" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
             </div>
 
-            <img src="@movie.poster_path" alt="">
-
-
-            <div class="col-sm-12 col-lg-12 col-md-12">
-                <h4>Do you like this movie? Book to watch it now!</h4>
-                <a class="btn btn-primary" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
-            </div>
+            @for(i<- 0 until movie.images.length){
+                <div  href="@movie.images(i)" >
+                    <img style="height: 300px; width: 300px;
+                        float: left;"  src="@movie.images(i)">
+                </div>
+            }
 
         </div>
 
