@@ -16,7 +16,9 @@ class Application extends Controller {
 
 
   def localStuff = Action {
-    Ok(views.html.localStuff("Local Stuff"))
+
+    Ok(views.html.localStuff("Local Amenities"))
+
   }
 
   def brokenLink = Action { implicit request =>
@@ -25,6 +27,10 @@ class Application extends Controller {
 
   def noSuchMovie = Action { implicit request =>
     Ok(views.html.noSuchMovie(0))
+  }
+
+  def findUs = Action {
+    Ok(views.html.findUs("Find Us"))
   }
 
 }

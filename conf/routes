@@ -3,30 +3,35 @@
 # ~~~~
 
 # Home page/////
+
 GET        /                       controllers.MongoDBController.listIndexMovies
-GET        /bookingConfirmation    controllers.Receipt.bookingConfirmation
-GET        /receipt                controllers.Receipt.receipt
-GET        /movieinfo              controllers.MongoDBController.movieInfo(id:Int)
-GET        /contact                controllers.Application.contact
+
+
+GET         /bookingConfirmation        controllers.Receipt.bookingConfirmation
+GET         /receipt                    controllers.Receipt.receipt
+GET         /movieinfo                  controllers.MongoDBController.movieInfo(id:Int)
+GET         /contact                    controllers.Application.contact
+
 
 GET        /localStuff             controllers.Application.localStuff
+GET        /findUs                 controllers.Application.findUs
 
 
-GET         /404                   controllers.Application.brokenLink
-GET         /500                   controllers.Application.noSuchMovie
+GET         /404                        controllers.Application.brokenLink
+GET         /500                        controllers.Application.noSuchMovie
 
 
-GET        /listings               controllers.MongoDBController.listMovies
-GET        /listings/upcoming      controllers.MongoDBController.upcomingMovies
-GET        /listings/:gen          controllers.MongoDBController.filterMovies(gen: String)
+GET         /listings                   controllers.MongoDBController.listMovies
+GET         /listings/upcoming          controllers.MongoDBController.upcomingMovies
+GET         /listings/:gen              controllers.MongoDBController.filterMovies(gen: String)
 
 
-GET         /addMovie           controllers.MongoDBController.seeAddMovie
-POST        /addMovie            controllers.MongoDBController.addMovie()
+GET         /addMovie                   controllers.MongoDBController.seeAddMovie
+POST        /addMovie                   controllers.MongoDBController.addMovie()
 
-GET        /classifications        controllers.Application.classification
+GET         /classifications            controllers.Application.classification
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file           controllers.Assets.at(path="/public", file)
+GET         /assets/*file               controllers.Assets.at(path="/public", file)
 

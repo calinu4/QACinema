@@ -12,10 +12,10 @@
         <meta name="author" content="">
 
         <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/shop-homepage.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/map.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/findUs.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="@routes.Assets.at("javascripts/jquery-3.2.1.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
@@ -38,13 +38,15 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="http://localhost:9000/listings">Listings</a>
+                            <a href="@routes.MongoDBController.listMovies">Listings</a>
                         </li>
                         <li>
-                            <a href="#">Services</a>
+
+                            <a href="@routes.Application.findUs">Find</a>
                         </li>
                         <li>
-                            <a href="http://localhost:9000/contact#contact-us">Contact</a>
+                            <a href="@routes.Application.localStuff">Local Info</a>
+
                         </li>
                         <li>
                             <a href="http://localhost:9000/contact">About Us</a>
@@ -65,19 +67,25 @@
             <footer>
                 <div class="row">
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href="http://localhost:9000/contact"><ul>QACinemas</ul></a>
-                        <a href="http://localhost:9000/contact#contact-us"><ul>Contact us</ul></a>
-                        <a href=#><ul>Find Us </ul></a>
+
+                        <a href="@routes.Application.index"><ul>Home</ul></a>
+                        <a href="@routes.MongoDBController.listMovies"><ul>Listings</ul></a>
+                        <a href="@routes.Application.classification"><ul>Classifications</ul></a>
+                        <a href="@routes.Application.contact#about-us"><ul>About us</ul></a>
+                        <a href="@routes.Application.contact#contact-us"><ul>Contact us</ul></a>
+                        <a href="@routes.Application.findUs"><ul>Locate us </ul></a>
+                        <a href="@routes.Application.localStuff"><ul>Local Info</ul></a>
+
                     </div>
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href="http://localhost:9000/classifications"><ul>Classifications</ul></a>
-                        <a href="http://localhost:9000/listings"><ul>Listings</ul></a>
-                        <a href=#><ul>Screens </ul></a>
+                        <ul><b>Open:</b></ul>
+                        <ul>Mon-Sun 09:00-23:00</ul>
                     </div>
                     <div class="col-sm-4 col-lg-4 col-md-4">
-                        <a href="http://localhost:9000/localStuff"><ul>Where to eat</ul></a>
-                        <a href=#><ul>Work For us</ul></a>
-                        <a href=#><ul>Legal stuff</ul></a>
+
+                      
+
+
                     </div>
                 </div>
             </footer>
