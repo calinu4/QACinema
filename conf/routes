@@ -4,7 +4,7 @@
 
 # Home page/////
 
-GET        /                       controllers.MongoDBController.listIndexMovies
+GET         /                           controllers.MongoDBController.listIndexMovies
 
 
 GET         /bookingConfirmation        controllers.Receipt.bookingConfirmation
@@ -13,8 +13,8 @@ GET         /movieinfo                  controllers.MongoDBController.movieInfo(
 GET         /contact                    controllers.Application.contact
 
 
-GET        /localStuff             controllers.Application.localStuff
-GET        /findUs                 controllers.Application.findUs
+GET         /localStuff                 controllers.Application.localStuff
+GET         /findUs                     controllers.Application.findUs
 
 
 GET         /404                        controllers.Application.brokenLink

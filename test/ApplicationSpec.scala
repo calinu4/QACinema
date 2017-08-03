@@ -25,17 +25,17 @@ class ApplicationSpec extends Specification {
       contentAsString(home) must contain("QA Cinema")
     }
     "render the 404 page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/404")).get
-      status(listings) must equalTo(NOT_FOUND)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("This is not the page you are looking for.")
+      val notfound = route(FakeRequest(GET, "/404")).get
+      status(notfound) must equalTo(NOT_FOUND)
+      contentType(notfound) must beSome.which(_ == "text/html")
+      contentAsString(notfound) must contain("This is not the page you are looking for.")
     }
 
     "render the 500 page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/500")).get
-      status(listings) must equalTo(OK)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("does not exist.")
+      val badrequest = route(FakeRequest(GET, "/500")).get
+      status(badrequest) must equalTo(OK)
+      contentType(badrequest) must beSome.which(_ == "text/html")
+      contentAsString(badrequest) must contain("does not exist.")
     }
 
     "render the Listings page" in new WithApplication {
@@ -46,10 +46,10 @@ class ApplicationSpec extends Specification {
     }
 
     "render the Classifications page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/classifications")).get
-      status(listings) must equalTo(OK)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("Parental Guidance")
+      val classifications = route(FakeRequest(GET, "/classifications")).get
+      status(classifications) must equalTo(OK)
+      contentType(classifications) must beSome.which(_ == "text/html")
+      contentAsString(classifications) must contain("Parental Guidance")
     }
 
     "render the Contact page" in new WithApplication {
@@ -60,24 +60,24 @@ class ApplicationSpec extends Specification {
     }
 
     "render the About us page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/contact")).get
-      status(listings) must equalTo(OK)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("QACinema is an independent Cinema located in Manchester")
+      val contact = route(FakeRequest(GET, "/contact")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("QACinema is an independent Cinema located in Manchester")
     }
 
     "render the 404 page for an non existing page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/thispagedoesntexist")).get
-      status(listings) must equalTo(NOT_FOUND)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("This is not the page you are looking for.")
+      val notfound = route(FakeRequest(GET, "/thispagedoesntexist")).get
+      status(notfound) must equalTo(NOT_FOUND)
+      contentType(notfound) must beSome.which(_ == "text/html")
+      contentAsString(notfound) must contain("This is not the page you are looking for.")
     }
 
     "render the 500 page" in new WithApplication {
-      val listings = route(FakeRequest(GET, "/movieinfo?id=1337")).get
-      status(listings) must equalTo(BAD_REQUEST)
-      contentType(listings) must beSome.which(_ == "text/html")
-      contentAsString(listings) must contain("does not exist.")
+      val badrequest = route(FakeRequest(GET, "/movieinfo?id=1337")).get
+      status(badrequest) must equalTo(OK)
+      contentType(badrequest) must beSome.which(_ == "text/html")
+      contentAsString(badrequest) must contain("does not exist.")
     }
 
   }
