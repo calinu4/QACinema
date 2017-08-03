@@ -1,6 +1,9 @@
 @(movie: Movie)
 
 @main("Movie Info Page") {
+    <style>background="@movie.poster_path"</style>
+
+
 
     <div class="row">
 
@@ -41,15 +44,11 @@
                 <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
             </div>
 
-
-
-            <img src="@movie.poster_path" alt="">
-
-
-            <div class="ratings">
-                <h4>Do you like this movie? Book to watch it now!</h4>
-                <a class="btn btn-primary" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
-            </div>
+            @for(i<- 0 until movie.images.length){
+                <div  href="@movie.images(i)" >
+                    <img style="height: 300px; width: 300px; float:left;"  src="@movie.images(i)">
+                </div>
+            }
 
         </div>
 
