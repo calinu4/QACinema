@@ -20,7 +20,8 @@ class Application extends Controller {
 
 
   def localStuff = Action {
-    Ok(views.html.localStuff("Local Stuff"))
+    Ok(views.html.localStuff("Local Amenities"))
+  }
 
   def brokenLink = Action { implicit request =>
     NotFound(views.html.notFound())
