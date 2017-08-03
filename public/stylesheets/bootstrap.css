@@ -6770,6 +6770,15 @@ button.close {
   border-radius: 10px;
 }
 footer {
-  font-size: large;
+  font-size: smaller;
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.error-page {
+  padding: 1em;
+}
+.error-page h1 {
+  font-size: 500%;
+}
+.error-page p {
+  font-size: 200%;
+}

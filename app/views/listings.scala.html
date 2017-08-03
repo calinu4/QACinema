@@ -26,8 +26,16 @@
                 <a href="/movieinfo?id=@m.movie_id">
                     <img src="@m.poster_path" alt="@m.title" width="300" height="200">
                 </a>
-                <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
-                    @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
+                <div class="desc">
+                    <div class="row"><a href ="/movieinfo?id=@m.movie_id">
+                        <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
+                        @m.title
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <img src ="@routes.Assets.at(m.age_rating)">
+                        </div></a>
+                    </div>
+                </div>
             </div>
         }
         </div>
