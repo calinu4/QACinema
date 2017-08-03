@@ -67,5 +67,26 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+  def seeAddMovie=Action{
+    Ok(views.html.addMovie(Movie.createMovie))
+  }
+
+
+
+  //adds Movies to database
+  def addMovie=Action{ implicit request=>
+    val formValidationResult= Movie.createMovie.bindFromRequest
+    formValidationResult.fold({
+      errors =>
+        println(formValidationResult)
+
+        BadRequest(views.html.addMovie(errors))
+    },{movie=> val futureResult = moviecollection.flatMap(_.insert(movie))
+
+      futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
+      Redirect(routes.MongoDBController.listMovies())
+    })
+  }
+
 
 }
