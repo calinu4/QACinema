@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page/////
-GET        /                       controllers.Application.index
+GET        /                       controllers.MongoDBController.listIndexMovies
 GET        /bookingConfirmation    controllers.Receipt.bookingConfirmation
 GET        /receipt                controllers.Receipt.receipt
 GET        /movieinfo              controllers.MongoDBController.movieInfo(id:Int)

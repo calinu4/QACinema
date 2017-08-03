@@ -6,10 +6,6 @@ import java.io._
 
 class Application extends Controller {
 
-  def index = Action {
-    Ok(views.html.index("Home"))
-  }
-
   def contact = Action {
     Ok(views.html.contact("Contact"))
   }
