@@ -1,0 +1,17 @@
+div.logo img {
+    width: 50%;
+    height: 11.8%;
+    display: block;
+    margin: auto;
+}
+
+
+div.about img{
+    width: 75%;
+    height: 32.9%;
+    display: block;
+    margin: auto;
+    border-radius: 5px;
+}
+
+
