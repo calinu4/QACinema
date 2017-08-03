@@ -22,4 +22,8 @@ class Application extends Controller {
     NotFound(views.html.notFound())
   }
 
+  def noSuchMovie = Action { implicit request =>
+    Ok(views.html.noSuchMovie(0))
+  }
+
 }
