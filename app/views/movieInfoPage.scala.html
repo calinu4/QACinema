@@ -21,16 +21,15 @@
 
 
                     <p>@for(genre <- movie.genres) {@genre }</p>
-                    <p>Actors: Database Does not have this????</p>
-                    <p>director @movie.director</p>
-                    <p>Cast @movie.cast</p>
+                    <p>Director: @movie.director</p>
+                    <p>Cast: @movie.cast</p>
                     <p>Overview: @movie.overview</p>
-                    <h4>Rating</h4>
                 </div>
 
 
                 <div style ="padding-top: 15px" class="ratings">
                     <p class="pull-right">1,000,000 reviews TODO</p>
+                    <p>Rating</p>
                     <p>
                     @for(star <- 0 until movie.user_rating.toInt) {
                         <span class="glyphicon glyphicon-star"></span>
@@ -39,13 +38,15 @@
                 </div>
             </div>
             <div>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/_qIRtFE6aIc" frameborder="0" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
             </div>
+
+
 
             <img src="@movie.poster_path" alt="">
 
 
-            <div class="col-sm-12 col-lg-12 col-md-12">
+            <div class="ratings">
                 <h4>Do you like this movie? Book to watch it now!</h4>
                 <a class="btn btn-primary" target="_blank" href="https://www.reddit.com/r/fail/">Then Book it!</a>
             </div>
