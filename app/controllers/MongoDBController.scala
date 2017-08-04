@@ -229,4 +229,11 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   }
+
+  def updatePage(): Action[AnyContent] = Action {
+    implicit request =>
+    val movies = getMovies()
+      Ok(views.html.showEdits(movies))
+
+  }
 }

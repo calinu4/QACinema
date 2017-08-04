@@ -1,0 +1,27 @@
+@(movies: List[Movie])(implicit messages: Messages)
+
+
+@main("List of Movies") {
+
+
+    <h1>Movies</h1>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Genres</th></tr>
+        </thead>
+        <tbody>
+        @for(movie <- movies) {
+
+                <tr><td>@(movies.indexOf(movie))</td>
+                    <td>@movie.title</td>
+                    <td>@movie.genres</td>
+                    <td><a href="/updateMovie/@(movies.indexOf(movie))"> Edit</a></td>
+                </tr>
+        }
+        </tbody>
+    </table>
+
+    <hr/>
+
+
+}
