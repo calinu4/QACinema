@@ -177,6 +177,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
+//Select tickets types and quantity
+  def ticketSelection(id:Int)=Action{
+   Ok(views.html.ticketselection(id)).withSession("id"->s"${id}")
+  }
 
 
   //display grid for selecting seats
