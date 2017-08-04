@@ -1,0 +1,60 @@
+@(message: String)
+
+@main("QA Cinema") {
+
+
+    <div class="row">
+        <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="400" height="100" />
+
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Local Amenities</h2>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+
+
+            <div class="col-md-4">
+
+                <ul>A: QA Cinema</ul>
+                <ul>B: Lime Restaurant</ul>
+                <ul>C: Nandos</ul>
+                <ul>D: Pizza Express</ul>
+                <ul>E: Media City Tram Stop</ul>
+                <ul>F: Media City Bus Stop</ul>
+
+
+            </div>
+
+
+            <div class="pull-right col-md-8">
+                <div id="map_wrapper">
+                    <div id="map_canvas" class="mapping"></div>
+                </div>
+
+                <div class="directions"><form action="http://maps.google.com/maps" method="get" target="_blank">
+                    <label for="saddr" class="dir-label">Enter Your Location for Directions</label>
+                    <input type="text" name="saddr" class="dir-input" size="16" />
+                    <input type="hidden" name="daddr" value="The Lowry, The Quays, Salford, M50 3AZ" />
+                    <input type="submit" value="Get directions" class="dir-button button" />
+                </form>
+                </div>
+
+
+
+
+                @*<body>*@
+                    @*<iframe src="https://goo.gl/s3dcGJ" width="600" height="450" frameborder="0" style="border: 0" allowfullscreen=""></iframe>*@
+                    @*>*@
+                </body>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+}
