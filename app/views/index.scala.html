@@ -68,7 +68,7 @@
                 @for(m <- movies) {
                     <div class="gallery">
                         <a href="/movieinfo?id=@m.movie_id">
-                            <img src="@m.poster_path" alt="@m.title" width="300" height="200">
+                            <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
                         </a>
                         <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
                             @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
@@ -84,7 +84,8 @@
                 @for(m <- moviesU) {
                     <div class="gallery">
                         <a href="/movieinfo?id=@m.movie_id">
-                            <img src="@m.poster_path" alt="@m.title" width="300" height="200">
+                            <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
+
                         </a>
                         <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
                             @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
