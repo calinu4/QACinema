@@ -17,8 +17,8 @@ GET         /contact                    controllers.Application.contact
 GET         /localStuff                 controllers.Application.localStuff
 GET         /findUs                     controllers.Application.findUs
 
-GET        /updateMovie/:id        controllers.MongoDBController.updateMoviePage(id:Int)
-POST       /updateMovie/:id        controllers.MongoDBController.updateMovie(id:Int)
+GET         /updateMovie/:id            controllers.MongoDBController.updateMoviePage(id:Int)
+POST        /updateMovie/:id            controllers.MongoDBController.updateMovie(id:Int)
 
 GET         /404                        controllers.Application.brokenLink
 GET         /500                        controllers.Application.noSuchMovie
@@ -35,9 +35,11 @@ POST        /addMovie                   controllers.MongoDBController.addMovie()
 GET         /classifications            controllers.Application.classification
 
 #Seating and booking pages
+
 GET        /showings               controllers.MongoDBController.showingsView
 GET        /ticketselection        controllers.MongoDBController.ticketSelection(id:Int)
 GET        /seating                controllers.MongoDBController.seating
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file               controllers.Assets.at(path="/public", file)
 
