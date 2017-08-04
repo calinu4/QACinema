@@ -1,19 +1,10 @@
-@(movies: List[Movie])(moviesU: List[Movie])
+@(movies: List[Movie])(moviesU: List[Movie])(moviesCurrent: List[Movie])
 
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/listnings.css")">
         <div class="row">
 
-            <div class="col-md-3">
-                <p class="lead">Shop Name</p>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">Category 1</a>
-                    <a href="#" class="list-group-item">Category 2</a>
-                    <a href="#" class="list-group-item">Category 3</a>
-                </div>
-            </div>
-
-            <div class="col-md-9">
+            <div class="col-md-12">
 
                 <div class="row carousel-holder">
 
@@ -23,7 +14,6 @@
                                 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                                 <li data-target="#carousel-example-generic" data-slide-to="1"></li>
                                 <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                                <li<iframe width="560" height="315" src="https://www.youtube.com/embed/fHJATbVHc1g" frameborder="0" allowfullscreen></iframe> ></li>
                             </ol>
                             <div class="carousel-inner">
                                 <div class="item active">
@@ -65,7 +55,7 @@
                 <h2>Now Showing</h2>
                 <br>
                 <div class = "col-md-12">
-                @for(m <- movies) {
+                @for(m <- moviesCurrent) {
                     <div class="gallery">
                         <a href="/movieinfo?id=@m.movie_id">
                             <img src="@m.poster_path" alt="@m.title" width="300" height="200">

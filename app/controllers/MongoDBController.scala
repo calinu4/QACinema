@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 import scala.util.Try
 import scala.concurrent.{Await, Future}
-import play.api._
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -17,8 +16,6 @@ import reactivemongo.play.json._
 import collection._
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
-import play.api.data._
-import play.api.data.Forms._
 
 import scala.concurrent.duration.Duration
 
@@ -36,6 +33,13 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def showings:Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
 
+  def dateParse(date: String): Date = {
+    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    format.parse(date)
+  }
+
+  def isFuture(value: Date): Boolean = value.after(new Date)
+  def isCurrent(value: Date): Boolean = value.before(new Date)
 
 
 //list movies for index
@@ -46,11 +50,12 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newmovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
-      Ok(views.html.index(movies)(newmovies))
+      val newMovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
+      val currentMovies = for (i <- movies if (isCurrent(dateParse(i.release_date)))) yield i
+      Ok(views.html.index(movies)(newMovies)(currentMovies))
     }
   }
   //display Movies from database
@@ -109,13 +114,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       case _ => "images/18.png"
     }
   }
-
-  def dateParse(date: String): Date = {
-    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
-    format.parse(date)
-  }
-
-  def isFuture(value: Date): Boolean = value.after(new Date)
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
