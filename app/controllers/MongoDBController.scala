@@ -29,7 +29,15 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(
-    _.collection[JSONCollection]("testMovie"))
+
+    _.collection[JSONCollection]("movies"))
+
+  def showings:Future[JSONCollection] = database.map(
+    _.collection[JSONCollection]("showings"))
+
+
+//    _.collection[JSONCollection]("testMovie"))
+
 
 //list movies for index
   def listIndexMovies: Action[AnyContent] = Action.async {
@@ -157,6 +165,37 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     })
   }
 
+
+  //Display all showings available to book
+  def showingsView: Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    var showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    showingsList.map { showing =>
+
+      Ok(views.html.showings(showing))
+    }
+  }
+
+
+
+  //display grid for selecting seats
+  def seating: Action[AnyContent] = Action.async {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    seatsList.map { showing =>
+
+      Ok(views.html.seating(showing.head))
+    }
+  }
+
   def updateMoviePage(id:Int): Action[AnyContent] = Action.async {
     implicit request =>
       val cursor: Future[Cursor[Movie]] = moviecollection.map {
@@ -175,6 +214,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def updateMovie(id:Int ) = Action {
 
     implicit request =>
+
 
       val formValidationResult = Movie.createMovie.bindFromRequest
       formValidationResult.fold({ errors =>
