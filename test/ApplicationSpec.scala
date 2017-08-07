@@ -115,12 +115,35 @@ class ApplicationSpec extends Specification {
       contentAsString(contact) must contain("No Such Movie")
     }
 
-    "render the movie info page for a given movie" in new WithApplication {
-      val contact = route(FakeRequest(GET, "/seating")).get
+    "render the admin page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/admin").withSession("admin" -> "admin")).get
       status(contact) must equalTo(OK)
       contentType(contact) must beSome.which(_ == "text/html")
-      contentAsString(contact) must contain("No Such Movie")
+      contentAsString(contact) must contain("Update or Delete a Movie")
     }
 
- }
+    "render the admin page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/admin").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Update or Delete a Movie")
+    }
+
+    "render the add movie page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/addMovie").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("movieID")
+    }
+
+    "render the upadate movie page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/updateMovie").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Movies")
+    }
+
+  }
+
+
 }
