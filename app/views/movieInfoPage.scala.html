@@ -37,27 +37,47 @@
                         <p>Releaste date: @movie.release_date.split("-").reverse.mkString("/")</p>
                         <p>Overview: @movie.overview</p>
                         <h4>Rating</h4>
+
                     </div>
 
-
                     <div style ="padding-top: 15px" class="ratings">
-                        <p class="pull-right">1,000,000 reviews TODO</p>
                         <p>
                         @for(star <- 0 until movie.user_rating.toInt) {
                             <span class="glyphicon glyphicon-star"></span>
                         }
                         </p>
                     </div>
-                </div>
 
-                @for(images <- movie.images.split(",")) {
-                    <div href="@images">
-                        <img onerror="this.src = '@routes.Assets.at("images/placeholder-poster.png")'" alt="@movie.title" style="height: 300px;
-                            width: 300px;
-                            float: left;" src="@images">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img class="slide-image" src="@movie.images.split(',')(0)" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="slide-image" src="@movie.images.split(',')(1)" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="slide-image" src="@movie.images.split(',')(2)" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
                     </div>
-                }
+                    <div class="col-md-3"></div>
 
+                </div>
 
             </div>
 

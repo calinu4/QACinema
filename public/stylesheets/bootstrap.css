@@ -6781,3 +6781,6 @@ footer {
 .error-page p {
   font-size: 200%;
 }
+img, .gallery {
+  border-radius: 4px;
+}
