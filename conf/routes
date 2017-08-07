@@ -34,8 +34,8 @@ GET         /listings/upcoming          controllers.MongoDBController.upcomingMo
 GET         /listings/:gen              controllers.MongoDBController.filterMovies(gen: String)
 
 
-GET         /addMovie                   controllers.MongoDBController.seeAddMovie
-POST        /addMovie                   controllers.MongoDBController.addMovie()
+GET         /addMovie           controllers.MongoDBController.seeAddMovie
+POST        /addMovie            controllers.MongoDBController.addMovie()
 
 GET         /classifications            controllers.Application.classification
 
@@ -58,3 +58,4 @@ GET         /session                    controllers.Application.session()
 GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
+GET         /successPage                        controllers.Application.successPage
