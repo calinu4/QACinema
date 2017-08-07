@@ -17,25 +17,31 @@
                             </ol>
                             <div class="carousel-inner">
                                 <div class="item active">
+                                    <a href="@routes.MongoDBController.movieInfo(movies(2).movie_id)">
                                     <img class="slide-image" src="@movies(2).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(2).title</h3>
                                         <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movies(2).age_rating)" >
                                     </div>
+                                    </a>
                                 </div>
                                 <div class="item">
+                                    <a href="@routes.MongoDBController.movieInfo(movies(1).movie_id)">
                                     <img class="slide-image" src="@movies(1).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(1).title</h3>
                                         <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movies(1).age_rating)" >
                                     </div>
+                                    </a>
                                 </div>
                                 <div class="item">
+                                    <a href="@routes.MongoDBController.movieInfo(movies(3).movie_id)">
                                     <img class="slide-image" src="@movies(3).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(3).title</h3>
                                         <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movies(3).age_rating)" >
                                     </div>
+                                    </a>
                                 </div>
 
                             </div>
@@ -60,7 +66,7 @@
                         <a href="/movieinfo?id=@m.movie_id">
                             <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
                         </a>
-                        <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
+                        <div class="desc"><a href ="@routes.MongoDBController.movieInfo(m.movie_id)">
                             @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
                     </div>
                 }
@@ -77,7 +83,7 @@
                             <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
 
                         </a>
-                        <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
+                        <div class="desc"><a href ="@routes.MongoDBController.movieInfo(m.movie_id)">
                             @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
                     </div>
                 }
