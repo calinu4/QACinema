@@ -51,4 +51,9 @@ class Application extends Controller {
     //the price in there that you want the checkout button to have
     Ok(views.html.payment("2.50"))
   }
+
+  //You should only get here if payment is successful and only...
+  def successPage = Action{
+    Ok(views.html.successPage(showing)(reservation))
+  }
 }
