@@ -34,4 +34,20 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+  def sessionIn() = Action {
+    Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+  }
+
+  def sessionOut() = Action {
+    Ok(views.html.messagePage("You are logged out")).withNewSession
+  }
+
+  def session() = Action { implicit request =>
+    request.session.get("admin").map { user =>
+      Ok(views.html.messagePage("You are Logged in! "+user))
+    }.getOrElse {
+      Unauthorized(views.html.messagePage("You are not logged in!"))
+    }
+  }
+
 }
