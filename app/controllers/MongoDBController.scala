@@ -304,7 +304,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-        Ok(views.html.AdminControllerPage())
+        Ok(views.html.AdminControllerPage(user))
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
