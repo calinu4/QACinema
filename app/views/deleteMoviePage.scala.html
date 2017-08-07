@@ -1,0 +1,29 @@
+@(movies: List[Movie],id:Int)(implicit messages: Messages))
+@main("Delete Movie"){
+
+    <h1>Movies</h1>
+
+        @for(movie <- movies) {
+            @if(movies.indexOf(movie) == id) {
+                <p>Movie @(movies.indexOf(movie))</p>
+                    <p>Title: @movie.title</p>
+                    <p>Genres: @movie.genres</p>
+                    <p>Cast: @movie.cast</p>
+                    <p>Director: @movie.director</p>
+                    <p>Overview: @movie.overview</p>
+                    <p>Images: @movie.images</p>
+                    <p>Age Rating: @movie.age_rating</p>
+                    <p>Release Date: @movie.release_date</p>
+                    <p><a href="/deleteMovie/@(movies.indexOf(movie))"> <button type="button" class="btn btn-primary">
+                        Delete</button></a></p>
+
+
+            }
+        }
+
+
+
+
+
+
+}

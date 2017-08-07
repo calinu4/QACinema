@@ -35,5 +35,25 @@ class Application extends Controller {
   }
 
 
+  def sessionIn() = Action {
+    Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+  }
+
+  def sessionOut() = Action {
+    Ok(views.html.messagePage("You are logged out")).withNewSession
+  }
+
+  def session() = Action { implicit request =>
+    request.session.get("admin").map { user =>
+      Ok(views.html.messagePage("You are Logged in! "+user))
+    }.getOrElse {
+      Unauthorized(views.html.messagePage("You are not logged in!"))
+    }
+  }
+
+  def payment = Action {
+    //the price in there that you want the checkout button to have
+    Ok(views.html.payment("2.50"))
+  }
 
 }

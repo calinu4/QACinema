@@ -56,7 +56,7 @@ class ApplicationSpec extends Specification {
       val contact = route(FakeRequest(GET, "/contact")).get
       status(contact) must equalTo(OK)
       contentType(contact) must beSome.which(_ == "text/html")
-      contentAsString(contact) must contain("Please do not hesitate to get in contact with us.")
+      contentAsString(contact) must contain("Please don't hesitate to contact us if you have any enquiries.")
     }
 
     "render the About us page" in new WithApplication {

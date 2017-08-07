@@ -2,87 +2,104 @@
 
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/listnings.css")">
-        <div class="row">
+    <div class="row">
 
-            <div class="col-md-12">
+        <div class="col-md-12">
 
-                <div class="row carousel-holder">
+            <div class="row carousel-holder">
 
-                    <div class="col-md-12">
-                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                            </ol>
-                            <div class="carousel-inner">
-                                <div class="item active">
+                <div class="col-md-12">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <a href="@routes.MongoDBController.movieInfo(movies(2).movie_id)">
                                     <img class="slide-image" src="@movies(2).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(2).title</h3>
-                                        <p>@movies(2).age_rating</p>
+                                        <img style="max-height: 35px;
+                                            max-width: 35px" src ="@routes.Assets.at(movies(2).age_rating)" >
                                     </div>
-                                </div>
-                                <div class="item">
+                                </a>
+                            </div>
+                            <div class="item">
+                                <a href="@routes.MongoDBController.movieInfo(movies(1).movie_id)">
                                     <img class="slide-image" src="@movies(1).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(1).title</h3>
-                                        <p>@movies(1).age_rating</p>
+                                        <img style="max-height: 35px;
+                                            max-width: 35px" src ="@routes.Assets.at(movies(1).age_rating)" >
                                     </div>
-                                </div>
-                                <div class="item">
+                                </a>
+                            </div>
+                            <div class="item">
+                                <a href="@routes.MongoDBController.movieInfo(movies(3).movie_id)">
                                     <img class="slide-image" src="@movies(3).poster_path" alt="">
                                     <div class="carousel-caption">
                                         <h3>@movies(3).title</h3>
-                                        <p>@movies(3).age_rating</p>
+                                        <img style="max-height: 35px;
+                                            max-width: 35px" src ="@routes.Assets.at(movies(3).age_rating)" >
                                     </div>
-                                </div>
-
+                                </a>
                             </div>
+
                         </div>
-                        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                        </a>
-                        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                        </a>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <h2>Now Showing</h2>
-                <br>
-                <div class = "col-md-12">
-                @for(m <- moviesCurrent) {
-                    <div class="gallery">
-                        <a href="/movieinfo?id=@m.movie_id">
-                            <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
-                        </a>
-                        <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
-                            @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
-                    </div>
-                }
-                </div>
-        </div>
-
-            <div class="row">
-                <h2>Showing Soon</h2>
-                <br>
-                <div class = "col-md-12">
-                @for(m <- moviesU) {
-                    <div class="gallery">
-                        <a href="/movieinfo?id=@m.movie_id">
-                            <img src="@m.poster_path" onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
-
-                        </a>
-                        <div class="desc"><a href ="/movieinfo?id=@m.movie_id">
-                            @m.title <img src ="@routes.Assets.at(m.age_rating)"></a></div>
-                    </div>
-                }
+                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
                 </div>
             </div>
+
         </div>
+
+        <div class="row">
+            <h2>Now Showing</h2>
+            <br>
+            <div class = "col-md-12">
+            @for(m <- moviesCurrent) {
+                <div class="gallery">
+                    <a href="/movieinfo?id=@m.movie_id">
+                        <img src="@m.poster_path" onerror="this.src = '@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
+                    </a>
+                    <div class="desc"><div class="row"><a href ="@routes.MongoDBController.movieInfo(m.movie_id)">
+                        <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
+                        @m.title
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                            <img src ="@routes.Assets.at(m.age_rating)">
+                        </div></a>
+                    </div>
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+
+        <div class="row">
+            <h2>Showing Soon</h2>
+            <br>
+            <div class = "col-md-12">
+            @for(m <- moviesU) {
+                <div class="gallery">
+                    <a href="/movieinfo?id=@m.movie_id">
+                        <img src="@m.poster_path" onerror="this.src = '@routes.Assets.at("images/placeholder-poster.png")'" alt="@m.title" width="300" height="200">
+
+                    </a>
+                    <div class="desc"><a href ="@routes.MongoDBController.movieInfo(m.movie_id)">
+                        @m.title <img src ="@routes.Assets.at(m.age_rating)"></a>
+                    </div>
+                </div>
+            }
+            </div>
+        </div>
+    </div>
 
 }
