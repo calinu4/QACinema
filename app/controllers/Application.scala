@@ -1,5 +1,8 @@
 package controllers
 
+import models.ContactUs
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api._
 import play.api.mvc._
 import java.io._
@@ -9,7 +12,8 @@ class Application extends Controller {
 
 
   def contact = Action {
-    Ok(views.html.contact("Contact"))
+    implicit request =>
+    Ok(views.html.contact("Contact", ContactUs.createContactForm))
   }
 
   def classification = Action {

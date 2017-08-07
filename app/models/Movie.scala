@@ -43,9 +43,9 @@ object Movie{
     "overview"->nonEmptyText,
     "cast"->nonEmptyText,
     "director"->nonEmptyText,
-    "screen"->nonEmptyText
+"screen"->nonEmptyText
 
-  )(Movie.apply)(Movie.unapply))
+)(Movie.apply)(Movie.unapply))
 }
 object JsonFormats {
   import play.api.libs.json.Json
