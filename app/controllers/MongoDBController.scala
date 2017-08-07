@@ -54,7 +54,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       val upcomingMovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
       val showingMovies = for (i <- movies if !(isFuture(dateParse(i.release_date)))) yield i
-      Ok(views.html.index(showingMovies.drop(4))(upcomingMovies.drop(0)))  //Drops movies to make overall count = 4
+      Ok(views.html.index(movies)(showingMovies.drop(4))(upcomingMovies.drop(0)))  //Drops movies to make overall count = 4
 
     }
   }
