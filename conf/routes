@@ -13,7 +13,7 @@ GET         /receipt                    controllers.Receipt.receipt
 GET         /movieinfo                  controllers.MongoDBController.movieInfo(id:Int)
 GET         /contact                    controllers.Application.contact
 
-
+GET         /admin                      controllers.MongoDBController.adminPage()
 
 GET         /localStuff                 controllers.Application.localStuff
 GET         /findUs                     controllers.Application.findUs
@@ -21,6 +21,9 @@ GET         /findUs                     controllers.Application.findUs
 GET         /updateMovie/:id            controllers.MongoDBController.updateMoviePage(id:Int)
 POST        /updateMovie/:id            controllers.MongoDBController.updateMovie(id:Int)
 GET         /updateMovie                controllers.MongoDBController.updatePage
+
+GET         /deleteMovie/:id            controllers.MongoDBController.deleteMovie(id:Int)
+GET         /deleteMoviePage/:id        controllers.MongoDBController.deletePage(id:Int)
 
 GET         /404                        controllers.Application.brokenLink
 GET         /500                        controllers.Application.noSuchMovie

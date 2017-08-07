@@ -65,7 +65,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       Ok(views.html.listings(movies))
@@ -170,7 +170,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     showingsList.map { showing =>
 
       Ok(views.html.showings(showing))
@@ -190,7 +190,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
 
       Ok(views.html.seating(showing.head))
@@ -238,4 +238,26 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       Ok(views.html.showEdits(movies))
 
   }
+
+  def deletePage(id:Int):Action[AnyContent]=Action{
+    implicit request =>
+      val movieList = getMovies()
+      Ok(views.html.deleteMoviePage(movieList, id))
+  }
+
+
+  def deleteMovie(id:Int)=Action{
+  implicit request=>
+  val  movieList = getMovies()
+  val selector = movieList(id)
+  val futureResult = moviecollection.map(_.findAndRemove(selector))
+    Redirect(routes.MongoDBController.updatePage())
+
+  }
+
+  def adminPage()=Action{
+    implicit request =>
+      Ok(views.html.AdminControllerPage())
+  }
+
 }
