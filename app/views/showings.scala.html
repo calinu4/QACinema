@@ -14,8 +14,8 @@
         </thead>
         <tbody>
         @for(s<- show) {
-          <tr><td>@s.movieId</td><td><a href="@routes.MongoDBController.ticketSelection(s.sessionId)">
-            <button id="@s.sessionId">@s.time</button>
+          <tr><td>@s.movieId</td><td><a href="@routes.MongoDBController.ticketSelection(s.showingId)">
+            <button id="@s.showingId">@s.time</button>
           </a></td></tr>
         }
         </tbody>

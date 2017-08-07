@@ -4,6 +4,8 @@ import play.api._
 import play.api.mvc._
 import java.io._
 
+import models.Reservation
+
 class Application extends Controller {
 
 
@@ -34,6 +36,7 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }
@@ -50,8 +53,18 @@ class Application extends Controller {
     }
   }
 
-  def payment = Action {
+  def payment(name:String,email:String) = Action {implicit request=>
+    val total=request.session.get("total").get.toInt
+    val adult=request.session.get("adult").get.toInt
+    val child=request.session.get("child").get.toInt
+    val concession=request.session.get("concession").get.toInt
+    val seats=request.session.get("seats").get
+    val newseats=seats.split(',').toList.map(elem=>elem.split(' ').toList)
+
+    val reservation=Reservation(name,email,adult,child,concession,newseats,total)
+
     //the price in there that you want the checkout button to have
-    Ok(views.html.payment("2.50"))
+    Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email))
   }
+
 }
