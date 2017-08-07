@@ -7,7 +7,6 @@ import java.io._
 class Application extends Controller {
 
 
-
   def contact = Action {
     Ok(views.html.contact("Contact"))
   }
@@ -17,9 +16,7 @@ class Application extends Controller {
   }
 
   def localStuff = Action {
-
     Ok(views.html.localStuff("Local Amenities"))
-
   }
 
   def brokenLink = Action { implicit request =>
@@ -44,7 +41,7 @@ class Application extends Controller {
 
   def session() = Action { implicit request =>
     request.session.get("admin").map { user =>
-      Ok(views.html.messagePage("You are Logged in! "+user))
+      Ok(views.html.messagePage("You are Logged in! " + user))
     }.getOrElse {
       Unauthorized(views.html.messagePage("You are not logged in!"))
     }
