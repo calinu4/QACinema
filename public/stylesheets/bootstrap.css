@@ -1131,7 +1131,6 @@ img {
   max-height: 500px;
   margin-bottom: 1rem;
 }
-
 .img-rounded {
   border-radius: 6px;
 }
@@ -6770,6 +6769,15 @@ button.close {
   border-radius: 10px;
 }
 footer {
-  font-size: large;
+  font-size: 100%;
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.error-page {
+  padding: 1em;
+}
+.error-page h1 {
+  font-size: 500%;
+}
+.error-page p {
+  font-size: 200%;
+}

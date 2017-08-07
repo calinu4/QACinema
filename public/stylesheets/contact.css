@@ -1,0 +1,27 @@
+div.logo img {
+    width: 50%;
+    height: 11.8%;
+    display: block;
+    margin: auto;
+}
+
+
+div.about img{
+    width: 75%;
+    height: 32.9%;
+    display: block;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.red{
+    color:red;
+}
+.form-area
+{
+    background-color: #FAFAFA;
+    padding: 15px 20px 60px;
+    margin: 5px 0px 30px;
+    border: 1px solid GREY;
+}
+

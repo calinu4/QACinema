@@ -1,10 +1,29 @@
-@(form:Form[Movie])(implicit messages:Messages)
-@main("AddMovies"){
+@(movies: List[Movie],form: Form[Movie],id:Int)(implicit messages: Messages)
 
 
+@main("CDs") {
 
 
-    @helper.form(routes.MongoDBController.addMovie){
+    <h1>Edit Movie</h1>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Title</th><th>Genres</th></tr>
+        </thead>
+        <tbody>
+        @for(movie <- movies) {
+            @if(movies.indexOf(movie)==id){
+                <tr><td>@movie.movie_id</td>
+                    <td>@movie.title</td>
+                    <td>@movie.genres</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+
+    <hr/>
+
+    @helper.form(routes.MongoDBController.updateMovie(id)) {
 
         @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false)
         @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false)
@@ -21,22 +40,6 @@
         @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)
         @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false)
         @helper.inputText(form("screen"),'_label->"Screen Types",'_showConstraints->false)
-        <button type="submit">Create Movie</button>
+        <button type="submit">Edit Movie</button>
     }
 }
-
-    "movie_id"->number,
-    "title"->nonEmptyText,
-    "poster_path"->nonEmptyText,
-    "landscape"->nonEmptyText,
-    "video"->nonEmptyText,
-    "images"->list(nonEmptyText),
-    "age_rating"->nonEmptyText,
-    "user_rating"->bigDecimal,
-    "release_date"->nonEmptyText,
-    "run_time"->number,
-    "genres"->list(nonEmptyText),
-    "overview"->nonEmptyText,
-    "cast"->nonEmptyText,
-    "director"->nonEmptyText,
-    "screen"->list(nonEmptyText)

@@ -11,16 +11,16 @@ case class Movie(
                  poster_path: String,
                  landscape:String,
                  video:String,
-                 images:List[String],
+                 images:String,
                  var age_rating:String,
                  user_rating:BigDecimal,
                  release_date:String,
                  run_time:Int,
-                 genres:List[String],
+                 genres:String,
                  overview:String,
                  cast:String,
                  director:String,
-                 screen:List[String]
+                 screen:String
 
                )
 
@@ -34,16 +34,16 @@ object Movie{
      "poster_path"->nonEmptyText,
      "landscape"->nonEmptyText,
      "video"->nonEmptyText,
-     "images"->list(nonEmptyText),
+     "images"->nonEmptyText,
     "age_rating"->nonEmptyText,
     "user_rating"->bigDecimal,
     "release_date"->nonEmptyText,
     "run_time"->number,
-    "genres"->list(nonEmptyText),
+    "genres"->nonEmptyText,
     "overview"->nonEmptyText,
     "cast"->nonEmptyText,
     "director"->nonEmptyText,
-    "screen"->list(nonEmptyText)
+    "screen"->nonEmptyText
 
   )(Movie.apply)(Movie.unapply))
 }
@@ -51,6 +51,8 @@ object JsonFormats {
   import play.api.libs.json.Json
 
   // Generates Writes and Reads for Movie thanks to Json Macros
+  implicit val reservationFormat = Json.format[Reservation]
+  implicit val showingFormat = Json.format[Showing]
   implicit val movieFormat = Json.format[Movie]
 }
 

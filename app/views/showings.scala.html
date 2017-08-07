@@ -1,0 +1,28 @@
+@(show: List[Showing])
+
+@main("Showings") {
+  <script>
+
+  </script>
+  <h1>Showings</h1>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <table>
+        <thead>
+          <tr><th>Movie Name </th><th>Times</th>
+        </thead>
+        <tbody>
+        @for(s<- show) {
+          <tr><td>@s.movieId</td><td><a href="@routes.MongoDBController.ticketSelection(s.sessionId)">
+            <button id="@s.sessionId">@s.time</button>
+          </a></td></tr>
+        }
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+}

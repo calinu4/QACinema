@@ -1,0 +1,55 @@
+@(s: Showing)
+
+@main("Seating Plan") {
+    <script>
+            function changeImage(id, src) {
+                if (src.indexOf("your-choice") !== -1) {
+                    document.getElementById(id).src = "@routes.Assets.at("images/choosen-person.png")"
+                    selectSeat(id)
+                }
+                else {
+                    document.getElementById(id).src = "@routes.Assets.at("images/your-choice.png")"
+                    unselectSeat("p" + id)
+                }
+
+            }
+            function selectSeat(id) {
+                var p = document.createElement("p")
+                p.id = "p" + id
+                p.innerHTML = "Seat: [" + id.toString() + "]"
+                document.getElementById("selectedseats").appendChild(p)
+            }
+            function unselectSeat(id) {
+                var elem = document.getElementById(id);
+                elem.parentNode.removeChild(elem)
+            }
+    </script>
+    <h1>Seating Plan</h1>
+    <div class="row">
+
+        <div class="col-lg-12">
+            @for(row <- 0 until s.seats.length) {
+                <h1>Row @{
+                    row + 1
+                }</h1>
+                @for(col <- 0 to 9) {
+                    @if(s.seats(row)(col) == 0) {
+                        <input id="@row @col" type="image" src="@routes.Assets.at("images/your-choice.png")" onclick="changeImage(id, src)"/>
+                    } else {
+                        <input id="@row @col" type="image" src="@routes.Assets.at("images/your-unavaliable.png")" />
+                    }
+
+                }
+                <br>
+                <br>
+            }
+            <div id="selectedseats">
+                <H1>Seats Selected: </H1>
+
+            </div>
+        </div>
+
+    </div>
+
+
+}
