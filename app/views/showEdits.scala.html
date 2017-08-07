@@ -15,7 +15,9 @@
                 <tr><td>@(movies.indexOf(movie))</td>
                     <td>@movie.title</td>
                     <td>@movie.genres</td>
-                    <td><a href="/updateMovie/@(movies.indexOf(movie))"> Edit</a></td>
+                    <td><a href="/updateMovie/@(movies.indexOf(movie))"> <button type="button" class="btn btn-primary">Edit</button></a></td>
+                    <td><a href="/deleteMoviePage/@(movies.indexOf(movie))"> <button type="button" class="btn btn-primary">Delete</button></a></td>
+
                 </tr>
         }
         </tbody>
