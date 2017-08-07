@@ -1,6 +1,6 @@
 @(movie: Movie)
 
-@main("Movie Info Page") {
+@main(movie.title) {
 
     <div class="row">
 
@@ -18,9 +18,8 @@
                             Then Book it!</a>
                     </h5>
 
-                    <h1 style="color: #414141; font-size: 300%">@movie.title <img src="@routes.Assets.at(movie.age_rating)" style="max-height:35px;max-width:35px" /></h1>
+                    <h1 style="color: #414141; font-size: 300%">@movie.title <img src="@routes.Assets.at("images/"+movie.age_rating.toLowerCase()+".png")" style="max-height:35px;max-width:35px" /></h1>
                     <br/>
-                    <p>@routes.Assets.at(movie.age_rating)</p>
 
                     <div style="text-align: center">
                         <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
