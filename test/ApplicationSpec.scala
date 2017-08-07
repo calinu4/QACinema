@@ -80,5 +80,47 @@ class ApplicationSpec extends Specification {
       contentAsString(badrequest) must contain("does not exist.")
     }
 
-  }
+    "render the local info page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/localStuff")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Local Amenities")
+    }
+
+    "render the Find Us page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/findUs")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Find Us")
+    }
+
+    "render the Find Us page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/findUs")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Find Us")
+    }
+
+    "render the movie info page for a given movie" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/movieinfo?id=4")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Guardians of the Galaxy")
+    }
+
+    "render the movie info page for a given movie" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/movieinfo?id=20")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("No Such Movie")
+    }
+
+    "render the movie info page for a given movie" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/seating")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("No Such Movie")
+    }
+
+ }
 }
