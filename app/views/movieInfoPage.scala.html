@@ -42,10 +42,9 @@
             <div>
                 <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
             </div>
-
             @for(images<-movie.images.split(",")){
                 <div  href="@images">
-                    <img style="height: 300px; width: 300px;
+                    <img onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@movie.title" style="height: 300px; width: 300px;
                         float: left;"  src="@images">
                 </div>
             }
