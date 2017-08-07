@@ -1,15 +1,17 @@
 package models
 
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+
 
 case class Showing(
-                  sessionId:Int,
+                  showingId:Int,
                   roomId:Int,
                   movieId:String,
                   date:String,
                   time:String,
-                  seatsAvailable:Int,
-                  seats:Array[Array[Int]],
-                  reservations:List[Reservation]
+                  var seatsAvailable:Int,
+                  seats:ArrayBuffer[ArrayBuffer[Int]],
+                  reservations:ListBuffer[Reservation]
                   )
 
 

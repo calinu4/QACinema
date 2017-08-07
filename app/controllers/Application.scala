@@ -34,6 +34,7 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }
@@ -54,4 +55,5 @@ class Application extends Controller {
     //the price in there that you want the checkout button to have
     Ok(views.html.payment("2.50"))
   }
+
 }
