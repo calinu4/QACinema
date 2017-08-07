@@ -50,4 +50,8 @@ class Application extends Controller {
     }
   }
 
+  def payment = Action {
+    //the price in there that you want the checkout button to have
+    Ok(views.html.payment("2.50"))
+  }
 }
