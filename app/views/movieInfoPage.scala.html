@@ -1,62 +1,67 @@
 @(movie: Movie)
 
-@main("Movie Info Page") {
+    @main(movie.title) {
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-lg-12">
-
-
-            <div class="thumbnail" >
+            <div class="col-lg-12">
 
 
-                <div style="padding:2em">
-                    <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/>
-                        Consesion Ticket £9.99
+                <div class="thumbnail" >
+
+
+                    <div style="padding: 2em">
+                        <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/>
+                            Concession Ticket £9.99
+                            <hr/>
+                            <p>Like the look of this movie?</p>
+                            <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="@routes.Application.payment">
+                                Then Book it!</a>
+                        </h5>
+
+                        <h1 style="color: #414141;
+                            font-size: 300%">@movie.title <img src="@routes.Assets.at("images/" + movie.age_rating.toLowerCase() + ".png")" style="max-height: 50px;
+                            max-width: 50px" /></h1>
+                        <br/>
+
+                        <div style="text-align: center">
+                            <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
+                        </div>
+
                         <hr/>
-                        <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="@routes.Application.payment">
-                            Then Book it!</a>
-                    </h5>
-                    <h1>@movie.title</h1>@movie.age_rating
-                    <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movie.age_rating)">
+
+                        <p>Genre: @movie.genres.split(",").map(x => x + " ")</p>
+
+                        <p>director @movie.director</p>
+                        <p>Cast @movie.cast</p>
+                        <p>Releaste date: @movie.release_date.split("-").reverse.mkString("/")</p>
+                        <p>Overview: @movie.overview</p>
+                        <h4>Rating</h4>
+                    </div>
 
 
-
-
-                    <p>Genre: @movie.genres.split(",").map(x=>x + ",")</p>
-
-                    <p>director @movie.director</p>
-                    <p>Cast @movie.cast</p>
-                    <p>Releaste date: @movie.release_date</p>
-                    <p>Overview: @movie.overview</p>
-                    <h4>Rating</h4>
+                    <div style ="padding-top: 15px" class="ratings">
+                        <p class="pull-right">1,000,000 reviews TODO</p>
+                        <p>
+                        @for(star <- 0 until movie.user_rating.toInt) {
+                            <span class="glyphicon glyphicon-star"></span>
+                        }
+                        </p>
+                    </div>
                 </div>
 
+                @for(images <- movie.images.split(",")) {
+                    <div href="@images">
+                        <img onerror="this.src = '@routes.Assets.at("images/placeholder-poster.png")'" alt="@movie.title" style="height: 300px;
+                            width: 300px;
+                            float: left;" src="@images">
+                    </div>
+                }
 
-                <div style ="padding-top: 15px" class="ratings">
-                    <p class="pull-right">1,000,000 reviews TODO</p>
-                    <p>
-                    @for(star <- 0 until movie.user_rating.toInt) {
-                        <span class="glyphicon glyphicon-star"></span>
-                    }
-                    </p>
-                </div>
+
             </div>
-            <div>
-                <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
-            </div>
-            @for(images<-movie.images.split(",")){
-                <div  href="@images">
-                    <img onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@movie.title" style="height: 300px; width: 300px;
-                        float: left;"  src="@images">
-                </div>
-            }
-
-
 
         </div>
 
-    </div>
 
-
-}
+    }

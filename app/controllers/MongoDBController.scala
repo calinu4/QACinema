@@ -109,12 +109,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def replaceAgeRating(age: String): String = {
     age match {
-      case "U" => "images/u.png"
-      case "PG" => "images/pg.png"
-      case "12" => "images/12.png"
-      case "12A" => "/images/12a.png"
-      case "15" => "images/15.png"
-      case _ => "images/18.png"
+      case _ => "images/"+age.toLowerCase+".png"
     }
   }
 
