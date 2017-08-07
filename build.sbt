@@ -25,3 +25,6 @@ unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 routesGenerator := InjectedRoutesGenerator
+
+libraryDependencies += "com.stripe" % "stripe-java" % "1.4.2"
+
