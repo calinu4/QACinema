@@ -46,16 +46,16 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def listIndexMovies: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
       _.find(Json.obj())
-        .options(QueryOpts(5,5))
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
     val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newMovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
-      val currentMovies = for (i <- movies if (isCurrent(dateParse(i.release_date)))) yield i
-      Ok(views.html.index(movies)(newMovies)(currentMovies))
+      val upcomingMovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
+      val showingMovies = for (i <- movies if !(isFuture(dateParse(i.release_date)))) yield i
+      Ok(views.html.index(showingMovies.drop(4))(upcomingMovies.drop(0)))  //Drops movies to make overall count = 4
+
     }
   }
   //display Movies from database
