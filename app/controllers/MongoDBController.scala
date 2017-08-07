@@ -28,9 +28,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def moviecollection: Future[JSONCollection] = database.map(
 
     _.collection[JSONCollection]("testMovie"))
-//    _.collection[JSONCollection]("movies"))
 
-  def showings:Future[JSONCollection] = database.map(
+  //    _.collection[JSONCollection]("movies"))
+
+  def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
 
   def dateParse(date: String): Date = {
@@ -39,10 +40,11 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
   def isFuture(value: Date): Boolean = value.after(new Date)
+
   def isCurrent(value: Date): Boolean = value.before(new Date)
 
 
-//list movies for index
+  //list movies for index
   def listIndexMovies: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
       _.find(Json.obj())
@@ -54,10 +56,11 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       val upcomingMovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
       val showingMovies = for (i <- movies if !(isFuture(dateParse(i.release_date)))) yield i
-      Ok(views.html.index(movies)(upcomingMovies.drop(0))(showingMovies.drop(4)))  //Drops movies to make overall count = 4
+      Ok(views.html.index(movies)(upcomingMovies.drop(0))(showingMovies.drop(4))) //Drops movies to make overall count = 4
 
     }
   }
+
   //display Movies from database
   def listMovies: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
@@ -65,7 +68,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       Ok(views.html.listings(movies))
@@ -145,7 +148,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //adds Movies to database
-  def addMovie = Action { implicit request =>
+  def addMovie = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
     val formValidationResult = Movie.createMovie.bindFromRequest
     formValidationResult.fold({
       errors =>
@@ -154,12 +160,15 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         BadRequest(views.html.addMovie(errors))
 
     }, { movie =>
-
       val futureResult = moviecollection.flatMap(_.insert(movie))
 
       futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
       Redirect(routes.MongoDBController.listMovies())
     })
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
   }
 
 
@@ -170,16 +179,16 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     showingsList.map { showing =>
 
       Ok(views.html.showings(showing))
     }
   }
 
-//Select tickets types and quantity
-  def ticketSelection(id:Int)=Action{
-   Ok(views.html.ticketselection(id)).withSession("id"->s"${id}")
+  //Select tickets types and quantity
+  def ticketSelection(id: Int) = Action {
+    Ok(views.html.ticketselection(id)).withSession("id" -> s"${id}")
   }
 
 
@@ -190,14 +199,14 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
 
       Ok(views.html.seating(showing.head))
     }
   }
 
-  def updateMoviePage(id:Int): Action[AnyContent] = Action.async {
+  def updateMoviePage(id: Int): Action[AnyContent] = Action.async {
     implicit request =>
       val cursor: Future[Cursor[Movie]] = moviecollection.map {
         _.find(Json.obj())
@@ -212,10 +221,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   }
 
-  def updateMovie(id:Int ) = Action {
+  def updateMovie(id: Int) = Action {
 
     implicit request =>
-
+      request.session.get("admin").map { user =>
 
       val formValidationResult = Movie.createMovie.bindFromRequest
       formValidationResult.fold({ errors =>
@@ -228,14 +237,62 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Redirect(routes.MongoDBController.listMovies())
 
       })
+  }.getOrElse {
+    Unauthorized(views.html.messagePage("You are not logged in!"))
+  }
 
 
   }
 
   def updatePage(): Action[AnyContent] = Action {
     implicit request =>
-    val movies = getMovies()
+      request.session.get("admin").map { user =>
+
+      val movies = getMovies()
       Ok(views.html.showEdits(movies))
 
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
   }
+
+  def deletePage(id: Int): Action[AnyContent] = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+      val movieList = getMovies()
+      Ok(views.html.deleteMoviePage(movieList, id))
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+
+  def deleteMovie(id: Int) = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        val movieList = getMovies()
+        val selector = movieList(id)
+        val futureResult = moviecollection.map(_.findAndRemove(selector))
+        Redirect(routes.MongoDBController.updatePage())
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+  def adminPage() = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        Ok(views.html.AdminControllerPage())
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+
 }

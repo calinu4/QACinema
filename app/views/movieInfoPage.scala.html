@@ -17,7 +17,9 @@
                         <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="@routes.Application.payment">
                             Then Book it!</a>
                     </h5>
-                    <h1>@movie.title</h1>
+                    <h1>@movie.title</h1>@movie.age_rating
+                    <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movie.age_rating)">
+
 
 
 
