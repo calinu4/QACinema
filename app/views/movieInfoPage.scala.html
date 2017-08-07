@@ -1,6 +1,6 @@
 @(movie: Movie)
 
-@main("Movie Info Page") {
+@main(movie.title) {
 
     <div class="row">
 
@@ -12,18 +12,23 @@
 
                 <div style="padding:2em">
                     <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/>
-                        Consesion Ticket £9.99
+                        Concession Ticket £9.99
                         <hr/>
+                        <p>Like the look of this movie?</p>
                         <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="@routes.Application.payment">
                             Then Book it!</a>
                     </h5>
-                    <h1>@movie.title</h1>@movie.age_rating
-                    <img style="max-height:35px;max-width:35px" src ="@routes.Assets.at(movie.age_rating)">
 
+                    <h1 style="color: #414141; font-size: 300%">@movie.title <img src="@routes.Assets.at("images/"+movie.age_rating.toLowerCase()+".png")" style="max-height:35px;max-width:35px" /></h1>
+                    <br/>
 
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
+                    </div>
 
+                    <hr/>
 
-                    <p>Genre: @movie.genres.split(",").map(x=>x + ",")</p>
+                    <p>Genre: @movie.genres.split(",").map(x=>x + " ")</p>
 
                     <p>director @movie.director</p>
                     <p>Cast @movie.cast</p>
@@ -42,9 +47,7 @@
                     </p>
                 </div>
             </div>
-            <div>
-                <iframe width="560" height="315" src="@movie.video" frameborder="0" allowfullscreen></iframe>
-            </div>
+
             @for(images<-movie.images.split(",")){
                 <div  href="@images">
                     <img onerror="this.src='@routes.Assets.at("images/placeholder-poster.png")'" alt="@movie.title" style="height: 300px; width: 300px;
