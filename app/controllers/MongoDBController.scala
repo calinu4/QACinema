@@ -184,10 +184,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
 
-  def ticketSelection(id:Int)=Action{
+  def ticketSelection(id:Int)=Action {
 
-   Ok(views.html.ticketselection(id)).withSession("id"->s"$id")
-
+    Ok(views.html.ticketselection(id)).withSession("id" -> s"$id")
+  }
 
 
 
