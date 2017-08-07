@@ -43,7 +43,8 @@ GET         /classifications            controllers.Application.classification
 
 GET         /showings                   controllers.MongoDBController.showingsView
 GET         /ticketselection            controllers.MongoDBController.ticketSelection(id:Int)
-GET         /seating                    controllers.MongoDBController.seating
+GET         /seating                    controllers.MongoDBController.seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int)
+GET        /userinfo               controllers.MongoDBController.userInfo(seats:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file               controllers.Assets.at(path="/public", file)
@@ -54,3 +55,4 @@ GET         /payment                    controllers.Application.payment
 GET         /session                    controllers.Application.session()
 GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
+
