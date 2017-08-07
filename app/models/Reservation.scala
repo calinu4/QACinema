@@ -9,7 +9,7 @@ case class Reservation(
                       adult:Int,
                       child:Int,
                       concession:Int,
-                      seats:List[List[Int]],
+                      seats:List[List[String]],
                       total:Int
                       )
 
