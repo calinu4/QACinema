@@ -1,0 +1,52 @@
+@(price: String,r: Reservation)(implicit session: Session)
+
+@main("Payment") {
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <div id="paypal-button"></div>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <script>
+        const receivedPrice = @price;
+            paypal.Button.render({
+                env: 'sandbox', // 'production' Or 'sandbox'
+
+                client: {
+                    sandbox: 'ATvnGWDdUAwmb357H1whr96aXMJo3pGm6dPiT2KIzb_2LXVyXl0IYXIilQgZ6cjXvU3mOvmKFRNggRjE',
+                    production: 'AeFeE_WZm8Chtixuuoy_N_01pMJyUEZPnOOq2DITmdSLgWl3TMnCPrPp9dyiu0K81k8scCJANqATqwB7'
+                },
+
+                commit: true, // Show a 'Pay Now' button
+
+                payment: function (data, actions) {
+                    return actions.payment.create({
+                        payment: {
+                            transactions: [
+                                {
+                                    amount: {total: receivedPrice, currency: 'GBP'}
+                                }
+                            ]
+                        }
+                    });
+                },
+                onAuthorize: function (data, actions) {
+                    return actions.payment.execute().then(function (payment) {
+
+
+                        window.location.replace("/");
+                    });
+                }
+            }, '#paypal-button');
+    </script>
+    <h1>Reservation Details </h1>
+    <p>Name: @r.name</p>
+    <p>Email: @r.email</p>
+    <p>Seats: @r.seats</p>
+    <p>Adult: @r.adult</p>
+    <p>Child: @r.child</p>
+    <p>Concession: @r.concession</p>
+    <p>Total: @r.total £</p>
+    <p>Movie name: @session.get("moviename").get</p>
+    <p>Date: @session.get("date").get</p>
+    <p>Time: @session.get("time").get</p>
+    <p>Room: @session.get("room").get</p>
+
+}

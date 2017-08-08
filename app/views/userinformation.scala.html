@@ -1,0 +1,29 @@
+@(s:Showing)
+
+@main("User Information") {
+  <script>
+       function  getFormData(){
+           var name=document.getElementById("name").value
+         var email=document.getElementById("email").value
+          window.location.href="/payment?name="+name+"&email="+email
+       }
+
+
+  </script>
+  <h1>Tickets</h1>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <h1>Enter user details</h1>
+
+
+        <input label="Name" type="text" id="name" name="name" />
+        <input label="Email" type="text" id="email" name="email" />
+        <button  onclick="getFormData()" >Submit</button>
+
+    </div>
+
+  </div>
+
+
+}

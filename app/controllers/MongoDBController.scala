@@ -3,6 +3,8 @@ package controllers
 import java.util.Date
 import javax.inject.Inject
 
+import play.api.cache.Cache
+import play.api.Play.current
 import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api.mvc._
@@ -107,16 +109,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  def replaceAgeRating(age: String): String = {
-    age match {
-      case "U" => "images/u.png"
-      case "PG" => "images/pg.png"
-      case "12" => "images/12.png"
-      case "12A" => "/images/12a.png"
-      case "15" => "images/15.png"
-      case _ => "images/18.png"
-    }
-  }
+  def replaceAgeRating(age: String): String = "images/"+age.toLowerCase+".png"
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
@@ -186,23 +179,44 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  //Select tickets types and quantity
-  def ticketSelection(id: Int) = Action {
-    Ok(views.html.ticketselection(id)).withSession("id" -> s"${id}")
+
+  def ticketSelection(id:Int)=Action {
+
+    Ok(views.html.ticketselection(id)).withSession("id" -> s"$id")
   }
 
 
+
   //display grid for selecting seats
-  def seating: Action[AnyContent] = Action.async {
+  def seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int): Action[AnyContent] = Action.async {implicit request=>
+    val sId=request.session.get("id").get
     val cursor: Future[Cursor[Showing]] = showings.map {
-      _.find(Json.obj())
+      _.find(Json.obj("showingId"->sId.toInt))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    seatsList.map { showing =>
+           val singleS=showing.head
+      Ok(views.html.seating(singleS,seatsNo)).withSession(request.session+("total"->total.toString)+("adult"->adult.toString)+("child"->child.toString)+
+        ("concession"->concession.toString)+("seatsNo"->seatsNo.toString)+("moviename"->singleS.movieId)+("date"->singleS.date)+("time"->singleS.time)+
+        ("room"->singleS.roomId.toString))
+    }
+  }
+
+  //get user details to complete booking
+  def userInfo(seats:String): Action[AnyContent] = Action.async {implicit request=>
+    val sId=request.session.get("id").get
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj("showingId"->sId.toInt))
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
     val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
 
-      Ok(views.html.seating(showing.head))
+      Ok(views.html.userinformation(showing.head)).withSession(request.session+("seats"->seats))
+
     }
   }
 
@@ -287,7 +301,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-        Ok(views.html.AdminControllerPage())
+        Ok(views.html.AdminControllerPage(user))
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))

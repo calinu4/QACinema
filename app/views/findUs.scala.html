@@ -1,54 +1,87 @@
 @(message: String)
 
-@main("QA Cinema") {
+    @main("QA Cinema") {
 
-
-    <div class="row">
-        <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="400" height="100" />
 
         <div class="row">
-            <div class="col-md-4">
-                <h2>Find Us</h2>
+            <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="400" height="100" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Find Us</h2>
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="map-container">
+                        <iframe width="900"
+                        height="400"
+                        frameborder="0"
+                        scrolling="no"
+                        marginheight="0"
+                        marginwidth="0"
+                        style = "border-width: 0"
+                        src="https://goo.gl/BwN3fS">
+
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="directions"><form action="http://maps.google.com/maps" method="get" target="_blank">
+                        <label for="saddr" class="dir-label">Enter Your Location for Directions</label>
+                        <input type="text" name="saddr" class="dir-input" size="16" />
+                        <input type="hidden" name="daddr" value="The Lowry, The Quays, Salford, M50 3AZ" />
+                        <input type="submit" value="Get directions" class="dir-button button" />
+                    </form>
+                    </div>
+                </div>
 
 
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="map-container">
-                <iframe width="900"
-                height="400"
-                frameborder="0"
-                scrolling="no"
-                marginheight="0"
-                marginwidth="0"
-                style = "border-width: 0"
-                src="https://goo.gl/BwN3fS">
-
-                </iframe>
+            <div class ="row">
+                <div class="col-md-4">
+                    <div class="container-fluid">
+                        <h1>via Tram</h1>
+                        <p>QA Cinemas is easily accessible via the tram.<br>
+                            Metrolink offers fast,frequent and fully accessible
+                            transport to and from Manchester city centre.<br>
+                            Take the Eccles line to <b>MediaCityUK</b> and walk across the
+                            footbridge towards the Lowry Outlet.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="container-fluid">
+                        <h1>Via Train</h1>
+                        <p>To reach QA Cinemas by train, first take the train to
+                            Manchester Piccadilly or Manchester Victoria Station, then
+                            take the tram stop nearby, then follow the instruction
+                            to get to QA Cinemas Via Tram.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="container-fluid">
+                        <h1>Via Car</h1>
+                        <p>Follow the instuctions provided by google</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="directions"><form action="http://maps.google.com/maps" method="get" target="_blank">
-                    <label for="saddr" class="dir-label">Enter Your Location for Directions</label>
-                    <input type="text" name="saddr" class="dir-input" size="16" />
-                    <input type="hidden" name="daddr" value="The Lowry, The Quays, Salford, M50 3AZ" />
-                    <input type="submit" value="Get directions" class="dir-button button" />
-                </form>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container-fluid">
+                        <h1>Via Bus</h1>
+                        <ul><b>250 Piccadilly Gardens to Trafford Centre.</b> This service stops on Wharfside Way, Trafford Park. Alight at Village Circle and walk back to Elevator Road; continue on foot to IWM North on Trafford Wharf Road.</ul>
+                        <ul><b>X50 Piccadilly Gardens to Trafford Centre.</b> This service stops on Wharfside Way, Trafford Park. Alight at Village Circle and walk back to Elevator Road; continue on foot to IWM North on Trafford Wharf Road. This service runs approximately every 15 minutes. For more information please see the Stagecoach website.</ul>
+                        <ul><b>50 from East Didsbury via the City Centre and Salford Crescent to MediaCityUK.</b> This service stops on the Salford side of The Quays by The Lowry. We are a short walk across the canal by footbridge.</ul>
+                    </div>
                 </div>
-                </div>
-
-
             </div>
 
-
-
         </div>
-    </div>
-    </div>
 
 
-}
+    }

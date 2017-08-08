@@ -1,10 +1,8 @@
-@(message: String)
+@(message: String, form: Form[ContactUs])(implicit messages: Messages)
 
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/contact.css")">
-
-
-
+    <script src="@routes.Assets.at("javascripts/contact-us.js")"></script>
 
         <div class="row">
 
@@ -61,24 +59,26 @@
                         <div class="container">
                             <div class="col-md-4">
                                 <div class="form-area">
-                                    <form role="form">
+
+                                    <form role="form" action="/contactform" method="GET" >
                                         <br style="clear:both">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                                            <input type="text" class="form-control" id="Name" name="Name" value="" placeholder="Name" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                                            <input type="text" class="form-control" id="Email" name="Email" value="" placeholder="Email" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
+                                            <input type="text" class="form-control" id="Subject" name="Subject" value="" placeholder="Subject" required>
                                         </div>
                                         <div class="form-group">
-                                            <textarea class="form-control" type="textarea" id="message" placeholder="Message" maxlength="140" rows="7"></textarea>
+                                            <textarea class="form-control" type="textarea" id="Message" name="Message" value="" placeholder="Message" maxlength="140" rows="7"></textarea>
                                             <span class="help-block"><p id="characterLeft" class="help-block ">You have reached the limit</p></span>
                                         </div>
 
-                                        <button type="button" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
+                                        <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,4 @@
         </div>
 
 
-
-
-
-}
+    }
