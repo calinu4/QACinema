@@ -29,8 +29,8 @@
                 onAuthorize: function (data, actions) {
                     return actions.payment.execute().then(function (payment) {
 
-
-                        window.location.replace("/");
+                            @session.+("paymentStatus"->"true")
+                        window.location.replace("/successPage");
                     });
                 }
             }, '#paypal-button');
