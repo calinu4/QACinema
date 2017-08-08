@@ -3,6 +3,7 @@ package controllers
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 import javax.inject.Inject
+import javax.management.relation.RelationServiceNotRegisteredException
 
 import play.api.cache.Cache
 import play.api.Play.current
@@ -20,6 +21,7 @@ import reactivemongo.play.json._
 import collection._
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
+import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
 
@@ -39,6 +41,50 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def receipts: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("receipts"))
+
+
+  def getreceipt(reservationId:String):Reservation = {
+    val cursor: Future[Cursor[Reservation]] = receipts.map {
+      _.find(Json.obj("reservationId"->reservationId))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Reservation]
+    }
+    val futureResList: Future[List[Reservation]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf).head
+  }
+
+  def getshowing(showingId:Int):Showing = {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj("showingId"->showingId))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    val futureResList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf).head
+  }
+
+  def updateShowingPage(): Action[AnyContent] = Action.async {
+    implicit request =>
+      val showingId=request.session.get("id").get
+      val receiptId=request.session.get("reservationId").get
+      val receipt=getreceipt(receiptId)
+      val seats=receipt.seats
+      val seatsNo=request.session.get("seatsNo").get.toInt
+      val showing=getshowing(showingId.toInt)
+      for(i<-seats){
+        showing.seats(i.head.toInt)(i.last.toInt)=1
+      }
+      showing.seatsAvailable-=seatsNo
+
+      val selector = BSONDocument("showingId" -> showingId.toInt) // looking for the record based on some field
+
+    val futureResult = showings.map(_.findAndUpdate(selector,showing))
+      futureResult.map(_=> Ok("Updated Showing"))
+
+  }
+
+
+
 
 
   def dateParse(date: String): Date = {
@@ -339,6 +385,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 //    def success() : Action[AnyContent]{
 //      Ok(views.html.successPage())
 //    }
+
+
 
 
 

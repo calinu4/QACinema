@@ -1,6 +1,6 @@
 package models
 
-import scala.collection.mutable.MutableList
+import scala.collection.mutable.ArraySeq
 
 
 case class Showing(
@@ -10,7 +10,7 @@ case class Showing(
                   date:String,
                   time:String,
                   var seatsAvailable:Int,
-                  var seats:List[List[Int]]
+                  var seats:Array[Array[Int]]
                   )
 
 

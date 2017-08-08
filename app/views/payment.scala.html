@@ -30,7 +30,8 @@
                     return actions.payment.execute().then(function (payment) {
 
                             @session.+("paymentStatus"->"true")
-                        window.location.replace("/successPage");
+                        window.location.replace("/success");
+
                     });
                 }
             }, '#paypal-button');
