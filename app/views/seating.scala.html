@@ -1,21 +1,25 @@
-@(s: Showing,seatsNo:Int)(implicit session: Session)
+@(s: Showing, seatsNo: Int)(implicit session: Session)
 
 @main("Seating Plan") {
     <script>
-        var selectedSeats=0
-        var availability=@s.seatsAvailable
-        var seats =[[]]
-        window.onload = function() {
-            if (@seatsNo>availability){
-                alert("Select less than " + availability + " seats!")
-                history.go(-1)
+            var selectedSeats = 0
+            var availability =
+            @s.seatsAvailable
+            var seats = [[]]
+            window.onload = function () {
+                if (@seatsNo>
+                availability
+                )
+                {
+                    alert("Select less than " + availability + " seats!")
+                    history.go(-1)
+                }
             }
-        }
 
             function changeImage(id, src) {
 
                 if (src.indexOf("your-choice") !== -1) {
-                    if(selectedSeats<@seatsNo) {
+                    if (selectedSeats <@seatsNo) {
                         document.getElementById(id).src = "@routes.Assets.at("images/choosen-person.png")"
                         selectSeat(id)
                     }
@@ -30,29 +34,33 @@
             }
             function selectSeat(id) {
 
-            seats.push(id)
+                seats.push(id)
 
-            selectedSeats++
+                selectedSeats++
                 var p = document.createElement("p")
                 p.id = "p" + id
                 p.innerHTML = "Seat: [" + id.toString() + "]"
                 document.getElementById("selectedseats").appendChild(p)
             }
             function unselectSeat(id) {
-            var ids=id.split(" ")
-                seats.splice(seats.indexOf(ids),1)
+                var ids = id.split(" ")
+                seats.splice(seats.indexOf(ids), 1)
 
-            selectedSeats--
+                selectedSeats--
                 var elem = document.getElementById(id);
                 elem.parentNode.removeChild(elem)
             }
 
-            function submitSeats(){
-            window.location.href="/userinfo?seats="+seats
+            function submitSeats() {
+                if (selectedSeats == @seatsNo)
+                    window.location.href = "/userinfo?seats=" + seats
+                else
+                    alert("Select all seats for your reservation")
             }
 
     </script>
-    <h1>Seating Plan </h1><br>
+    <h1>Seating Plan </h1>
+    <br>
     <button id="seats" onclick="submitSeats()">Submit Seats</button>
     <div class="row">
 
