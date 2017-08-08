@@ -1124,8 +1124,9 @@ img {
 .thumbnail a > img,
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
+  padding-top: 10px;
   display: block;
-  object-fit: none;
+  object-fit: fill;
   object-position: 50% 40%;
   width: 100%;
   max-height: 500px;
@@ -1138,7 +1139,7 @@ img {
   display: inline-block;
   max-width: 100%;
   height: auto;
-  padding: 4px;
+  padding: px;
   line-height: 1.42857143;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -1150,6 +1151,7 @@ img {
 .img-circle {
   border-radius: 50%;
 }
+
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
