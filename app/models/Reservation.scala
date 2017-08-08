@@ -14,7 +14,7 @@ case class Reservation(
                       date:String,
                       time:String,
                       room:String,
-                      paid:Boolean
+                      var paid:Boolean
                       )
 
 
