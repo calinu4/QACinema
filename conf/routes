@@ -41,9 +41,9 @@ GET         /classifications            controllers.Application.classification
 
 #Seating and booking pages
 
-GET         /showings                   controllers.MongoDBController.showingsView
-GET         /ticketselection            controllers.MongoDBController.ticketSelection(id:Int)
-GET         /seating                    controllers.MongoDBController.seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int)
+GET        /showings               controllers.MongoDBController.showingsView
+GET        /ticketselection        controllers.MongoDBController.ticketSelection(id:Int)
+GET        /seating                controllers.MongoDBController.seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int)
 GET        /userinfo                    controllers.MongoDBController.userInfo(seats:String)
 
 GET        /contactform            controllers.MailController.getFormContent
