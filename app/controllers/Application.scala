@@ -1,5 +1,8 @@
 package controllers
 
+import models.ContactUs
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api._
 import play.api.mvc._
 import java.io._
@@ -9,7 +12,7 @@ class Application extends Controller {
 
 
   def contact = Action {
-    Ok(views.html.contact("Contact"))
+    Ok(views.html.contact("Contact Us",ContactUs.createContactForm))
   }
 
   def classification = Action {
@@ -50,15 +53,15 @@ class Application extends Controller {
     }
   }
 
-  def payment = Action {
-    //the price in there that you want the checkout button to have
-    Ok(views.html.payment("2.50"))
-  }
+//  def payment = Action {
+//    //the price in there that you want the checkout button to have
+//    Ok(views.html.payment("2.50"))
+//  }
 
   //You should only get here if payment is successful and only...
-  def successPage = Action{
-    Ok(views.html.payment("2"))
-    //Ok(views.html.successPage(showing)(reservation))
-  }
+//  def successPage = Action{
+//    Ok(views.html.payment("2"))
+//    //Ok(views.html.successPage(showing)(reservation))
+//  }
 
 }
