@@ -80,9 +80,15 @@ class ApplicationSpec extends Specification {
       contentAsString(badrequest) must contain("does not exist.")
     }
 
-    "check if admin seesion" in new WithApplication {
-      val adminSession = route(FakeRequest(GET, "/sessionIn")).get
-      session(adminSession) must equalTo("admin")
+    "check if session exists for admin" in new WithApplication{
+      val testRequest = route(FakeRequest(GET,"/sessionIn")).get
+      session(testRequest).get("admin") must equalTo(Some("admin"))
     }
+
+    "lose session" in new WithApplication{
+      val testRequest = route(FakeRequest(GET,"sessionOut").withSession("admin" -> "admin")).get
+      session(testRequest).get("admin") must equalTo(None)
+    }
+
   }
 }
