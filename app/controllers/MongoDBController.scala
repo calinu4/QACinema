@@ -109,11 +109,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  def replaceAgeRating(age: String): String = {
-    age match {
-      case _ => "images/"+age.toLowerCase+".png"
-    }
-  }
+  def replaceAgeRating(age: String): String = "images/"+age.toLowerCase+".png"
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
