@@ -1,6 +1,6 @@
 package models
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.MutableList
 
 
 case class Showing(
@@ -10,8 +10,7 @@ case class Showing(
                   date:String,
                   time:String,
                   var seatsAvailable:Int,
-                  seats:ArrayBuffer[ArrayBuffer[Int]],
-                  reservations:ListBuffer[Reservation]
+                  var seats:List[List[Int]]
                   )
 
 

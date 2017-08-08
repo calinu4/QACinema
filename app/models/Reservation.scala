@@ -1,16 +1,20 @@
 package models
 
-/**
-  * Created by Administrator on 03/08/2017.
-  */
+
 case class Reservation(
+                      reservationId:String,
                       name:String,
                       email:String,
                       adult:Int,
                       child:Int,
                       concession:Int,
-                      seats:List[List[Int]],
-                      total:Int
+                      seats:List[List[String]],
+                      total:Int,
+                      movie:String,
+                      date:String,
+                      time:String,
+                      room:String,
+                      paid:Boolean
                       )
 
 

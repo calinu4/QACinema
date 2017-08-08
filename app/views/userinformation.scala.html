@@ -3,9 +3,9 @@
 @main("User Information") {
   <script>
        function  getFormData(){
-           var name=document.getElementById("name")
-         var email=document.getElementById("email")
-
+           var name=document.getElementById("name").value
+         var email=document.getElementById("email").value
+          window.location.href="/payment?name="+name+"&email="+email
        }
 
 
