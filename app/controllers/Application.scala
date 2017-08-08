@@ -1,21 +1,15 @@
 package controllers
 
-import models.ContactUs
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import play.api._
 import play.api.mvc._
 import java.io._
-
-import models.Reservation
 
 class Application extends Controller {
 
 
 
   def contact = Action {
-    implicit request =>
-    Ok(views.html.contact("Contact", ContactUs.createContactForm))
+    Ok(views.html.contact("Contact"))
   }
 
   def classification = Action {
@@ -40,7 +34,6 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
-
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }
@@ -57,22 +50,15 @@ class Application extends Controller {
     }
   }
 
-  def payment(name:String,email:String) = Action {implicit request=>
-    val total=request.session.get("total").get.toInt
-    val adult=request.session.get("adult").get.toInt
-    val child=request.session.get("child").get.toInt
-    val concession=request.session.get("concession").get.toInt
-    val seats=request.session.get("seats").get
-    val newseats=seats.split(',').toList.map(elem=>elem.split(' ').toList)
-
-    val reservation=Reservation(name,email,adult,child,concession,newseats,total)
-
+  def payment = Action {
     //the price in there that you want the checkout button to have
-    Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email))
+    Ok(views.html.payment("2.50"))
   }
 
-//  You should only get here if payment is successful and only...
-//  def successPage = Action{
-//    Ok(views.html.successPage(showing)(reservation))
-//  }
+  //You should only get here if payment is successful and only...
+  def successPage = Action{
+    Ok(views.html.payment("2"))
+    //Ok(views.html.successPage(showing)(reservation))
+  }
+
 }
