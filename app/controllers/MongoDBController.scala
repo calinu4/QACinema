@@ -197,9 +197,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
     var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
-
-      Ok(views.html.seating(showing.head,seatsNo)).withSession(request.session+("total"->total.toString)+("adult"->adult.toString)+("child"->child.toString)+
-        ("concession"->concession.toString)+("seatsNo"->seatsNo.toString))
+           val singleS=showing.head
+      Ok(views.html.seating(singleS,seatsNo)).withSession(request.session+("total"->total.toString)+("adult"->adult.toString)+("child"->child.toString)+
+        ("concession"->concession.toString)+("seatsNo"->seatsNo.toString)+("moviename"->singleS.movieId)+("date"->singleS.date)+("time"->singleS.time)+
+        ("room"->singleS.roomId.toString))
     }
   }
 

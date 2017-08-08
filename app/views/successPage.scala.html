@@ -1,0 +1,19 @@
+@(showing: Showing)(reservation: Reservation)
+@main("Booking Successful") {
+    <div class="alert alert-success" role="alert">
+        <strong>Payment Successful!</strong> You have successfully booked the following tickets
+        <h4> Your Details are:</h4>
+        <div class="thumbnail">
+            <p>Name: @reservation.name</p>
+            <p>Email: @reservation.email</p>
+            <p>Adult Tickets: @reservation.adult</p>
+            <p>Child Tickets: @reservation.child</p>
+            <p>Concession Tickets: @reservation.concession</p>
+            <p>Booked the Following: /////Tickets////////</p>
+            <p>Making it the total of: @reservation.total tickets</p>
+        </div>
+    </div>
+}
+
+
+

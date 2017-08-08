@@ -29,8 +29,8 @@
 
             }
             function selectSeat(id) {
-            var ids=id.split(" ")
-            seats.push(ids)
+
+            seats.push(id)
 
             selectedSeats++
                 var p = document.createElement("p")
@@ -48,7 +48,7 @@
             }
 
             function submitSeats(){
-            window.location.href="/userinfo?seats="+seats.toString
+            window.location.href="/userinfo?seats="+seats
             }
 
     </script>
