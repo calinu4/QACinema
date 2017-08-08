@@ -29,7 +29,7 @@
                 onAuthorize: function (data, actions) {
                     return actions.payment.execute().then(function (payment) {
 
-                        window.location.replace("http://localhost:9000");
+                        window.location.replace("/success");
                     });
                 }
             }, '#paypal-button');

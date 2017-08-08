@@ -50,7 +50,7 @@ GET        /userinfo                    controllers.MongoDBController.userInfo(s
 GET         /assets/*file               controllers.Assets.at(path="/public", file)
 
 GET         /payment                    controllers.MongoDBController.payment(name:String,email:String)
-
+GET         /success                    controllers.MongoDBController.updateShowingPage()
 # Sessions
 GET         /session                    controllers.Application.session()
 GET         /sessionIn                  controllers.Application.sessionIn()
