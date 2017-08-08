@@ -1,8 +1,10 @@
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-
+import org.scalatest.FunSuite
+import org.scalatest.BeforeAndAfter
 import play.api.test._
+import controllers._
 import play.api.test.Helpers._
 
 /**
@@ -10,7 +12,7 @@ import play.api.test.Helpers._
  * An integration test will fire up a whole play application in a real (or headless) browser
  */
 @RunWith(classOf[JUnitRunner])
-class IntegrationSpec extends Specification {
+class IntegrationSpec extends Specification                                                                                                                                                                                                                                                                                                                 {
 
   "Application" should {
 
@@ -21,4 +23,5 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("Your new application is ready.")
     }
   }
+
 }
