@@ -58,8 +58,4 @@ class Application extends Controller {
 
 
 
-//  You should only get here if payment is successful and only...
-//  def successPage = Action{
-//    Ok(views.html.successPage(showing)(reservation))
-//  }
 }
