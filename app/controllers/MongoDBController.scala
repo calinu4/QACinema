@@ -1,10 +1,12 @@
 package controllers
 
-import java.util.Date
+import java.sql.Timestamp
+import java.util.{Calendar, Date}
 import javax.inject.Inject
 
 import play.api.cache.Cache
 import play.api.Play.current
+
 import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api.mvc._
@@ -31,10 +33,13 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
     _.collection[JSONCollection]("testMovie"))
 
-  //    _.collection[JSONCollection]("movies"))
 
   def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
+
+  def receipts: Future[JSONCollection] = database.map(
+    _.collection[JSONCollection]("receipts"))
+
 
   def dateParse(date: String): Date = {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
@@ -307,6 +312,30 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
+
+
+  //before payment
+  def payment(name:String,email:String): Action[AnyContent] = Action.async {implicit request=>
+    val total=request.session.get("total").get.toInt
+    val adult=request.session.get("adult").get.toInt
+    val child=request.session.get("child").get.toInt
+    val concession=request.session.get("concession").get.toInt
+    val seats=request.session.get("seats").get
+    val newseats=seats.split(',').toList.map(elem=>elem.split(' ').toList).tail
+    val moviename=request.session.get("moviename").get
+    val date=request.session.get("date").get
+    val time=request.session.get("time").get
+    val room=request.session.get("room").get
+    val currentTimestamp = new Timestamp(Calendar.getInstance.getTime.getTime).toString
+
+    val reservation=new Reservation(currentTimestamp,name,email,adult,child,concession,newseats,total,moviename,date,time,room,false)
+    val futureResult = receipts.flatMap(_.insert(reservation))
+    futureResult.map(_ =>
+    //the price in there that you want the checkout button to have
+    Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email)+("reservationId"->currentTimestamp))
+    )
+  }
+
 
 
 }
