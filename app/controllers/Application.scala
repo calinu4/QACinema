@@ -40,6 +40,7 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }
@@ -70,8 +71,8 @@ class Application extends Controller {
     Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email))
   }
 
-  //You should only get here if payment is successful and only...
-  def successPage = Action{
-    Ok(views.html.successPage(showing)(reservation))
-  }
+//  You should only get here if payment is successful and only...
+//  def successPage = Action{
+//    Ok(views.html.successPage(showing)(reservation))
+//  }
 }

@@ -58,4 +58,4 @@ GET         /session                    controllers.Application.session()
 GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
-GET         /successPage                        controllers.Application.successPage
+#GET         /successPage                        controllers.Application.successPage
