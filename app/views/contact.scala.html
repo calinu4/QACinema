@@ -1,10 +1,8 @@
-@(message: String)
+@(message: String, form: Form[ContactUs])(implicit messages: Messages)
 
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/contact.css")">
-
-
-
+    <script src="@routes.Assets.at("javascripts/contact-us.js")"></script>
 
         <div class="row">
 
@@ -20,7 +18,9 @@
                     <h2>About us</h2>
 
                     <p>QACinema is an independent Cinema located in Manchester, UK. Our Cinema is within the Lowry Outlet in Salford Quays.  </p>
-                    <p>Lorem ipsum dolor sit amet, ei has velit timeam tractatos. Ea labores menandri oportere qui, te cum illum integre. Duo ei mazim evertitur, sed wisi indoctum ut. At per iisque efficiendi philosophia. Quo et tale meis electram, impetus appellantur quo ea. Ad viris nonumy argumentum sea, ea per liber postulant philosophia. Qui ei meis saperet mandamus.</p>
+                    <p>QACinema started as a small cinema in the 1990s, consistently providing our customer, the latest and greatest
+                        movies. Our cinema boast the best screens in a million centimeters, with complimentary toilet
+                        access with every screen, QA Cimema takes the Cinema experience to the next stage.</p>
                     <br>
 
                 </div>
@@ -61,24 +61,26 @@
                         <div class="container">
                             <div class="col-md-4">
                                 <div class="form-area">
-                                    <form role="form">
+
+                                    <form role="form" action="/contactform" method="GET" >
                                         <br style="clear:both">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                                            <input type="text" class="form-control" id="Name" name="Name" value="" placeholder="Name" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                                            <input type="text" class="form-control" id="Email" name="Email" value="" placeholder="Email" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
+                                            <input type="text" class="form-control" id="Subject" name="Subject" value="" placeholder="Subject" required>
                                         </div>
                                         <div class="form-group">
-                                            <textarea class="form-control" type="textarea" id="message" placeholder="Message" maxlength="140" rows="7"></textarea>
+                                            <textarea class="form-control" type="textarea" id="Message" name="Message" value="" placeholder="Message" maxlength="140" rows="7"></textarea>
                                             <span class="help-block"><p id="characterLeft" class="help-block ">You have reached the limit</p></span>
                                         </div>
 
-                                        <button type="button" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
+                                        <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -96,7 +98,4 @@
         </div>
 
 
-
-
-
-}
+    }

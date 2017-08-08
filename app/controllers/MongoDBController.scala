@@ -160,11 +160,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  def replaceAgeRating(age: String): String = {
-    age match {
-      case _ => "images/"+age.toLowerCase+".png"
-    }
-  }
+  def replaceAgeRating(age: String): String = "images/"+age.toLowerCase+".png"
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
@@ -356,7 +352,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-        Ok(views.html.AdminControllerPage())
+        Ok(views.html.AdminControllerPage(user))
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
@@ -385,6 +381,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email)+("reservationId"->currentTimestamp))
     )
   }
+
+//    def success() : Action[AnyContent]{
+//      Ok(views.html.successPage())
+//    }
 
 
 
