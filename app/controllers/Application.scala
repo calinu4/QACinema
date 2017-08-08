@@ -37,6 +37,12 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+
+  def screenInformation = Action {
+    Ok(views.html.screenInformation("Screen Information"))
+  }
+
+
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }

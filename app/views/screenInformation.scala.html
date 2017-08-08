@@ -1,10 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+@(message: String)
+
+@main("QA Cinema") {
+
+
+    <div class="row">
+        <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="400" height="100" />
+
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Screen Information </h2>
+            </div>
+        </div>
+
+
+        <div class="container-fluid">
+
+            <div class="col-sm-4 col-md-4 col-lg-6 col-xl-6">
+                <h4>
+                    <ul>Screen 1<ul><br> Is our deluxe iMax experience <br> all of the latest movies in mind blowing 3D!</ul></ul>
+                </h4>
+
+            </div>
+
+
+
+
+                <div class="pull-right col-sm-8 col-md-8 col-lg-6 col-xl-6">
+
+                    <td style="width: 100%; height: 200px;">
+                        <img src="https://itpworld.files.wordpress.com/2015/12/empty-cinema-and-white-screen.jpg" style="width: 100%; height: 100%; padding-bottom: 10px;"
+                    </td>
+
+                </div>
+        </div>
+
+            <div class="container-fluid">
+
+                <div class="col-sm-4 col-md-4 col-lg-6 col-xl-6">
+                    <h4>
+                        <ul>Screen 2<ul><br> Is our classic hi-def movie experience!</ul></ul>
+                    </h4>
+
+                </div>
+
+
+                <div class="pull-right col-sm-8 col-md-8 col-lg-6 col-xl-6">
+
+                    <td style="width: 100%; height: 200px;">
+                        <img src="https://www.phoenix.org.uk/content/uploads/2014/08/cinema-2.jpg" style="width: 100%; height: 100%; padding-top: 10px;"
+                    </td>
+
+                </div>
+
+
+            </div>
+            </div>
+
+}
+
