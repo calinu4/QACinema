@@ -60,4 +60,5 @@ class Application extends Controller {
     Ok(views.html.payment("2"))
     //Ok(views.html.successPage(showing)(reservation))
   }
+
 }

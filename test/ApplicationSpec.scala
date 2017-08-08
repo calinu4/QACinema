@@ -90,7 +90,5 @@ class ApplicationSpec extends Specification {
       session(testRequest).get("admin") must equalTo(None)
     }
 
-
-
   }
 }
