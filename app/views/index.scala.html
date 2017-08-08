@@ -61,7 +61,7 @@
         </div>
 
         <div class="row">
-            <h2>Now Showing</h2>
+            <h2>Now Showing <a href="@routes.MongoDBController.listMovies()" style="font-size: 75%">View All</a></h2>
             <br>
             <div class = "col-md-12">
             @for(m <- moviesCurrent) {
@@ -84,7 +84,7 @@
         </div>
 
         <div class="row">
-            <h2>Showing Soon</h2>
+            <h2>Showing Soon <a href="@routes.MongoDBController.upcomingMovies" style="font-size: 75%">View All</a></h2>
             <br>
             <div class = "col-md-12">
             @for(m <- moviesU) {
