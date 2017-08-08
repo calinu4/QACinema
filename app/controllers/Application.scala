@@ -34,6 +34,13 @@ class Application extends Controller {
     Ok(views.html.findUs("Find Us"))
   }
 
+<<<<<<< Updated upstream
+=======
+  def screenInformation = Action {
+    Ok(views.html.screenInformation("Screen Information"))
+  }
+
+>>>>>>> Stashed changes
   def sessionIn() = Action {
     Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
   }
