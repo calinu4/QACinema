@@ -7,14 +7,12 @@ import play.api._
 import play.api.mvc._
 import java.io._
 
-
 class Application extends Controller {
 
 
 
   def contact = Action {
-    implicit request =>
-    Ok(views.html.contact("Contact", ContactUs.createContactForm))
+    Ok(views.html.contact("Contact Us",ContactUs.createContactForm))
   }
 
   def classification = Action {
@@ -40,8 +38,17 @@ class Application extends Controller {
   }
 
 
-  def sessionIn() = Action {
-    Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+  def screenInformation = Action {
+    Ok(views.html.screenInformation("Screen Information"))
+  }
+
+
+  def sessionIn() = Action {implicit request =>
+    request.session.get("admin").map { user =>
+      Ok(views.html.AdminControllerPage("Admin Page"))
+    }.getOrElse {
+      Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+    }
   }
 
   def sessionOut() = Action {
@@ -56,10 +63,15 @@ class Application extends Controller {
     }
   }
 
-
-
-//  You should only get here if payment is successful and only...
-//  def successPage = Action{
-//    Ok(views.html.successPage(showing)(reservation))
+//  def payment = Action {
+//    //the price in there that you want the checkout button to have
+//    Ok(views.html.payment("2.50"))
 //  }
+
+  //You should only get here if payment is successful and only...
+//  def successPage = Action{
+//    Ok(views.html.payment("2"))
+//    //Ok(views.html.successPage(showing)(reservation))
+//  }
+
 }

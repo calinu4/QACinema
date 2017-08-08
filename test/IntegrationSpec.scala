@@ -6,6 +6,11 @@ import org.scalatest.selenium.WebBrowser
 import org.scalatest.time.{Seconds, Span}
 import org.specs2.matcher.ShouldMatchers
 import org.specs2.runner._
+import org.scalatest.FunSuite
+import org.scalatest.BeforeAndAfter
+import play.api.test._
+import controllers._
+import play.api.test.Helpers._
 
 /**
   * add your integration spec here.
@@ -18,7 +23,7 @@ class IntegrationSpec extends FlatSpec with Matchers with WebBrowser {
 
   val host = "http://localhost:9000/"
 
-  "The website navigation" should "navigate through booking to the seat selection page" in {
+      "The website navigation" should "navigate through booking to the seat selection page" in {
     go to (host + "showings")
     click on cssSelector("#\\31 ")
     singleSel("adult").value = "2"
@@ -31,9 +36,9 @@ class IntegrationSpec extends FlatSpec with Matchers with WebBrowser {
   }
 
   "The seat selection" should "throw an error when too many seats are selected" in {
-    go to (host + "http://localhost:9000/seating?total=30&adult=2&child=0&concession=0&seatsNo=2")
+    go to (host +"http://localhost:9000/seating?total=30&adult=2&child=0&concession=0&seatsNo=2")
 
-    click on id("4 1")
+      click on id("4 1")
   }
 
 
@@ -52,4 +57,5 @@ class IntegrationSpec extends FlatSpec with Matchers with WebBrowser {
     println(currentUrl)
     pageTitle shouldEqual "Manchester Victoria to The Lowry - Google Maps"
   }
+
 }

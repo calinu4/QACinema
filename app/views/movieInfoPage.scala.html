@@ -30,7 +30,7 @@
 
                         <hr/>
 
-                        <p>Genre: @movie.genres.split(",").map(x => x + " ")</p>
+                        <p>Genre: @movie.genres.split(",").map(x => x + " ").mkString(",")</p>
 
                         <p>director @movie.director</p>
                         <p>Cast @movie.cast</p>

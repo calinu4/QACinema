@@ -10,11 +10,11 @@ GET         /bookingConfirmation        controllers.Receipt.bookingConfirmation
 GET         /receipt                    controllers.Receipt.receipt
 GET         /movieinfo                  controllers.MongoDBController.movieInfo(id:Int)
 GET         /contact                    controllers.Application.contact
-
 GET         /admin                      controllers.MongoDBController.adminPage()
 
 GET         /localStuff                 controllers.Application.localStuff
 GET         /findUs                     controllers.Application.findUs
+GET         /screenInformation          controllers.Application.screenInformation
 
 GET         /updateMovie/:id            controllers.MongoDBController.updateMoviePage(id:Int)
 POST        /updateMovie/:id            controllers.MongoDBController.updateMovie(id:Int)
@@ -32,8 +32,8 @@ GET         /listings/upcoming          controllers.MongoDBController.upcomingMo
 GET         /listings/:gen              controllers.MongoDBController.filterMovies(gen: String)
 
 
-GET         /addMovie           controllers.MongoDBController.seeAddMovie
-POST        /addMovie            controllers.MongoDBController.addMovie()
+GET         /addMovie                   controllers.MongoDBController.seeAddMovie
+POST        /addMovie                   controllers.MongoDBController.addMovie()
 
 GET         /classifications            controllers.Application.classification
 
@@ -42,14 +42,16 @@ GET         /classifications            controllers.Application.classification
 GET         /showings                   controllers.MongoDBController.showingsView
 GET         /ticketselection            controllers.MongoDBController.ticketSelection(id:Int)
 GET         /seating                    controllers.MongoDBController.seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int)
-GET        /userinfo                    controllers.MongoDBController.userInfo(seats:String)
+GET         /userinfo                   controllers.MongoDBController.userInfo(seats:String)
 
-GET        /contactform            controllers.MailController.getFormContent
+GET         /contactform                controllers.MailController.getFormContent
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file               controllers.Assets.at(path="/public", file)
 
 GET         /payment                    controllers.MongoDBController.payment(name:String,email:String)
+
+GET         /success                    controllers.MongoDBController.updateShowingPage()
 
 # Sessions
 GET         /session                    controllers.Application.session()

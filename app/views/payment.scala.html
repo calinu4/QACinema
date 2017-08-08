@@ -29,8 +29,8 @@
                 onAuthorize: function (data, actions) {
                     return actions.payment.execute().then(function (payment) {
 
+                        window.location.replace("/success");
 
-                        window.location.replace("/");
                     });
                 }
             }, '#paypal-button');
@@ -39,7 +39,7 @@
     <p>Reservation ID: @r.reservationId</p>
     <p>Name: @r.name</p>
     <p>Email: @r.email</p>
-    <p>Seats:@r.seats.mkString(",")</p>
+    <p>Seats:@r.seats.map(elem=>elem.mkString).mkString(", ")</p>
     <p>Adult: @r.adult</p>
     <p>Child: @r.child</p>
     <p>Concession: @r.concession</p>

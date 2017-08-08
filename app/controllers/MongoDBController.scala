@@ -3,6 +3,7 @@ package controllers
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 import javax.inject.Inject
+import javax.management.relation.RelationServiceNotRegisteredException
 
 import play.api.cache.Cache
 import play.api.Play.current
@@ -20,6 +21,7 @@ import reactivemongo.play.json._
 import collection._
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
+import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
 
@@ -39,6 +41,48 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def receipts: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("receipts"))
+
+
+  def getreceipt(reservationId: String): Reservation = {
+    val cursor: Future[Cursor[Reservation]] = receipts.map {
+      _.find(Json.obj("reservationId" -> reservationId))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Reservation]
+    }
+    val futureResList: Future[List[Reservation]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf).head
+  }
+
+  def getshowing(showingId: Int): Showing = {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj("showingId" -> showingId))
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    val futureResList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf).head
+  }
+
+  def updateShowingPage(): Action[AnyContent] = Action.async {
+    implicit request =>
+      val showingId = request.session.get("id").get
+      val receiptId = request.session.get("reservationId").get
+      val receipt = getreceipt(receiptId)
+      val seats = receipt.seats
+      val seatsNo = request.session.get("seatsNo").get.toInt
+      val showing = getshowing(showingId.toInt)
+      for (i <- seats) {
+        showing.seats(i.head.toInt)(i.last.toInt) = 1
+      }
+      showing.seatsAvailable -= seatsNo
+      receipt.paid=true
+      val selector = BSONDocument("showingId" -> showingId.toInt) // looking for the record based on some field
+      val selector1 = BSONDocument("reservationId" -> receiptId)
+      val futureResult = showings.map(_.findAndUpdate(selector, showing))
+      futureResult.map(_ => Ok(views.html.successPage(receipt)))
+      val futureResultTwo = receipts.map(_.findAndUpdate(selector1, receipt))
+      futureResultTwo.map(_ => Ok(views.html.successPage(receipt)))
+  }
 
 
   def dateParse(date: String): Date = {
@@ -114,7 +158,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-  def replaceAgeRating(age: String): String = "images/"+age.toLowerCase+".png"
+  def replaceAgeRating(age: String): String = "images/" + age.toLowerCase + ".png"
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
@@ -150,19 +194,19 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-    val formValidationResult = Movie.createMovie.bindFromRequest
-    formValidationResult.fold({
-      errors =>
-        println(formValidationResult)
+        val formValidationResult = Movie.createMovie.bindFromRequest
+        formValidationResult.fold({
+          errors =>
+            println(formValidationResult)
 
-        BadRequest(views.html.addMovie(errors))
+            BadRequest(views.html.addMovie(errors))
 
-    }, { movie =>
-      val futureResult = moviecollection.flatMap(_.insert(movie))
+        }, { movie =>
+          val futureResult = moviecollection.flatMap(_.insert(movie))
 
-      futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
-      Redirect(routes.MongoDBController.listMovies())
-    })
+          futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
+          Redirect(routes.MongoDBController.listMovies())
+        })
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
@@ -185,42 +229,41 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
 
-  def ticketSelection(id:Int)=Action {
+  def ticketSelection(id: Int) = Action {
 
     Ok(views.html.ticketselection(id)).withSession("id" -> s"$id")
   }
 
 
-
   //display grid for selecting seats
-  def seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int): Action[AnyContent] = Action.async {implicit request=>
-    val sId=request.session.get("id").get
+  def seating(total: Int, adult: Int, child: Int, concession: Int, seatsNo: Int): Action[AnyContent] = Action.async { implicit request =>
+    val sId = request.session.get("id").get
     val cursor: Future[Cursor[Showing]] = showings.map {
-      _.find(Json.obj("showingId"->sId.toInt))
+      _.find(Json.obj("showingId" -> sId.toInt))
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
     var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
-           val singleS=showing.head
-      Ok(views.html.seating(singleS,seatsNo)).withSession(request.session+("total"->total.toString)+("adult"->adult.toString)+("child"->child.toString)+
-        ("concession"->concession.toString)+("seatsNo"->seatsNo.toString)+("moviename"->singleS.movieId)+("date"->singleS.date)+("time"->singleS.time)+
-        ("room"->singleS.roomId.toString))
+      val singleS = showing.head
+      Ok(views.html.seating(singleS, seatsNo)).withSession(request.session + ("total" -> total.toString) + ("adult" -> adult.toString) + ("child" -> child.toString) +
+        ("concession" -> concession.toString) + ("seatsNo" -> seatsNo.toString) + ("moviename" -> singleS.movieId) + ("date" -> singleS.date) + ("time" -> singleS.time) +
+        ("room" -> singleS.roomId.toString))
     }
   }
 
   //get user details to complete booking
-  def userInfo(seats:String): Action[AnyContent] = Action.async {implicit request=>
-    val sId=request.session.get("id").get
+  def userInfo(seats: String): Action[AnyContent] = Action.async { implicit request =>
+    val sId = request.session.get("id").get
     val cursor: Future[Cursor[Showing]] = showings.map {
-      _.find(Json.obj("showingId"->sId.toInt))
+      _.find(Json.obj("showingId" -> sId.toInt))
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
     val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
 
-      Ok(views.html.userinformation(showing.head)).withSession(request.session+("seats"->seats))
+      Ok(views.html.userinformation(showing.head)).withSession(request.session + ("seats" -> seats))
 
     }
   }
@@ -245,20 +288,20 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-      val formValidationResult = Movie.createMovie.bindFromRequest
-      formValidationResult.fold({ errors =>
-        BadRequest(views.html.listings(getMovies()))
-      }, { movies =>
-        val movieList = getMovies()
-        val selector = movieList(id)
-        val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
-        futureResult.map(_ => Ok("Added user " + movies.title))
-        Redirect(routes.MongoDBController.listMovies())
+        val formValidationResult = Movie.createMovie.bindFromRequest
+        formValidationResult.fold({ errors =>
+          BadRequest(views.html.listings(getMovies()))
+        }, { movies =>
+          val movieList = getMovies()
+          val selector = movieList(id)
+          val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+          futureResult.map(_ => Ok("Added user " + movies.title))
+          Redirect(routes.MongoDBController.listMovies())
 
-      })
-  }.getOrElse {
-    Unauthorized(views.html.messagePage("You are not logged in!"))
-  }
+        })
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
 
 
   }
@@ -267,8 +310,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-      val movies = getMovies()
-      Ok(views.html.showEdits(movies))
+        val movies = getMovies()
+        Ok(views.html.showEdits(movies))
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
@@ -279,8 +322,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       request.session.get("admin").map { user =>
 
-      val movieList = getMovies()
-      Ok(views.html.deleteMoviePage(movieList, id))
+        val movieList = getMovies()
+        Ok(views.html.deleteMoviePage(movieList, id))
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
@@ -315,27 +358,30 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //before payment
-  def payment(name:String,email:String): Action[AnyContent] = Action.async {implicit request=>
-    val total=request.session.get("total").get.toInt
-    val adult=request.session.get("adult").get.toInt
-    val child=request.session.get("child").get.toInt
-    val concession=request.session.get("concession").get.toInt
-    val seats=request.session.get("seats").get
-    val newseats=seats.split(',').toList.map(elem=>elem.split(' ').toList).tail
-    val moviename=request.session.get("moviename").get
-    val date=request.session.get("date").get
-    val time=request.session.get("time").get
-    val room=request.session.get("room").get
+  def payment(name: String, email: String): Action[AnyContent] = Action.async { implicit request =>
+    val total = request.session.get("total").get.toInt
+    val adult = request.session.get("adult").get.toInt
+    val child = request.session.get("child").get.toInt
+    val concession = request.session.get("concession").get.toInt
+    val seats = request.session.get("seats").get
+    val newseats = seats.split(',').toList.map(elem => elem.split(' ').toList).tail
+    val moviename = request.session.get("moviename").get
+    val date = request.session.get("date").get
+    val time = request.session.get("time").get
+    val room = request.session.get("room").get
     val currentTimestamp = new Timestamp(Calendar.getInstance.getTime.getTime).toString
 
-    val reservation=new Reservation(currentTimestamp,name,email,adult,child,concession,newseats,total,moviename,date,time,room,false)
+    val reservation = new Reservation(currentTimestamp, name, email, adult, child, concession, newseats, total, moviename, date, time, room, false)
     val futureResult = receipts.flatMap(_.insert(reservation))
     futureResult.map(_ =>
-    //the price in there that you want the checkout button to have
-    Ok(views.html.payment(total.toString,reservation)).withSession(request.session+("name"->name)+("email"->email)+("reservationId"->currentTimestamp))
+      //the price in there that you want the checkout button to have
+      Ok(views.html.payment(total.toString, reservation)).withSession(request.session + ("name" -> name) + ("email" -> email) + ("reservationId" -> currentTimestamp))
     )
   }
 
+  //    def success() : Action[AnyContent]{
+  //      Ok(views.html.successPage())
+  //    }
 
 
 }

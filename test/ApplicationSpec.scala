@@ -80,5 +80,77 @@ class ApplicationSpec extends Specification {
       contentAsString(badrequest) must contain("does not exist.")
     }
 
+
+    "render the local info page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/localStuff")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Local Amenities")
+    }
+
+    "render the Find Us page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/findUs")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Find Us")
+    }
+
+    "render the movie info page for a given movie" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/movieinfo?id=4")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Guardians of the Galaxy")
+    }
+
+    "render the movie info page for a given movie" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/movieinfo?id=20")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("No Such Movie")
+    }
+
+    "render the admin page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/admin").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Update or Delete a Movie")
+    }
+
+    "render the admin page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/admin").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Update or Delete a Movie")
+    }
+
+    "render the add movie page with admin session" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/addMovie").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("movieID")
+    }
+
+    "render the upadate movie page" in new WithApplication {
+      val contact = route(FakeRequest(GET, "/updateMovie").withSession("admin" -> "admin")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Movies")
+    }
+
+    "check if session exists for admin" in new WithApplication{
+      val testRequest = route(FakeRequest(GET,"/sessionIn")).get
+      session(testRequest).get("admin") must equalTo(Some("admin"))
+    }
+
+    "lose session" in new WithApplication{
+      val testRequest = route(FakeRequest(GET,"sessionOut").withSession("admin" -> "admin")).get
+      session(testRequest).get("admin") must equalTo(None)
+
+    }
+
   }
+
+
+
+
 }
