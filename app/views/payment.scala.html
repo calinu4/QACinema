@@ -36,6 +36,7 @@
             }, '#paypal-button');
     </script>
     <h1>Reservation Details </h1>
+    <p>Reservation ID: @r.reservationId</p>
     <p>Name: @r.name</p>
     <p>Email: @r.email</p>
     <p>Seats: @r.seats</p>
@@ -43,9 +44,9 @@
     <p>Child: @r.child</p>
     <p>Concession: @r.concession</p>
     <p>Total: @r.total £</p>
-    <p>Movie name: @session.get("moviename").get</p>
-    <p>Date: @session.get("date").get</p>
-    <p>Time: @session.get("time").get</p>
-    <p>Room: @session.get("room").get</p>
+    <p>Movie name: @r.movie</p>
+    <p>Date: @r.date</p>
+    <p>Time: @r.time</p>
+    <p>Room: @r.room</p>
 
 }
