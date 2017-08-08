@@ -43,8 +43,12 @@ class Application extends Controller {
   }
 
 
-  def sessionIn() = Action {
-    Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+  def sessionIn() = Action {implicit request =>
+    request.session.get("admin").map { user =>
+      Ok(views.html.AdminControllerPage("Admin Page"))
+    }.getOrElse {
+      Ok(views.html.messagePage("Logged in")).withSession("admin" -> "admin")
+    }
   }
 
   def sessionOut() = Action {
