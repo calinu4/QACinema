@@ -23,6 +23,7 @@ class IntegrationSpec extends FlatSpec with Matchers with WebBrowser {
     click on cssSelector("#\\31 ")
     singleSel("adult").value = "2"
     singleSel("adult").value shouldBe "2"
+    println(singleSel("adult").value)
     click on id("goToSeatSelection")
 
     pageTitle shouldEqual "Seating Plan"
