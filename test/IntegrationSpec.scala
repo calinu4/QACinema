@@ -57,4 +57,55 @@ class IntegrationSpec extends FlatSpec with ShouldMatchers with WebBrowser {
     pageTitle shouldEqual "admin"
   }
 
+  "The classifications page" should "be available from the footer on multiple pages" in {
+    go to host
+    click on linkText("Classifications")
+    pageTitle shouldEqual "Classifications"
+
+    go to (host + "listings")
+    click on linkText("Classifications")
+    pageTitle shouldEqual "Classifications"
+
+    go to (host + "sessionIn")
+    go to (host + "admin")
+    click on linkText("Classifications")
+    pageTitle shouldEqual "Classifications"
+  }
+
+  it should "contain links to relevant BBFC classifications pages" in {
+    click on linkText("PG")
+    println(pageTitle)
+    pageTitle shouldEqual "PG | British Board of Film Classification"
+
+    go to (host + "classifications")
+    click on linkText("15")
+    pageTitle shouldEqual "15 | British Board of Film Classification"
+
+    go to (host + "classifications")
+    click on linkText("12A")
+    pageTitle shouldEqual "12A and 12 | British Board of Film Classification"
+
+    go to (host + "classifications")
+    click on linkText("18")
+    pageTitle shouldEqual "18 | British Board of Film Classification"
+  }
+
+  "The 404 page" should "appear when the designated 404 link is navigated to" in {
+    go to (host + "404")
+    pageTitle shouldEqual "404: Page Not Found"
+  }
+
+  it should "appear when an invalid path is navigated to" in {
+    go to (host + "not-a-page")
+    pageTitle shouldEqual "404: Page Not Found"
+
+    go to (host + "jshefiuhweghewgewe")
+    pageTitle shouldEqual "404: Page Not Found"
+  }
+
+  "The 500 page" should "appear when an invalid movie id is entered on the individual movie page" in {
+    go to (host + "movieinfo?id=456437")
+    pageTitle shouldEqual "500: No Such Movie"
+  }
+
 }
