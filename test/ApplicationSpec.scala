@@ -1,10 +1,12 @@
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-
+import org.scalatest.FunSpec
 import play.api.test._
 import play.api.mvc._
 import play.api.test.Helpers._
+import play.modules.reactivemongo.ReactiveMongoApi
+import controllers.MongoDBController
 
 /**
   * Add your spec here.

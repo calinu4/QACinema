@@ -379,9 +379,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     )
   }
 
-  //    def success() : Action[AnyContent]{
-  //      Ok(views.html.successPage())
-  //    }
 
 
 }
