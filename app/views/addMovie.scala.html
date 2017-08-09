@@ -6,22 +6,23 @@
 
     @helper.form(routes.MongoDBController.addMovie){
 
-        @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false)
-        @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false)
-        @helper.inputText(form("poster_path"),'_label->"poster Path",'_showConstraints->false)
-        @helper.inputText(form("landscape"),'_label->"landscape Path",'_showConstraints->false)
-        @helper.inputText(form("video"),'_label->"Trailer Path",'_showConstraints->false)
-        @helper.inputText(form("images"),'_label->"Image Paths",'_showConstraints->false)
-        @helper.inputText(form("age_rating"),'_label->"Age Rating",'_showConstraints->false)
-        @helper.inputText(form("user_rating"),'_label->"User Rating",'_showConstraints->false)
-        @helper.inputText(form("release_date"),'_label->"User Release Date",'_showConstraints->false)
-        @helper.inputText(form("run_time"),'_label->"Run Time",'_showConstraints->false)
-        @helper.inputText(form("genres"),'_label->"Genre Types",'_showConstraints->false)
-        @helper.inputText(form("overview"),'_label->"Overview",'_showConstraints->false)
-        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false)
-        @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false)
-        @helper.inputText(form("screen"),'_label->"Screen Types",'_showConstraints->false)
-        <button type="submit">Create Movie</button>
+        @helper.inputText(form("movie_id"),'_label->"movieID",'_showConstraints->false, 'placeholder -> "*eg: 13")
+        @helper.inputText(form("title"),'_label->"Title",'_showConstraints->false, 'placeholder -> "*Movie Title")
+        @helper.inputText(form("poster_path"),'_label->"poster Path",'_showConstraints->false, 'placeholder -> "*URL")
+        @helper.inputText(form("landscape"),'_label->"landscape Path",'_showConstraints->false, 'placeholder -> "*URL")
+        @helper.inputText(form("video"),'_label->"Trailer Path",'_showConstraints->false, 'placeholder -> "*Embedded YouTube URL")
+        @helper.inputText(form("images"),'_label->"Image Paths",'_showConstraints->false, 'placeholder -> "*URL,URL,URL")
+        @helper.inputText(form("age_rating"),'_label->"Age Rating",'_showConstraints->false, 'placeholder -> "*eg: PG, 12A, 18")
+        @helper.inputText(form("user_rating"),'_label->"User Rating",'_showConstraints->false, 'placeholder -> "*eg: 4.7")
+        @helper.inputText(form("release_date"),'_label->"User Release Date",'_showConstraints->false, 'placeholder -> "*eg: 2017-12-14")
+        @helper.inputText(form("run_time"),'_label->"Run Time",'_showConstraints->false, 'placeholder -> "Time in minutes")
+        @helper.inputText(form("genres"),'_label->"Genre Types",'_showConstraints->false, 'placeholder -> "*eg: Action,Adventure,Sci-Fi")
+        @helper.inputText(form("overview"),'_label->"Overview",'_showConstraints->false, 'placeholder -> "*Brief Summary")
+        @helper.inputText(form("cast"),'_label->"Cast",'_showConstraints->false, 'placeholder -> "*Cast")
+        @helper.inputText(form("director"),'_label->"Director",'_showConstraints->false, 'placeholder -> "*Director")
+        @helper.inputText(form("screen"),'_label->"Screen Types",'_showConstraints->false, 'placeholder -> "*eg: 2D, IMAX")
+        <h4 style="color: red">* indicates required field</h4>
+        <button type="submit" class="btn btn-primary">Create Movie</button>
     }
 }
 

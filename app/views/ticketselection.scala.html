@@ -19,21 +19,21 @@
                     switch (id) {
                         case "adult":
                             t1 = adult * adprice
-                            document.getElementById("adulttotal").innerHTML = "Price: " + t1 + " £"
+                            document.getElementById("adulttotal").innerHTML = "Price: £" + t1
                             break
                         case "child":
                             t2 = child * childprice
-                            document.getElementById("childtotal").innerHTML = "Price: " + t2 + " £"
+                            document.getElementById("childtotal").innerHTML = "Price: £" + t2
                             break
                         case "concession":
                             t3 = concession * conprice
-                            document.getElementById("concessiontotal").innerHTML = "Price: " + t3 + " £"
+                            document.getElementById("concessiontotal").innerHTML = "Price: £" + t3
                             break
                     }
                     total = t1 + t2 + t3
 
                     seatsNo = parseInt(adult)+parseInt(child)+parseInt(concession)
-                    document.getElementById("total").innerHTML = "Total: " + total + " £"
+                    document.getElementById("total").innerHTML = "Total: £" + total
                 }
 
 
@@ -83,7 +83,7 @@
                     <p id="concessiontotal"></p>
                 </div>
                 <h2 id="total">Total:</h2>
-                <button onclick="sendData()">Reserve Seats</button>
+                <button onclick="sendData()" class="btn btn-primary">Reserve Seats</button>
             </div>
 
         </div>
