@@ -1,6 +1,6 @@
 jQuery(function($) {
     // Asynchronously Load the map API
-    var script = document.createElement('script');
+    var script = document.createElement("script");
     script.src = "//maps.googleapis.com/maps/api/js?key=AIzaSyDyB23qJ23ZzxifPVEnJN-0PkQI_PApExw&sensor=false&callback=initialize";
     document.body.appendChild(script);
 });
@@ -8,11 +8,11 @@ jQuery(function($) {
 
 function initialize() {
     var map;
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     var labelIndex = 0;
     var bounds = new google.maps.LatLngBounds();
     var mapOptions = {
-        mapTypeId: 'roadmap'
+        mapTypeId: "roadmap"
     };
 
     // Display a map on the page
@@ -21,34 +21,34 @@ function initialize() {
 
     // Multiple Markers
     var markers = [
-        ['QA Cinema', 53.470843,-2.295886],
-        ['Lime Restaurant', 53.471012,-2.294400],
-        ['Nandos', 53.471292,-2.294805],
-        ['Pizza Express', 53.470404,-2.294526],
-        ['MediaCityUKTS', 53.472131, -2.297373],
-        ['MediaCityUKBS', 53.471768, -2.295256]
+        ["QA Cinema", 53.470843,-2.295886],
+        ["Lime Restaurant", 53.471012,-2.294400],
+        ["Nandos", 53.471292,-2.294805],
+        ["Pizza Express", 53.470404,-2.294526],
+        ["MediaCityUKTS", 53.472131, -2.297373],
+        ["MediaCityUKBS", 53.471768, -2.295256]
     ];
 
     // Info Window Content
     var infoWindowContent = [
         ['<div class="info_content">' +
-        '<h3>QA Cinema</h3>' +
-        '<p>Showing the latest and best movies, family owned since 1955bc</p>' + '</div>'],
+        "<h3>QA Cinema</h3>" +
+        "<p>Showing the latest and best movies, family owned since 1955bc</p>" + "</div>"],
         ['<div class="info_content">' +
-        '<h3>Lime Restaurant</h3>' +
-        '<p>Best Limes in in Lowry</p>' + '</div>'],
+        "<h3>Lime Restaurant</h3>" +
+        "<p>Best Limes in in Lowry</p>" + "</div>"],
         ['<div class="info_content">' +
-        '<h3>Nandos</h3>' +
-        '<p>Hottest chicks in town</p>' + '</div>'],
+        "<h3>Nandos</h3>" +
+        "<p>Hottest chicks in town</p>" + "</div>"],
         ['<div class="info_content">' +
-        '<h3>Pizza Express</h3>' +
-        '<p>Delicious pizza and such</p>' + '</div>'],
+        "<h3>Pizza Express</h3>" +
+        "<p>Delicious pizza and such</p>" + "</div>"],
         ['<div class="info_content">' +
-        '<h3>MediaCity Tram Stop</h3>' +
-        '<p>Local tram stop</p>' + '</div>'],
+        "<h3>MediaCity Tram Stop</h3>" +
+        "<p>Local tram stop</p>" + "</div>"],
         ['<div class="info_content">' +
-        '<h3>MediaCity Bus Stop</h3>' +
-        '<p>Local Bus stop</p>' + '</div>']
+        "<h3>MediaCity Bus Stop</h3>" +
+        "<p>Local Bus stop</p>" + "</div>"]
     ];
 
     // Display multiple markers on a map
@@ -66,11 +66,11 @@ function initialize() {
         });
 
         // Allow each marker to have an info window
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        google.maps.event.addListener(marker, "click", (function(marker, i) {
             return function() {
                 infoWindow.setContent(infoWindowContent[i][0]);
                 infoWindow.open(map, marker);
-            }
+            };
         })(marker, i));
 
         // Automatically center the map fitting all markers on the screen
@@ -78,7 +78,7 @@ function initialize() {
     }
 
     // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-    var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+    var boundsListener = google.maps.event.addListener((map), "bounds_changed", function(event) {
         this.setZoom(17);
         google.maps.event.removeListener(boundsListener);
     });

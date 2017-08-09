@@ -19,8 +19,7 @@ import models.JsonFormats._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json._
 import collection._
-import play.api.i18n.I18nSupport
-import play.api.i18n.MessagesApi
+import play.api.i18n.{I18nSupport,MessagesApi}
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
