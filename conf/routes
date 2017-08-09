@@ -12,7 +12,7 @@ GET         /movieinfo                  controllers.MongoDBController.movieInfo(
 GET         /contact                    controllers.Application.contact
 GET         /admin                      controllers.MongoDBController.adminPage()
 
-GET         /localStuff                 controllers.Application.localStuff
+GET         /localStuff                 controllers.Application.localInfo
 GET         /findUs                     controllers.Application.findUs
 GET         /screenInformation          controllers.Application.screenInformation
 

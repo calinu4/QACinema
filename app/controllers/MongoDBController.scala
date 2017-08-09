@@ -190,7 +190,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //adds Movies to database
-  def addMovie = Action {
+  def addMovie() = Action {
     implicit request =>
       request.session.get("admin").map { user =>
 
