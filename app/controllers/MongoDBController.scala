@@ -31,9 +31,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //Read from table movies
-  def moviecollection: Future[JSONCollection] = database.map(
-
-    _.collection[JSONCollection]("testMovie"))
+  def moviecollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("testMovie"))
 
 
   def showings: Future[JSONCollection] = database.map(
