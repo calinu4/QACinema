@@ -17,13 +17,14 @@ class IntegrationSpec extends FlatSpec with ShouldMatchers with WebBrowser {
 
   val host = "http://localhost:9000/"
 
-  "The website navigation" should "navigate through booking to the seat selection page" in {
+  "The website navigation" should "navigate through booking and select two adult tickets" in {
     go to (host + "showings")
     click on cssSelector("#\\31 ")
     singleSel("adult").value = "2"
     singleSel("adult").value shouldEqual "2"
-    println(singleSel("adult").value)
+  }
 
+  it should "go to the seat selection page" in {
     webDriver.findElement(By.xpath("/html/body/div[1]/div/div/button")).click()
     pageTitle shouldEqual "Seating Plan"
   }
@@ -52,7 +53,8 @@ class IntegrationSpec extends FlatSpec with ShouldMatchers with WebBrowser {
   }
 
   it should "show CRUD when logged in" in {
-    click on xpath("//*[@id=\"bs-example-navbar-collapse-1\"]/ul[2]/li[2]/a")
+    val loginButton = xpath("//*[@id=\"bs-example-navbar-collapse-1\"]/ul[2]/li[2]/a")
+    click on loginButton
     go to (host + "admin")
     pageTitle shouldEqual "admin"
   }
