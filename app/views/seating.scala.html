@@ -62,13 +62,14 @@
     <h1>Seating Plan </h1>
     <br>
     <button id="seats" onclick="submitSeats()" class="btn btn-primary">Submit Seats</button>
+    <br/>
     <div class="row">
 
         <div class="col-lg-9">
+            <h4 style="text-align: center">SCREEN</h4>
+            <hr style="width: 60%; text-align: left; height: 2px; background-color:#000000;"/>
+            <div style="text-align: center">
             @for(row <- 0 until s.seats.length) {
-                <h1>Row @{
-                    row + 1
-                }</h1>
                 @for(col <- 0 to 9) {
                     @if(s.seats(row)(col) == 0) {
                         <input id="@row @col" type="image" src="@routes.Assets.at("images/your-choice.png")" onclick="changeImage(id, src)" style="font-size: 200%"/>
@@ -80,6 +81,7 @@
                 <br>
                 <br>
             }
+            </div>
             <div id="selectedseats">
                 <H1>Seats Selected: </H1>
 

@@ -1,5 +1,7 @@
-import org.scalatest.FlatSpec
+package CoverageTests
+
 import models._
+import org.scalatest.FlatSpec
 class ModelsTest extends FlatSpec {
   val m = Movie(1, "1", "1", "1", "1", "1", "12A", 5, "2017-08-05", 120, "Action", "1", "1", "1", "1")
 
