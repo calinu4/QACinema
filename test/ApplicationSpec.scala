@@ -183,6 +183,32 @@ class ApplicationSpec extends Specification {
       contentAsString(seating) must contain("Enter user details")
       contentAsString(seating) must contain("Submit")
     }
+    "Seating request" in new WithApplication {
+      val details = route(FakeApplication(), FakeRequest(GET, "/payment?name=userfortest&email=test@email.com")
+        .withSession("id" -> "2","total" -> "15","adult" -> "1","child" -> "0",
+        "concession" -> "0" ,"seatsNo" -> "43" , "moviename" -> "Baby Driver" ,
+          "date" -> "2017-08-10" , "time" -> "18:00" , "room" -> "2","seats" -> "43",
+        "name" -> "userfortest", "email" -> "test@email.com","reservationId" -> "2017-08-10 09:51:37.583")).orNull
+      status(details) must equalTo(OK)
+      contentType(details) must beSome.which(_ == "text/html")
+      contentAsString(details) must contain("Reservation Details")
+      contentAsString(details) must contain("Movie name: Baby Driver")
+      contentAsString(details) must contain("Room: 2")
+    }
+    "Showing recipt request" in new WithApplication {
+      val details = route(FakeApplication(), FakeRequest(GET, "/success")
+        .withSession("id" -> "2","total" -> "15","adult" -> "1","child" -> "0",
+        "concession" -> "0" ,"seatsNo" -> "43" , "moviename" -> "Baby Driver" ,
+          "date" -> "2017-08-10" , "time" -> "18:00" , "room" -> "2","seats" -> "43",
+        "name" -> "userfortest", "email" -> "test@email.com","reservationId" -> "2017-08-10 09:51:37.583")).orNull
+      status(details) must equalTo(OK)
+      contentType(details) must beSome.which(_ == "text/html")
+      contentAsString(details) must contain("Payment Successful!")
+      contentAsString(details) must contain("Your Details are:")
+      contentAsString(details) must contain("Making it the total of: £15")
+      contentAsString(details) must contain("Print this")
+      contentAsString(details) must contain("Go Home")
+    }
 
 
     "send Bad on bad" in new WithApplication() {
