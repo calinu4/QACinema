@@ -1,10 +1,10 @@
+package CoverageTests
+
+import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
-import org.junit.runner._
-import play.api.test._
-import play.api.mvc._
 import play.api.test.Helpers._
-import play.modules.reactivemongo.ReactiveMongoApi
+import play.api.test._
 
 /**
   * Add your spec here.
@@ -232,14 +232,14 @@ class ApplicationSpec extends Specification {
       status(addMovieResult) must equalTo(303)
     }
 
-    " bad request add movie to database" in new WithApplication() {
+    "bad request add movie to database" in new WithApplication() {
       val addMovieResult = route(FakeApplication(), FakeRequest(POST,
         "/addMovie?movie_id=2&title=asda&poster_path=somepath&landscape=Stuff&video=aaa&images=asdasd&age_rating=dsad&" +
           "user_rating=fail.5&release_date=asdas&run_time=123&genres=asda&overview=aaa&cast=asdas&director=bbb&screen=dsada&submit=").withSession("admin"->"admin")).orNull
       status(addMovieResult) must equalTo(400)
     }
 
-//    " update movie" in new WithApplication() {
+//    "update movie" in new WithApplication() {
 //      val updateMovieResult = route(FakeApplication(), FakeRequest(POST,
 //        "/updateMovie/10?movie_id=2&title=asda&poster_path=somepath&landscape=Stuff&video=aaa&images=asdasd&age_rating=dsad&" +
 //          "user_rating=fail.5&release_date=asdas&run_time=123&genres=asda&overview=aaa&cast=asdas&director=bbb&screen=dsada&submit=").withSession("admin"->"admin")).orNull

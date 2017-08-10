@@ -3,23 +3,19 @@ package controllers
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 import javax.inject.Inject
-import javax.management.relation.RelationServiceNotRegisteredException
-
-import play.api.cache.Cache
-import play.api.Play.current
 
 import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import reactivemongo.api.{Cursor, QueryOpts}
+import reactivemongo.api.Cursor
 import models._
 import models.JsonFormats._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json._
 import collection._
-import play.api.i18n.{I18nSupport,MessagesApi}
+import play.api.i18n._
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
@@ -47,7 +43,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .cursor[Reservation]
     }
     val futureResList: Future[List[Reservation]] = cursor.flatMap(_.collect[List]())
-    Await.result(futureResList, Duration.Inf).head
+    Await.result(futureResList, Duration.Inf)(0)
   }
 
   def getshowing(showingId: Int): Showing = {
@@ -147,7 +143,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       val newmovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
@@ -240,9 +236,9 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
-      val singleS = showing.head
+      val singleS = showing(0)
       Ok(views.html.seating(singleS, seatsNo)).withSession(request.session + ("total" -> total.toString) + ("adult" -> adult.toString) + ("child" -> child.toString) +
         ("concession" -> concession.toString) + ("seatsNo" -> seatsNo.toString) + ("moviename" -> singleS.movieId) + ("date" -> singleS.date) + ("time" -> singleS.time) +
         ("room" -> singleS.roomId.toString))
