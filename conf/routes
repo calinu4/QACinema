@@ -5,9 +5,6 @@
 # Home page/////
 GET         /                           controllers.MongoDBController.listIndexMovies
 
-
-GET         /bookingConfirmation        controllers.Receipt.bookingConfirmation
-GET         /receipt                    controllers.Receipt.receipt
 GET         /movieinfo                  controllers.MongoDBController.movieInfo(id:Int)
 GET         /contact                    controllers.Application.contact
 GET         /admin                      controllers.MongoDBController.adminPage()
