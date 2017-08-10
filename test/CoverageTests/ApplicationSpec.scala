@@ -149,7 +149,7 @@ class ApplicationSpec extends Specification {
     }
 
     "Ticket selection" in new WithApplication {
-      val seating = route(FakeApplication(), FakeRequest(GET, "/ticketselection?id=2")).get
+      val seating = route(FakeApplication(), FakeRequest(GET, "/ticketselection?id=3")).get
       //.withSession("id" -> "2")).get
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
@@ -163,25 +163,53 @@ class ApplicationSpec extends Specification {
     }
 
     "Seating plan" in new WithApplication {
-      val seating = route(FakeApplication(), FakeRequest(GET, "/seating?total=15&adult=1&child=0&concession=0&seatsNo=1").withSession("id" -> "2")).get
+      val seating = route(FakeApplication(), FakeRequest(GET, "/seating?total=15&adult=1&child=0&concession=0&seatsNo=1").withSession("id" -> "3")).get
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
+      contentAsString(seating) must contain("Seating Plan")
       contentAsString(seating) must contain("Submit Seats")
-      contentAsString(seating) must contain("Row 1")
-      contentAsString(seating) must contain("Row 2")
-      contentAsString(seating) must contain("Row 3")
-      contentAsString(seating) must contain("Row 4")
-      contentAsString(seating) must contain("Row 5")
+      contentAsString(seating) must contain("SCREEN")
       contentAsString(seating) must contain("Seats Selected:")
+      contentAsString(seating) must contain("Availability")
+      contentAsString(seating) must contain("Unavailable")
+      contentAsString(seating) must contain("Selected")
     }
 
-    "Seating plan" in new WithApplication {
-      val seating = route(FakeApplication(), FakeRequest(GET, "/userinfo?seats=,0%200").withSession("id" -> "2")).get
+    "user details plan" in new WithApplication {
+      val seating = route(FakeApplication(), FakeRequest(GET, "/userinfo?seats=,0%200").withSession("id" -> "3")).get
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
       contentAsString(seating) must contain("Tickets")
       contentAsString(seating) must contain("Enter user details")
       contentAsString(seating) must contain("Submit")
+    }
+
+    "Seating request" in new WithApplication {
+      val details = route(FakeApplication(), FakeRequest(GET, "/payment?name=Tester&email=tester@email.com")
+        .withSession("id" -> "3","total" -> "15","adult" -> "1","child" -> "0",
+        "concession" -> "0" ,"seatsNo" -> "45" , "moviename" -> "Dunkirk" ,
+          "date" -> "2017-08-10" , "time" -> "21:00" , "room" -> "2","seats" -> "45",
+        "name" -> "Tester", "email" -> "tester@email.com","reservationId" -> " 2017-08-10 10:27:09.13")).orNull
+      status(details) must equalTo(OK)
+      contentType(details) must beSome.which(_ == "text/html")
+      contentAsString(details) must contain("Reservation Details")
+      contentAsString(details) must contain("Movie name: Dunkirk")
+      contentAsString(details) must contain("Room: 2")
+    }
+
+    "Showing recipt request" in new WithApplication {
+      val details = route(FakeApplication(), FakeRequest(GET, "/success")
+        .withSession("id" -> "3","total" -> "15","adult" -> "1","child" -> "0",
+        "concession" -> "0" ,"seatsNo" -> "43" , "moviename" -> "Dunkirk" ,
+          "date" -> "2017-08-10" , "time" -> "21:00" , "room" -> "2","seats" -> "45",
+        "name" -> "Tester", "email" -> "tester@email.com","reservationId" -> "2017-08-10 10:27:09.13")).orNull
+      status(details) must equalTo(OK)
+      contentType(details) must beSome.which(_ == "text/html")
+      contentAsString(details) must contain("Payment Successful!")
+      contentAsString(details) must contain("Your Details are:")
+      contentAsString(details) must contain("Making it the total of: £15")
+      contentAsString(details) must contain("Print this")
+      contentAsString(details) must contain("Go Home")
     }
 
 
