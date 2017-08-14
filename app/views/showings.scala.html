@@ -1,4 +1,4 @@
-@(show: List[Showing])(movieTitle: String)
+@(show: List[Showing])
 
 @main("Showings") {
 <script>
@@ -8,7 +8,7 @@
 <div class="row">
 
     <div class="col-lg-12">
-        <table>
+        <table id="showingsTable">
             <thead>
             <tr>
                 <th>Movie Name</th>
@@ -17,7 +17,6 @@
                 <th>Times</th>
             </thead>
             <tbody>
-            @if(movieTitle=="/all") {
             @for(s<- show) {
             <tr>
                 <td>@s.movieId</td>
@@ -27,20 +26,6 @@
                     <button id="@s.showingId" class="btn btn-primary">@s.time</button>
                 </a></td>
             </tr>
-            }
-            } else {
-            @for(s<- show) {
-            @if(movieTitle==s.movieId) {
-            <tr>
-                <td>@s.movieId</td>
-                <td>@s.date</td>
-                <td>@s.roomId</td>
-                <td><a href="@routes.MongoDBController.ticketSelection(s.showingId)">
-                    <button id="@s.showingId" class="btn btn-primary">@s.time</button>
-                </a></td>
-            </tr>
-            }
-            }
             }
             </tbody>
         </table>

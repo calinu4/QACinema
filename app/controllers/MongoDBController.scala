@@ -19,6 +19,7 @@ import play.api.i18n._
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
+import scala.reflect.ClassTag
 
 
 class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
@@ -26,7 +27,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //Read from table movies
-  def moviecollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("testMovie"))
+  def movieCollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("testMovie"))
 
 
   def showings: Future[JSONCollection] = database.map(
@@ -36,7 +37,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     _.collection[JSONCollection]("receipts"))
 
 
-  def getreceipt(reservationId: String): Reservation = {
+  def getReceipt(reservationId: String): Reservation = {
     val cursor: Future[Cursor[Reservation]] = receipts.map {
       _.find(Json.obj("reservationId" -> reservationId))
         .sort(Json.obj("created" -> -1))
@@ -46,7 +47,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     Await.result(futureResList, Duration.Inf)(0)
   }
 
-  def getshowing(showingId: Int): Showing = {
+  def getShowing(showingId: Int): Showing = {
     val cursor: Future[Cursor[Showing]] = showings.map {
       _.find(Json.obj("showingId" -> showingId))
         .sort(Json.obj("created" -> -1))
@@ -60,10 +61,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     implicit request =>
       val showingId = request.session.get("id").get
       val receiptId = request.session.get("reservationId").get
-      val receipt = getreceipt(receiptId)
+      val receipt = getReceipt(receiptId)
       val seats = receipt.seats
       val seatsNo = request.session.get("seatsNo").get.toInt
-      val showing = getshowing(showingId.toInt)
+      val showing = getShowing(showingId.toInt)
       for (i <- seats) {
         showing.seats(i.head.toInt)(i.last.toInt) = 1
       }
@@ -90,7 +91,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //list movies for index
   def listIndexMovies: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -107,7 +108,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //display Movies from database
   def listMovies: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -122,7 +123,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //Filter movies by genre
   def filterMovies(genre: String): Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -138,7 +139,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   //Upcoming movies
   def upcomingMovies: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -155,7 +156,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   def movieInfo(id: Int): Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj("movie_id" -> id)) // searching by a particular field
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -172,7 +173,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
   def getMovies(): List[Movie] = {
-    val cursor: Future[Cursor[Movie]] = moviecollection.map {
+    val cursor: Future[Cursor[Movie]] = movieCollection.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
@@ -195,7 +196,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
             BadRequest(views.html.addMovie(errors))
 
         }, { movie =>
-          val futureResult = moviecollection.flatMap(_.insert(movie))
+          val futureResult = movieCollection.flatMap(_.insert(movie))
 
           futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
           Redirect(routes.MongoDBController.listMovies())
@@ -216,8 +217,18 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
     val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     showingsList.map { showing =>
-
-      Ok(views.html.showings(showing)(movieTitle))
+      if(movieTitle!="/all") {
+        val newShowings = showing.filter(elem => elem.movieId == movieTitle)
+        if(newShowings.nonEmpty) {
+          Ok(views.html.showings(newShowings))
+        }
+        else {
+          Ok(views.html.showings(showing))
+        }
+      }
+      else{
+        Ok(views.html.showings(showing))
+      }
     }
   }
 
@@ -263,7 +274,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def updateMoviePage(id: Int): Action[AnyContent] = Action.async {
     implicit request =>
-      val cursor: Future[Cursor[Movie]] = moviecollection.map {
+      val cursor: Future[Cursor[Movie]] = movieCollection.map {
         _.find(Json.obj())
           .sort(Json.obj("created" -> 1))
           .cursor[Movie]
@@ -287,7 +298,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         }, { movies =>
           val movieList = getMovies()
           val selector = movieList(id)
-          val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+          val futureResult = movieCollection.map(_.findAndUpdate(selector, movies))
           futureResult.map(_ => Ok("Added user " + movies.title))
           Redirect(routes.MongoDBController.listMovies())
 
@@ -330,7 +341,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
         val movieList = getMovies()
         val selector = movieList(id)
-        val futureResult = moviecollection.map(_.findAndRemove(selector))
+        val futureResult = movieCollection.map(_.findAndRemove(selector))
         Redirect(routes.MongoDBController.updatePage())
 
       }.getOrElse {
@@ -371,10 +382,5 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       Ok(views.html.payment(total.toString, reservation)).withSession(request.session + ("name" -> name) + ("email" -> email) + ("reservationId" -> currentTimestamp))
     )
   }
-
-  //    def success() : Action[AnyContent]{
-  //      Ok(views.html.successPage())
-  //    }
-
 
 }
