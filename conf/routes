@@ -56,3 +56,6 @@ GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
 #GET         /successPage                        controllers.Application.successPage
+
+#Booking Filtering
+
