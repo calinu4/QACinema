@@ -167,11 +167,6 @@ class ApplicationSpec extends Specification {
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
       contentAsString(seating) must contain("Submit Seats")
-      contentAsString(seating) must contain("Row 1")
-      contentAsString(seating) must contain("Row 2")
-      contentAsString(seating) must contain("Row 3")
-      contentAsString(seating) must contain("Row 4")
-      contentAsString(seating) must contain("Row 5")
       contentAsString(seating) must contain("Seats Selected:")
     }
 
