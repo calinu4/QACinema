@@ -36,8 +36,8 @@ GET         /classifications            controllers.Application.classification
 
 #Seating and booking pages
 
-GET         /showings                   controllers.MongoDBController.showingsView(movieTitle: String ?= "/all")
-GET         /showings/:movieTitle       controllers.MongoDBController.showingsView(movieTitle: String)
+GET         /showings                   controllers.ShowingController.showingsView(movieTitle: String ?= "/all")
+GET         /showings/:movieTitle       controllers.ShowingController.showingsView(movieTitle: String)
 GET         /ticketselection            controllers.MongoDBController.ticketSelection(id:Int)
 GET         /seating                    controllers.MongoDBController.seating(total:Int,adult:Int,child:Int,concession:Int,seatsNo:Int)
 GET         /userinfo                   controllers.MongoDBController.userInfo(seats:String)
