@@ -1,10 +1,10 @@
-@(show: List[Showing],days:Array[String])
+@(show: List[Showing],days:Array[String],index:Int)
 
 @main("Showings") {
 <script>
 
 </script>
-<h1>Showings: @days(7)</h1>
+<h1>Showings: @days(index)</h1>
 <div class="row">
     <a href='@routes.ShowingController.showingsView("/all","1")' ><button class="btn btn-primary">Today</button></a>
     <a href='@routes.ShowingController.showingsView("/all","2")'><button class="btn btn-primary">Tomorrow</button></a>
