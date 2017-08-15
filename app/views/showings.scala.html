@@ -5,7 +5,7 @@
 <h1>Showings</h1>
 
 @if(isAll){
-<h1>Showings: @days(index)</h1>
+<h3>Showings: @days(index)</h3>
 <div class="row">
     <a href='@routes.ShowingController.showingsView("/all","1")' ><button class="btn btn-primary">Today</button></a>
     <a href='@routes.ShowingController.showingsView("/all","2")'><button class="btn btn-primary">Tomorrow</button></a>
@@ -15,7 +15,7 @@
     <a href='@routes.ShowingController.showingsView("/all","6")' ><button class="btn btn-primary">@days(5)</button></a>
     <a href='@routes.ShowingController.showingsView("/all","7")'><button class="btn btn-primary">@days(6)</button></a>
 </div>
-}else {<h1>Showings for: @show.head.movieId</h1>}
+}else {<h3>Showings for: @show.head.movieId</h3>}
 
 
 <div class="row">
