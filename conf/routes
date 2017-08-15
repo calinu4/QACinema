@@ -55,4 +55,8 @@ GET         /session                    controllers.Application.session()
 GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
+
+GET         /login                      controllers.Application.loginGet
+POST        /login                      controllers.Application.login
+
 #GET         /successPage                        controllers.Application.successPage

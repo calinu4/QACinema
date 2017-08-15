@@ -1,0 +1,14 @@
+@(form:Form[Login])(implicit messages:Messages)
+@main("Login"){
+
+
+
+
+    @helper.form(routes.Application.login){
+
+        @helper.inputText(form("email"),'_label->"Email",'_showConstraints->false, 'placeholder -> "Email")
+        @helper.inputText(form("password"),'_label->"Password",'_showConstraints->false, 'placeholder -> "Password")
+        <button type="submit" class="btn btn-primary">Login</button>
+    }
+}
+
