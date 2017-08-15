@@ -19,7 +19,6 @@ import play.api.i18n._
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
-import scala.reflect.ClassTag
 
 
 class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
@@ -206,32 +205,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
-
-
-  //Display all showings available to book
-  def showingsView(movieTitle: String): Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Showing]] = showings.map {
-      _.find(Json.obj())
-        .sort(Json.obj("created" -> -1))
-        .cursor[Showing]
-    }
-    val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
-    showingsList.map { showing =>
-      if(movieTitle!="/all") {
-        val newShowings = showing.filter(elem => elem.movieId == movieTitle)
-        if(newShowings.nonEmpty) {
-          Ok(views.html.showings(newShowings))
-        }
-        else {
-          Ok(views.html.showings(showing))
-        }
-      }
-      else{
-        Ok(views.html.showings(showing))
-      }
-    }
-  }
-
 
   def ticketSelection(id: Int) = Action {
 

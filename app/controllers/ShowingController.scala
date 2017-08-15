@@ -28,13 +28,6 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
 
-  def dateParse(date: String): Date = {
-    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
-    format.parse(date)
-  }
-  def isFuture(value: Date): Boolean = value.after(new Date)
-  def isCurrent(value: Date): Boolean = value.before(new Date)
-
   //Display all showings available to book
   def showingsView(movieTitle: String): Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Showing]] = showings.map {
@@ -42,6 +35,7 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
+
     val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     showingsList.map { showing =>
       if(movieTitle!="/all") {
