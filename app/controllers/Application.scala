@@ -55,23 +55,4 @@ class Application extends Controller {
     Ok(views.html.messagePage("You are logged out")).withNewSession
   }
 
-  def session() = Action { implicit request =>
-    request.session.get("admin").map { user =>
-      Ok(views.html.messagePage("You are Logged in! "+user))
-    }.getOrElse {
-      Unauthorized(views.html.messagePage("You are not logged in!"))
-    }
-  }
-
-//  def payment = Action {
-//    //the price in there that you want the checkout button to have
-//    Ok(views.html.payment("2.50"))
-//  }
-
-  //You should only get here if payment is successful and only...
-//  def successPage = Action{
-//    Ok(views.html.payment("2"))
-//    //Ok(views.html.successPage(showing)(reservation))
-//  }
-
 }

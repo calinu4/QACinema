@@ -1,5 +1,8 @@
 package CoverageTests
 
+import java.time.LocalDate
+import java.util.Calendar
+
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -16,7 +19,6 @@ class ApplicationSpec extends Specification {
 
 
   "Application" should {
-    //    "send 404 on a bad request" in new WithApplication{route(FakeRequest(GET, "/boum")) must beNone}
 
     "render the index page" in new WithApplication {
       val home = route(FakeApplication(), FakeRequest(GET, "/")).get
@@ -31,8 +33,22 @@ class ApplicationSpec extends Specification {
       contentAsString(notfound) must contain("This is not the page you are looking for.")
     }
 
+    "render the 404 page for an non existing page" in new WithApplication {
+      val notfound = route(FakeApplication(), FakeRequest(GET, "/thispagedoesntexist")).get
+      status(notfound) must equalTo(NOT_FOUND)
+      contentType(notfound) must beSome.which(_ == "text/html")
+      contentAsString(notfound) must contain("This is not the page you are looking for.")
+    }
+
     "render the 500 page" in new WithApplication {
       val badrequest = route(FakeApplication(), FakeRequest(GET, "/500")).get
+      status(badrequest) must equalTo(OK)
+      contentType(badrequest) must beSome.which(_ == "text/html")
+      contentAsString(badrequest) must contain("does not exist.")
+    }
+
+    "render the 500 page" in new WithApplication {
+      val badrequest = route(FakeApplication(), FakeRequest(GET, "/movieinfo?id=1337")).get
       status(badrequest) must equalTo(OK)
       contentType(badrequest) must beSome.which(_ == "text/html")
       contentAsString(badrequest) must contain("does not exist.")
@@ -43,6 +59,20 @@ class ApplicationSpec extends Specification {
       status(listings) must equalTo(OK)
       contentType(listings) must beSome.which(_ == "text/html")
       contentAsString(listings) must contain("Filter Movies")
+    }
+
+    "filter the Listings page by Romance" in new WithApplication {
+      val listings = route(FakeApplication(), FakeRequest(GET, "/listings/Romance")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain("Deadpool")
+    }
+
+    "filter the Listings page by Upcoming" in new WithApplication {
+      val listings = route(FakeApplication(), FakeRequest(GET, "/listings/upcoming")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain("The Dark Tower (2017)")
     }
 
     "render the Classifications page" in new WithApplication {
@@ -66,26 +96,18 @@ class ApplicationSpec extends Specification {
       contentAsString(contact) must contain("QACinema is an independent Cinema located in Manchester")
     }
 
-    "render the 404 page for an non existing page" in new WithApplication {
-      val notfound = route(FakeApplication(), FakeRequest(GET, "/thispagedoesntexist")).get
-      status(notfound) must equalTo(NOT_FOUND)
-      contentType(notfound) must beSome.which(_ == "text/html")
-      contentAsString(notfound) must contain("This is not the page you are looking for.")
-    }
-
-    "render the 500 page" in new WithApplication {
-      val badrequest = route(FakeApplication(), FakeRequest(GET, "/movieinfo?id=1337")).get
-      status(badrequest) must equalTo(OK)
-      contentType(badrequest) must beSome.which(_ == "text/html")
-      contentAsString(badrequest) must contain("does not exist.")
-    }
-
-
     "render the local info page" in new WithApplication {
       val contact = route(FakeApplication(), FakeRequest(GET, "/localStuff")).get
       status(contact) must equalTo(OK)
       contentType(contact) must beSome.which(_ == "text/html")
       contentAsString(contact) must contain("Local Amenities")
+    }
+
+    "render the screen info page" in new WithApplication {
+      val contact = route(FakeApplication(), FakeRequest(GET, "/screenInformation")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Is our deluxe iMax experience")
     }
 
     "render the Find Us page" in new WithApplication {
@@ -102,18 +124,11 @@ class ApplicationSpec extends Specification {
       contentAsString(contact) must contain("Deadpool")
     }
 
-    "render the movie info page for a given movie" in new WithApplication {
+    "render the 500 page for no such movie" in new WithApplication {
       val contact = route(FakeApplication(), FakeRequest(GET, "/movieinfo?id=20")).get
       status(contact) must equalTo(OK)
       contentType(contact) must beSome.which(_ == "text/html")
       contentAsString(contact) must contain("No Such Movie")
-    }
-
-    "render the admin page with admin session" in new WithApplication {
-      val contact = route(FakeApplication(), FakeRequest(GET, "/admin").withSession("admin" -> "admin")).get
-      status(contact) must equalTo(OK)
-      contentType(contact) must beSome.which(_ == "text/html")
-      contentAsString(contact) must contain("Update or Delete a Movie")
     }
 
     "render the admin page with admin session" in new WithApplication {
@@ -145,10 +160,112 @@ class ApplicationSpec extends Specification {
     "lose session" in new WithApplication {
       val testRequest = route(FakeApplication(), FakeRequest(GET, "/sessionOut").withSession("admin" -> "admin")).get
       session(testRequest).get("admin") must equalTo(None)
-
     }
 
-    "Ticket selection" in new WithApplication {
+    "show only Deadpool movies" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?movieTitle=Deadpool")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+      contentAsString(showingsPage) must not contain("Guardians of the Galaxy")
+      contentAsString(showingsPage) must not contain("Dunkirk")
+      contentAsString(showingsPage) must not contain("Atomic Blonde(2017)")
+      contentAsString(showingsPage) must not contain("Pirates of the Caribbean: Dead Men Tell No Tales")
+    }
+
+    "by default show today's movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+      val now = Calendar.getInstance().toInstant
+      val currentDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(currentDate)
+    }
+
+    "show tomorrow movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=2")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(1).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val tomorrowDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(tomorrowDate))
+    }
+
+    "show day 3 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=3")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(2).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 4 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=4")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(3).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 5 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=5")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(4).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 6 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=6")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(5).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 7 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=7")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(6).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show ticket selection" in new WithApplication {
       val seating = route(FakeApplication(), FakeRequest(GET, "/ticketselection?id=3")).get
       //.withSession("id" -> "2")).get
       status(seating) must equalTo(OK)
@@ -162,7 +279,7 @@ class ApplicationSpec extends Specification {
       contentAsString(seating) must contain("Reserve Seats")
     }
 
-    "Seating plan" in new WithApplication {
+    "show seating plan" in new WithApplication {
       val seating = route(FakeApplication(), FakeRequest(GET, "/seating?total=15&adult=1&child=0&concession=0&seatsNo=1").withSession("id" -> "3")).get
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
@@ -175,7 +292,7 @@ class ApplicationSpec extends Specification {
       contentAsString(seating) must contain("Selected")
     }
 
-    "user details plan" in new WithApplication {
+    "show user details plan" in new WithApplication {
       val seating = route(FakeApplication(), FakeRequest(GET, "/userinfo?seats=,0%200").withSession("id" -> "3")).get
       status(seating) must equalTo(OK)
       contentType(seating) must beSome.which(_ == "text/html")
@@ -197,7 +314,7 @@ class ApplicationSpec extends Specification {
       contentAsString(details) must contain("Room: 2")
     }
 
-    "Showing recipt request" in new WithApplication {
+    "show recipt request" in new WithApplication {
       val details = route(FakeApplication(), FakeRequest(GET, "/success")
         .withSession("id" -> "3","total" -> "15","adult" -> "1","child" -> "0",
         "concession" -> "0" ,"seatsNo" -> "43" , "moviename" -> "Dunkirk" ,
@@ -212,8 +329,7 @@ class ApplicationSpec extends Specification {
       contentAsString(details) must contain("Go Home")
     }
 
-
-    "send Bad on bad" in new WithApplication() {
+    "show invalid email page" in new WithApplication() {
       val mailResult = route(FakeApplication(), FakeRequest(GET,
         "/contactform?Name=hello&Email=Hi&Subject=Stuff&Message=Waa%21&sub")).orNull
       status(mailResult) must equalTo(OK)
@@ -227,12 +343,12 @@ class ApplicationSpec extends Specification {
       status(mailResult) must equalTo(SEE_OTHER)
     }
 
-    "add movie to database" in new WithApplication() {
-      val addMovieResult = route(FakeApplication(), FakeRequest(POST,
-        "/addMovie?movie_id=10&title=leaveThisForNow&poster_path=somepath&landscape=Stuff&video=aaa&images=asdasd&age_rating=12A&" +
-          "user_rating=2.5&release_date=2017-06-08&run_time=123&genres=asda&overview=aaa&cast=asdas&director=bbb&screen=dsada&21&submit=").withSession("admin"->"admin")).orNull
-      status(addMovieResult) must equalTo(303)
-    }
+//    "add movie to database" in new WithApplication() {
+//      val addMovieResult = route(FakeApplication(), FakeRequest(POST,
+//        "/addMovie?movie_id=10&title=leaveThisForNow&poster_path=somepath&landscape=Stuff&video=aaa&images=asdasd&age_rating=12A&" +
+//          "user_rating=2.5&release_date=2017-06-08&run_time=123&genres=asda&overview=aaa&cast=asdas&director=bbb&screen=dsada&21&submit=").withSession("admin"->"admin")).orNull
+//      status(addMovieResult) must equalTo(303)
+//    }
 
     "bad request add movie to database" in new WithApplication() {
       val addMovieResult = route(FakeApplication(), FakeRequest(POST,
