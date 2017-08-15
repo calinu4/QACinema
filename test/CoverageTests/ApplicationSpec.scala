@@ -1,5 +1,8 @@
 package CoverageTests
 
+import java.time.LocalDate
+import java.util.Calendar
+
 import org.junit.runner._
 import org.specs2.mutable._
 import org.specs2.runner._
@@ -16,7 +19,6 @@ class ApplicationSpec extends Specification {
 
 
   "Application" should {
-    //    "send 404 on a bad request" in new WithApplication{route(FakeRequest(GET, "/boum")) must beNone}
 
     "render the index page" in new WithApplication {
       val home = route(FakeApplication(), FakeRequest(GET, "/")).get
@@ -59,6 +61,20 @@ class ApplicationSpec extends Specification {
       contentAsString(listings) must contain("Filter Movies")
     }
 
+    "filter the Listings page by Romance" in new WithApplication {
+      val listings = route(FakeApplication(), FakeRequest(GET, "/listings/Romance")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain("Deadpool")
+    }
+
+    "filter the Listings page by Upcoming" in new WithApplication {
+      val listings = route(FakeApplication(), FakeRequest(GET, "/listings/upcoming")).get
+      status(listings) must equalTo(OK)
+      contentType(listings) must beSome.which(_ == "text/html")
+      contentAsString(listings) must contain("The Dark Tower (2017)")
+    }
+
     "render the Classifications page" in new WithApplication {
       val classifications = route(FakeApplication(), FakeRequest(GET, "/classifications")).get
       status(classifications) must equalTo(OK)
@@ -85,6 +101,13 @@ class ApplicationSpec extends Specification {
       status(contact) must equalTo(OK)
       contentType(contact) must beSome.which(_ == "text/html")
       contentAsString(contact) must contain("Local Amenities")
+    }
+
+    "render the screen info page" in new WithApplication {
+      val contact = route(FakeApplication(), FakeRequest(GET, "/screenInformation")).get
+      status(contact) must equalTo(OK)
+      contentType(contact) must beSome.which(_ == "text/html")
+      contentAsString(contact) must contain("Is our deluxe iMax experience")
     }
 
     "render the Find Us page" in new WithApplication {
@@ -147,6 +170,99 @@ class ApplicationSpec extends Specification {
       contentAsString(showingsPage) must not contain("Dunkirk")
       contentAsString(showingsPage) must not contain("Atomic Blonde(2017)")
       contentAsString(showingsPage) must not contain("Pirates of the Caribbean: Dead Men Tell No Tales")
+    }
+
+    "by default show today's movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+      val now = Calendar.getInstance().toInstant
+      val currentDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(currentDate)
+    }
+
+    "show tomorrow movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=2")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(1).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val tomorrowDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(tomorrowDate))
+    }
+
+    "show day 3 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=3")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(2).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 4 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=4")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(3).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 5 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=5")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(4).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 6 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=6")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(5).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
+    }
+
+    "show day 7 movie listings" in new WithApplication {
+      val showingsPage = route(FakeApplication(), FakeRequest(GET, "/showings?date=7")).get
+      status(showingsPage) must equalTo(OK)
+      contentType(showingsPage) must beSome.which(_ == "text/html")
+
+      def incrementDayByOne(now:String): String = {
+        LocalDate.parse(now).plusDays(6).toString
+      }
+
+      val now = Calendar.getInstance().toInstant
+      val futureDate = now.toString.splitAt(10)._1
+      contentAsString(showingsPage) must contain(incrementDayByOne(futureDate))
     }
 
     "show ticket selection" in new WithApplication {

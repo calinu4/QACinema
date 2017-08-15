@@ -29,7 +29,7 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
 
-  def getShowings(): List[Showing] = {
+  def getShowings: List[Showing] = {
     val cursor: Future[Cursor[Showing]] = showings.map {
       _.find(Json.obj())
         .sort(Json.obj("created" -> -1))
@@ -40,53 +40,51 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   }
 
   //Display all showings available to book
-  def showingsView(movieTitle: String,date:String): Action[AnyContent] = Action{
-    val sevenDays=getSevenDays()
-    val showingsList=getShowings()
-      if(movieTitle!="/all") {
-        val newShowings = showingsList.filter(elem => elem.movieId == movieTitle)
-        if(newShowings.nonEmpty) {
-          Ok(views.html.showings(newShowings,sevenDays))
-        }
-        else {
-          Ok(views.html.showings(showingsList,sevenDays))
-        }
+  def showingsView(movieTitle: String, date: String): Action[AnyContent] = Action {
+    val sevenDays = getSevenDays
+    val showingsList = getShowings
+    if (movieTitle != "/all") {
+      val newShowings = showingsList.filter(elem => elem.movieId == movieTitle)
+      if (newShowings.nonEmpty) {
+        Ok(views.html.showings(newShowings, sevenDays))
       }
-      else{
-        val filteredShowings=filterShowingByDate(date,showingsList)
-        Ok(views.html.showings(filteredShowings,sevenDays))
+      else {
+        Ok(views.html.showings(showingsList, sevenDays))
       }
+    }
+    else {
+      val filteredShowings = filterShowingByDate(date, showingsList)
+      Ok(views.html.showings(filteredShowings, sevenDays))
+    }
   }
 
-  def filterShowingByDate(date:String,showings:List[Showing]):List[Showing]={
-    val sevenDays=getSevenDays()
-    date match{
-      case "1"=>showings.filter(e=>e.date==sevenDays(0))
-      case "2"=>showings.filter(e=>e.date==sevenDays(1))
-      case "3"=>showings.filter(e=>e.date==sevenDays(2))
-      case "4"=>showings.filter(e=>e.date==sevenDays(3))
-      case "5"=>showings.filter(e=>e.date==sevenDays(4))
-      case "6"=>showings.filter(e=>e.date==sevenDays(5))
-      case "7"=>showings.filter(e=>e.date==sevenDays(6))
-      case _=>showings
+  def filterShowingByDate(date: String, showings: List[Showing]): List[Showing] = {
+    val sevenDays = getSevenDays
+    date match {
+      case "1" => showings.filter(e => e.date == sevenDays(0))
+      case "2" => showings.filter(e => e.date == sevenDays(1))
+      case "3" => showings.filter(e => e.date == sevenDays(2))
+      case "4" => showings.filter(e => e.date == sevenDays(3))
+      case "5" => showings.filter(e => e.date == sevenDays(4))
+      case "6" => showings.filter(e => e.date == sevenDays(5))
+      case "7" => showings.filter(e => e.date == sevenDays(6))
+      case _ => showings
     }
-
   }
 
   //Added 7 days list here
-  def incrementDayByOne(now:String): String = {
-    return LocalDate.parse(now).plusDays(1).toString
-  }
+  def incrementDayByOne(now: String): String = LocalDate.parse(now).plusDays(1).toString
 
-  def getSevenDays():Array[String]={
+  def getSevenDays: Array[String] = {
     val now = Calendar.getInstance().toInstant
     val currentDate = now.toString.splitAt(10)._1
-    val currentTime = now.toString.substring(11,16)
-    val datesList:Array[String]=new Array[String](7)
-    datesList(0)=currentDate
+    val currentTime = now.toString.substring(11, 16)
+    val datesList: Array[String] = new Array[String](7)
+    datesList(0) = currentDate
 
-    for(i<-1 until 7)
-      datesList(i)=incrementDayByOne(datesList(i-1))
+    for (i <- 1 until 7) {
+      datesList(i) = incrementDayByOne(datesList(i - 1))
+    }
     datesList
   }
 

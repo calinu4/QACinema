@@ -85,8 +85,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def isFuture(value: Date): Boolean = value.after(new Date)
 
-  def isCurrent(value: Date): Boolean = value.before(new Date)
-
 
   //list movies for index
   def listIndexMovies: Action[AnyContent] = Action.async {
@@ -127,12 +125,12 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
 
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
-      val newmovies = for (i <- movies if (i.genres.contains(genre))) yield i
-      Ok(views.html.listings(newmovies))
+      val newMovies = for (i <- movies if (i.genres.contains(genre))) yield i
+      Ok(views.html.listings(newMovies))
     }
   }
 
@@ -205,10 +203,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
-
-
-
-
 
   def ticketSelection(id: Int) = Action {
 
