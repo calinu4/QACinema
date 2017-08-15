@@ -28,13 +28,11 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   //Read from table movies
   def moviecollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("testMovie"))
 
-
   def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
 
   def receipts: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("receipts"))
-
 
   def getreceipt(reservationId: String): Reservation = {
     val cursor: Future[Cursor[Reservation]] = receipts.map {
@@ -53,6 +51,16 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .cursor[Showing]
     }
     val futureResList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf)
+  }
+
+  def getShowingObj(): List[ShowingObj] = {
+    val cursor: Future[Cursor[ShowingObj]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[ShowingObj]
+    }
+    val futureResList: Future[List[ShowingObj]] = cursor.flatMap(_.collect[List]())
     Await.result(futureResList, Duration.Inf)
   }
 
@@ -129,7 +137,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     }
   }
 
-
   //Filter movies by genre
   def filterMovies(genre: String): Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = moviecollection.map {
@@ -195,7 +202,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     Await.result(futureMovieList, Duration.Inf)
   }
 
-
   //adds Movies to database
   def addMovie() = Action {
     implicit request =>
@@ -219,7 +225,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
-
 
   //Display all showings available to book
   def showingsView: Action[AnyContent] = Action.async {
@@ -336,13 +341,13 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       }
   }
 
-  /*
+
   def updateShowing(id: Int) = Action {
 
     implicit request =>
       request.session.get("admin").map { user =>
 
-        val formValidationResult = Showing.createShowing.bindFromRequest
+        val formValidationResult = ShowingObj.createShowing.bindFromRequest
         formValidationResult.fold({ errors =>
           BadRequest(views.html.showings(getShowing()))
         }, { showingsShown =>
@@ -357,7 +362,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
 
-  }*/
+  }
 
   def addShowing(): Action[AnyContent] = Action { implicit request =>
     request.session.get("admin").map { user =>
@@ -385,21 +390,17 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     val seats=Array.ofDim[Int](5,10)
     Showing(show.showingId,show.roomId,show.movieId,show.date,show.time,50,seats)
   }
-/*
-  def updateShowingPageEdit(id: Int): Action[AnyContent] = Action.async {
-    implicit request =>
-      val cursor: Future[Cursor[Showing]] = showings.map {
-        _.find(Json.obj())
-          .sort(Json.obj("created" -> 1))
-          .cursor[Showing]
-      }
-      val futureMovieList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
-      futureMovieList.map(
-        showing =>
-          Ok(views.html.editShowing(showing, Showing.createShowing.fill(showing(id)), id))
-      )
 
-  }*/
+  def updateShowingPageEdit(id: Int): Action[AnyContent] = Action{
+    implicit request =>
+      val showing = getshowing(id)
+
+
+
+          Ok(views.html.editShowings(showing, ShowingObj.createShowing.fill(getShowingObj()(id)), id))
+
+
+  }
 
   def deletePage(id: Int): Action[AnyContent] = Action {
     implicit request =>
@@ -412,7 +413,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
-
 
   def deleteMovie(id: Int) = Action {
     implicit request =>
