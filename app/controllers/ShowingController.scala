@@ -25,6 +25,20 @@ import scala.concurrent.duration.Duration
 class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with MongoController with ReactiveMongoComponents with I18nSupport {
 
+  def dateParse(date: String): Date = {
+    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    format.parse(date)
+  }
+
+  def isFuture(value: Date): Boolean = value.after(new Date)
+  def isToday(value: String): Boolean = {
+    val now = Calendar.getInstance().toInstant
+    val currentDate = now.toString.splitAt(10)._1
+    if(currentDate==value)
+      true
+    else
+      false
+  }
 
   def showings: Future[JSONCollection] = database.map(
     _.collection[JSONCollection]("showings"))
@@ -45,17 +59,17 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
     val showingsList=getShowings()
       if(movieTitle!="/all") {
-        val newShowings = showingsList.filter(elem => elem.movieId == movieTitle)
+        val newShowings = showingsList.filter(elem => elem.movieId == movieTitle).filter(elem=>isToday(elem.date)||isFuture(dateParse(elem.date)))
         if(newShowings.nonEmpty) {
-          Ok(views.html.showings(newShowings,sevenDays,date.toInt-1))
+          Ok(views.html.showings(newShowings,sevenDays,date.toInt-1,false))
         }
         else {
-          Ok(views.html.showings(showingsList,sevenDays,date.toInt-1))
+          Ok(views.html.showings(showingsList,sevenDays,date.toInt-1,true))
         }
       }
       else{
         val filteredShowings=filterShowingByDate(date,showingsList)
-        Ok(views.html.showings(filteredShowings,sevenDays,date.toInt-1))
+        Ok(views.html.showings(filteredShowings,sevenDays,date.toInt-1,true))
       }
   }
 
@@ -90,5 +104,7 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       datesList(i)=incrementDayByOne(datesList(i-1))
     datesList
   }
+
+
 
 }

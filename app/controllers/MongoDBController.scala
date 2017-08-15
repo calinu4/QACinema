@@ -86,9 +86,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def isFuture(value: Date): Boolean = value.after(new Date)
 
-  def isCurrent(value: Date): Boolean = value.before(new Date)
-
-
   //list movies for index
   def listIndexMovies: Action[AnyContent] = Action.async {
     val cursor: Future[Cursor[Movie]] = movieCollection.map {
