@@ -1,10 +1,19 @@
-@(show: List[Showing])
+@(show: List[Showing],days:Array[String])
 
 @main("Showings") {
 <script>
 
 </script>
 <h1>Showings</h1>
+<div class="row">
+    <a href='@routes.ShowingController.showingsView("/all","1")' ><button class="btn btn-primary">Today</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","2")'><button class="btn btn-primary">Tomorrow</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","3")' ><button class="btn btn-primary">@days(2)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","4")'><button class="btn btn-primary">@days(3)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","5")'><button class="btn btn-primary">@days(4)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","6")' ><button class="btn btn-primary">@days(5)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","7")'><button class="btn btn-primary">@days(6)</button></a>
+</div>
 <div class="row">
 
     <div class="col-lg-12">
