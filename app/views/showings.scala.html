@@ -2,10 +2,10 @@
 
 @main("Showings") {
 
-<h1>Showings</h1>
+<h1>Select a Screening:</h1>
 
 @if(isAll){
-<h3>Showings: @days(index)</h3>
+<h4>Date: @days(index)</h4><br/>
 <div class="row">
     <a href='@routes.ShowingController.showingsView("/all","1")' ><button class="btn btn-primary">Today</button></a>
     <a href='@routes.ShowingController.showingsView("/all","2")'><button class="btn btn-primary">Tomorrow</button></a>
