@@ -110,4 +110,16 @@ class IntegrationSpec extends FlatSpec with ShouldMatchers with WebBrowser {
     pageTitle shouldEqual "500: No Such Movie"
   }
 
+  "The booking button on the individual Deadpool page" should "redirect to the showings page with only Deadpool showings" in {
+    go to (host + "listings")
+    click on linkText("Deadpool")
+    pageTitle shouldEqual "Deadpool"
+    click on linkText("Then Book it!")
+    pageTitle shouldEqual "Showings"
+    find(xpath("//*[@id=\"showingsTable\"]/tbody/tr[1]/td[1]")) shouldEqual "Deadpool"
+    find(xpath("//*[@id=\"showingsTable\"]/tbody/tr[2]/td[1]")) shouldEqual "Deadpool"
+    find(xpath("//*[@id=\"showingsTable\"]/tbody/tr[3]/td[1]")) shouldEqual "Deadpool"
+    find(xpath("//*[@id=\"showingsTable\"]/tbody/tr[4]/td[1]")) shouldEqual "Deadpool"
+  }
+
 }
