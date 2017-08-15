@@ -42,6 +42,16 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   //Display all showings available to book
   def showingsView(movieTitle: String,date:String): Action[AnyContent] = Action{
     val sevenDays=getSevenDays()
+    date match{
+      case "1"=>sevenDays(7)=sevenDays(0)
+      case "2"=>sevenDays(7)=sevenDays(1)
+      case "3"=>sevenDays(7)=sevenDays(2)
+      case "4"=>sevenDays(7)=sevenDays(3)
+      case "5"=>sevenDays(7)=sevenDays(4)
+      case "6"=>sevenDays(7)=sevenDays(5)
+      case "7"=>sevenDays(7)=sevenDays(6)
+      case _=>sevenDays(7)=sevenDays(0)
+    }
     val showingsList=getShowings()
       if(movieTitle!="/all") {
         val newShowings = showingsList.filter(elem => elem.movieId == movieTitle)
@@ -82,7 +92,7 @@ class ShowingController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     val now = Calendar.getInstance().toInstant
     val currentDate = now.toString.splitAt(10)._1
     val currentTime = now.toString.substring(11,16)
-    val datesList:Array[String]=new Array[String](7)
+    val datesList:Array[String]=new Array[String](8)
     datesList(0)=currentDate
 
     for(i<-1 until 7)
