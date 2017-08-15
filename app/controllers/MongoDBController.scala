@@ -46,6 +46,16 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
     Await.result(futureResList, Duration.Inf)(0)
   }
 
+  def getShowing(): List[Showing] = {
+    val cursor: Future[Cursor[Showing]] = showings.map {
+      _.find(Json.obj())
+        .sort(Json.obj("created" -> -1))
+        .cursor[Showing]
+    }
+    val futureResList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    Await.result(futureResList, Duration.Inf)
+  }
+
   def getshowing(showingId: Int): Showing = {
     val cursor: Future[Cursor[Showing]] = showings.map {
       _.find(Json.obj("showingId" -> showingId))
@@ -169,6 +179,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
   def seeAddMovie = Action {
     Ok(views.html.addMovie(Movie.createMovie))
+  }
+
+  def seeAddShowings = Action {
+    Ok(views.html.addShowing(ShowingObj.createShowing))
   }
 
   def getMovies(): List[Movie] = {
@@ -311,6 +325,82 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       }
   }
 
+  def updateShowingEditPage(): Action[AnyContent] = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        val showings = getShowing()
+        Ok(views.html.showShowings(showings))
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+  /*
+  def updateShowing(id: Int) = Action {
+
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        val formValidationResult = Showing.createShowing.bindFromRequest
+        formValidationResult.fold({ errors =>
+          BadRequest(views.html.showings(getShowing()))
+        }, { showingsShown =>
+          val showingList = getShowing()
+          val selector = showingList(id)
+          val futureResult = showings.map(_.findAndUpdate(selector, showingsShown))
+          futureResult.map(_ => Ok("Added user " + showingsShown.showingId + " at " + showingsShown.date + " " + showingsShown.time))
+          Redirect(routes.MongoDBController.showingsView())
+
+        })
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+
+  }*/
+
+  def addShowing(): Action[AnyContent] = Action { implicit request =>
+    request.session.get("admin").map { user =>
+
+      val formValidationResult = ShowingObj.createShowing.bindFromRequest
+      formValidationResult.fold({
+        errors =>
+          println(formValidationResult)
+
+          BadRequest(views.html.addShowing(errors))
+
+      }, { showingStuff =>
+        val result=returnNewShowing(showingStuff)
+        val futureResult = showings.flatMap(_.insert(result))
+        futureResult.map(_ => Ok("Added user " + showingStuff.showingId + " " + showingStuff.date + " " + showingStuff.time))
+        Redirect(routes.MongoDBController.listMovies())
+      })
+
+    }.getOrElse {
+      Unauthorized(views.html.messagePage("You are not logged in!"))
+    }
+  }
+
+  def returnNewShowing(show:ShowingObj):Showing={
+    val seats=Array.ofDim[Int](5,10)
+    Showing(show.showingId,show.roomId,show.movieId,show.date,show.time,50,seats)
+  }
+/*
+  def updateShowingPageEdit(id: Int): Action[AnyContent] = Action.async {
+    implicit request =>
+      val cursor: Future[Cursor[Showing]] = showings.map {
+        _.find(Json.obj())
+          .sort(Json.obj("created" -> 1))
+          .cursor[Showing]
+      }
+      val futureMovieList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+      futureMovieList.map(
+        showing =>
+          Ok(views.html.editShowing(showing, Showing.createShowing.fill(showing(id)), id))
+      )
+
+  }*/
+
   def deletePage(id: Int): Action[AnyContent] = Action {
     implicit request =>
       request.session.get("admin").map { user =>
@@ -332,6 +422,32 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         val selector = movieList(id)
         val futureResult = moviecollection.map(_.findAndRemove(selector))
         Redirect(routes.MongoDBController.updatePage())
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+  def deleteShowingPage(id: Int): Action[AnyContent] = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        val showingList = getShowing()
+        Ok(views.html.deleteShowingPage(showingList, id))
+
+      }.getOrElse {
+        Unauthorized(views.html.messagePage("You are not logged in!"))
+      }
+  }
+
+  def deleteShowing(id: Int) = Action {
+    implicit request =>
+      request.session.get("admin").map { user =>
+
+        val showingList = getShowing()
+        val selector = showingList(id)
+        val futureResult = moviecollection.map(_.findAndRemove(selector))
+        Redirect(routes.MongoDBController.updateShowingPage())
 
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))

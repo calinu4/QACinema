@@ -1,0 +1,16 @@
+@(form: Form[ShowingObj])(implicit messages: Messages)
+@main("Add Showing") {
+
+
+    @helper.form(routes.MongoDBController.addShowing) {
+
+        @helper.inputText(form("showingId"), '_label -> "Showing ID", '_showConstraints -> false)
+        @helper.inputText(form("roomId"), '_label -> "Room ID", '_showConstraints -> false)
+        @helper.inputText(form("movieId"), '_label -> "Movie ID", '_showConstraints -> false)
+        @helper.inputText(form("date"), '_label -> "Date", '_showConstraints -> false)
+        @helper.inputText(form("time"), '_label -> "Time", '_showConstraints -> false)
+        <h4 style="color: red">* indicates required field</h4>
+        <button type="submit" class="btn btn-primary">Create Screening</button>
+    }
+
+}

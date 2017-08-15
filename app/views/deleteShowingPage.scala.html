@@ -1,0 +1,27 @@
+@(showings: List[Showing],id:Int)(implicit messages: Messages))
+@main("Delete Movie"){
+
+    <h1>Showings</h1>
+
+        @for(showing <- showings) {
+            @if(showings.indexOf(showing) == id) {
+                <p>Showing @(showings.indexOf(showing))</p>
+                    <p>Showing: @showing.showingId</p>
+                    <p>Movie: @showing.movieId</p>
+                    <p>Date: @showing.date</p>
+                    <p>Time: @showing.time</p>
+                    <p>Seats Available: @showing.seatsAvailable</p>
+                    <p>Room ID: @showing.roomId</p>
+                    <p><a href="/deleteShowing/@(showings.indexOf(showing))"> <button type="button" class="btn btn-primary">
+                        Delete</button></a></p>
+
+
+            }
+        }
+
+
+
+
+
+
+}

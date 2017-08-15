@@ -56,3 +56,13 @@ GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
 #GET         /successPage                        controllers.Application.successPage
+
+
+GET         /addShowings                controllers.MongoDBController.seeAddShowings
+POST        /addShowings                controllers.MongoDBController.addShowing()
+#
+#GET         /updateShowings/:id         controllers.MongoDBController.updateShowingPageEdit(id:Int)
+#POST        /updateShowings/:id         controllers.MongoDBController.updateShowing(id:Int)
+#GET         /updateShowings             controllers.MongoDBController.updateShowingPage
+#GET         /deletShowing/:id           controllers.MongoDBController.deleteShowing(id:Int)
+#GET         /deleteShowingPage/:id      controllers.MongoDBController.deleteShowingPage(id:Int)
