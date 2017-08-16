@@ -197,7 +197,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
         }, { movie =>
           if(checkMovie(movie)){
-            val futureResult = moviecollection.flatMap(_.insert(movie))
+            val futureResult = movieCollection.flatMap(_.insert(movie))
 
             futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
 
@@ -281,7 +281,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
             if(checkMovie(movies)){
               val movieList = getMovies()
               val selector = movieList(id)
-              val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+              val futureResult = movieCollection.map(_.findAndUpdate(selector, movies))
               futureResult.map(_ => Ok("Added movie " + movies.title))
               Redirect(routes.MongoDBController.listMovies())
             }
