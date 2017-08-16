@@ -83,7 +83,11 @@ class Application @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: 
   }
 
   def loginGet() = Action { implicit request =>
-    Ok(views.html.login(Login.createLoginForm))
+    request.session.get("admin").map { user =>
+      Ok(views.html.AdminControllerPage("Admin Page"))
+    }.getOrElse {
+      Ok(views.html.login(Login.createLoginForm))
+    }
   }
 
   val usersResult = database.map(_.collection[JSONCollection]("users"))

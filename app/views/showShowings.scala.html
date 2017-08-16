@@ -1,0 +1,30 @@
+@(showings: List[Showing])(implicit messages: Messages)
+
+
+@main("List of Showings") {
+
+
+    <h1>Showings</h1>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Movie</th><th>Date</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+        @for(showing <- showings) {
+
+                <tr><td>@showing.showingId</td>
+                    <td>@showing.movieId</td>
+                    <td>@showing.date</td>
+                    <td>@showing.time</td>
+                    <td><a href="/updateShowings/@showing.showingId"> <button type="button" class="btn btn-primary">Edit</button></a></td>
+                    <td><a href="/deleteShowingPage/@showing.showingId"> <button type="button" class="btn btn-primary">Delete</button></a></td>
+
+                </tr>
+        }
+        </tbody>
+    </table>
+
+    <hr/>
+
+
+}

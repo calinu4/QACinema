@@ -54,7 +54,7 @@ object JsonFormats {
   implicit val reservationFormat = Json.format[Reservation]
   implicit val showingFormat = Json.format[Showing]
   implicit val movieFormat = Json.format[Movie]
-
+  implicit val showingObjFormat = Json.format[ShowingObj]
 }
 
 

@@ -1,0 +1,23 @@
+@(showing: Showing)(implicit messages: Messages))
+@main("Delete Movie"){
+
+    <h1>Showing</h1>
+
+
+                    <p>Showing: @showing.showingId</p>
+                    <p>Movie: @showing.movieId</p>
+                    <p>Date: @showing.date</p>
+                    <p>Time: @showing.time</p>
+                    <p>Seats Available: @showing.seatsAvailable</p>
+                    <p>Room ID: @showing.roomId</p>
+                    <p><a href="/deleteShowing/@showing.showingId"> <button type="button" class="btn btn-primary">
+                        Delete</button></a></p>
+
+
+
+
+
+
+
+
+}

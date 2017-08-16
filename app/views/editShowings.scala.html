@@ -1,0 +1,39 @@
+@(sc: Showing, form: Form[ShowingObj], id: Int)(implicit messages: Messages)
+
+
+@main("Screenings Edit") {
+
+
+    <h1>Edit Showing</h1>
+    <table>
+        <thead>
+            <tr><th>Showing ID</th><th>Room ID</th><th>Movie ID</th><th>Date</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+
+
+                <tr><td>@sc.showingId</td>
+                    <td>@sc.roomId</td>
+                    <td>@sc.movieId</td>
+                    <td>@sc.date</td>
+                    <td>@sc.time</td>
+
+                </tr>
+
+
+        </tbody>
+    </table>
+
+    <hr/>
+
+    @helper.form(routes.MongoDBController.updateShowing(id)) {
+
+        @helper.inputText(form("showingId"), '_label -> "Showing ID", '_showConstraints -> false)
+        @helper.inputText(form("roomId"), '_label -> "Room ID", '_showConstraints -> false)
+        @helper.inputText(form("movieId"), '_label -> "Movie ID", '_showConstraints -> false)
+        @helper.inputText(form("date"), '_label -> "Date", '_showConstraints -> false)
+        @helper.inputText(form("time"), '_label -> "Time", '_showConstraints -> false)
+
+            <button type="submit" class="btn btn-primary">Edit Showing</button>
+    }
+}
