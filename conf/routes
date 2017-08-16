@@ -66,8 +66,10 @@ GET         /addShowings                controllers.MongoDBController.seeAddShow
 POST        /addShowings                controllers.MongoDBController.addShowing()
 
 GET         /updateShowings/:id         controllers.MongoDBController.updateShowingPageEdit(id:Int)
+GET         /updateShowings             controllers.MongoDBController.updateShowingEditPage
 POST        /updateShowings/:id         controllers.MongoDBController.updateShowing(id:Int)
-#GET        /updateShowings            controllers.MongoDBController.updateShowingPage
+
+#GET        /updateShowings             controllers.MongoDBController.updateShowingPage
 
 GET         /deleteShowing/:id          controllers.MongoDBController.deleteShowing(id:Int)
 GET         /deleteShowingPage/:id      controllers.MongoDBController.deleteShowingPage(id:Int)

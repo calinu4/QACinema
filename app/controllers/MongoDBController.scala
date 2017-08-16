@@ -304,7 +304,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
             if(checkMovie(movies)){
               val movieList = getMovies()
               val selector = movieList(id)
-              val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+              val futureResult = movieCollection.map(_.findAndUpdate(selector, movies))
               futureResult.map(_ => Ok("Added movie " + movies.title))
               Redirect(routes.MongoDBController.listMovies())
             }
