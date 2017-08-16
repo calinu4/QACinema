@@ -1,5 +1,5 @@
 @(title: String)(content: Html)
-
+<!-- https://bootsnipp.com/snippets/featured/fancy-navbar-login-sign-in-form URL for the login button-->
 <!DOCTYPE html>
 
 <html>
@@ -22,6 +22,7 @@
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/jquery.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/map.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/extraJquery.js")" type="text/javascript"></script>
         <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
     </head>
     <body>
@@ -44,7 +45,7 @@
                         </li>
                         <li>
 
-                            <a href="/showings">Booking</a>
+                            <a href="/booking">Booking</a>
                         </li>
                         <li>
                             <a href="@routes.Application.findUs">Find Us</a>
@@ -66,8 +67,9 @@
                             <a href="@routes.Application.sessionOut()">Logout</a>
                         </li>
                         <li>
-                            <a href="@routes.Application.sessionIn()">Login</a>
+                            <a href="@routes.Application.loginGet()">Login</a>
                         </li>
+
 
                     </ul>
 
@@ -108,13 +110,10 @@
                         <ul><a href="https://twitter.com/QACinema" style="font-size: 400%;
                             color: #55ACEE" class="btn btn-social-icon btn-twitter" onclick="_gaq.push(['_trackEvent', 'btn-social-icon', 'click', 'btn-twitter']);"><span class="fa fa-twitter"></span></a>
                         </ul>
-
                     </div>
                 </div>
             </footer>
-
         </div>
-
         <script src="@routes.Assets.at("javascripts/jquery.js")"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
     </body>
