@@ -1,28 +1,50 @@
-@(show: List[Showing])
+@(show: List[Showing],days:Array[String],index:Int,isAll:Boolean)
 
 @main("Showings") {
-  <script>
 
-  </script>
-  <h1>Showings</h1>
-  <div class="row">
+<h1>Select a Screening:</h1>
+
+@if(isAll){
+<h4>Date: @days(index)</h4><br/>
+<div class="row">
+    <a href='@routes.ShowingController.showingsView("/all","1")' ><button class="btn btn-primary">Today</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","2")'><button class="btn btn-primary">Tomorrow</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","3")' ><button class="btn btn-primary">@days(2)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","4")'><button class="btn btn-primary">@days(3)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","5")'><button class="btn btn-primary">@days(4)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","6")' ><button class="btn btn-primary">@days(5)</button></a>
+    <a href='@routes.ShowingController.showingsView("/all","7")'><button class="btn btn-primary">@days(6)</button></a>
+</div>
+}else {<h3>Showings for: @show.head.movieId</h3>}
+
+
+<div class="row">
 
     <div class="col-lg-12">
-      <table>
-        <thead>
-          <tr><th>Movie Name </th><th>Dates</th><th>Screen</th><th>Times</th>
-        </thead>
-        <tbody>
-        @for(s<- show) {
-          <tr><td>@s.movieId</td><td>@s.date</td><td>@s.roomId</td><td><a href="@routes.MongoDBController.ticketSelection(s.showingId)">
-            <button id="@s.showingId" class="btn btn-primary">@s.time</button>
-          </a></td></tr>
-        }
-        </tbody>
-      </table>
+        <table id="showingsTable">
+            <thead>
+            <tr>
+                <th>Movie Name</th>
+                <th>Dates</th>
+                <th>Screen</th>
+                <th>Times</th>
+            </thead>
+            <tbody>
+            @for(s<- show) {
+            <tr>
+                <td>@s.movieId</td>
+                <td>@s.date</td>
+                <td>@s.roomId</td>
+                <td><a href="@routes.MongoDBController.ticketSelection(s.showingId)">
+                    <button id="@s.showingId" class="btn btn-primary">@s.time</button>
+                </a></td>
+            </tr>
+            }
+            </tbody>
+        </table>
     </div>
 
-  </div>
+</div>
 
 
 }
