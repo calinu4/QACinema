@@ -86,7 +86,6 @@ class Application @Inject()(val messagesApi: MessagesApi)(val reactiveMongoApi: 
     Ok(views.html.login(Login.createLoginForm))
   }
 
-
   val usersResult = database.map(_.collection[JSONCollection]("users"))
 
   def getUsers(): List[User] = {

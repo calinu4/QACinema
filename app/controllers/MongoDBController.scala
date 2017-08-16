@@ -1,21 +1,26 @@
 package controllers
-
+import play.api.Logger._
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 import javax.inject.Inject
+import javax.management.relation.RelationServiceNotRegisteredException
+
+import play.api.cache.Cache
+import play.api.Play.current
 
 import scala.util.Try
 import scala.concurrent.{Await, Future}
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import reactivemongo.api.Cursor
+import reactivemongo.api.{Cursor, QueryOpts}
 import models._
 import models.JsonFormats._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json._
 import collection._
-import play.api.i18n._
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.duration.Duration
@@ -188,15 +193,21 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         val formValidationResult = Movie.createMovie.bindFromRequest
         formValidationResult.fold({
           errors =>
-            println(formValidationResult)
-
             BadRequest(views.html.addMovie(errors))
 
         }, { movie =>
-          val futureResult = movieCollection.flatMap(_.insert(movie))
+          if(checkMovie(movie)){
+            val futureResult = moviecollection.flatMap(_.insert(movie))
 
-          futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
-          Redirect(routes.MongoDBController.listMovies())
+            futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
+
+            Redirect(routes.MongoDBController.adminPage())
+          }
+          else
+            Ok("Error,Invalid input.Please try again"+ "Image Path "+checkImagesPath(movie) +"Poster Path "+ checkPosterPath(movie)+"Landscape Path "+checkLandscapePath(movie)
+            +"Age rating "+ checkAge(movie)+"Genres "+ checkGenre(movie))
+           // TODO:find out how to redirect back a page
+
         })
 
       }.getOrElse {
@@ -267,11 +278,17 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         formValidationResult.fold({ errors =>
           BadRequest(views.html.listings(getMovies()))
         }, { movies =>
-          val movieList = getMovies()
-          val selector = movieList(id)
-          val futureResult = movieCollection.map(_.findAndUpdate(selector, movies))
-          futureResult.map(_ => Ok("Added user " + movies.title))
-          Redirect(routes.MongoDBController.listMovies())
+            if(checkMovie(movies)){
+              val movieList = getMovies()
+              val selector = movieList(id)
+              val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+              futureResult.map(_ => Ok("Added movie " + movies.title))
+              Redirect(routes.MongoDBController.listMovies())
+            }
+          else{
+              Ok("Error,Invalid input.Please try again "+ " Image Path ->"+checkImagesPath(movies) +" Poster Path ->"+ checkPosterPath(movies)+" Landscape Path ->"+checkLandscapePath(movies)
+                +" Age rating ->"+ checkAge(movies)+" Genres ->"+ checkGenre(movies))
+            }
 
         })
       }.getOrElse {
@@ -292,6 +309,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
+
+
 
   def deletePage(id: Int): Action[AnyContent] = Action {
     implicit request =>
@@ -354,5 +373,60 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       Ok(views.html.payment(total.toString, reservation)).withSession(request.session + ("name" -> name) + ("email" -> email) + ("reservationId" -> currentTimestamp))
     )
   }
+    
+  val whiteList = List(".png",".jpg")
+  val ageWhiteList = List("12A","18","R","U","PG","15","12")
+  val genreWhiteList = Array("Action","Adult","Avant-gade/Experimental","Children's","Drama","Family","Comedy","Crime","Epic",
+  "Fantasy","Horror","Musical","Musical","Romance","Science Fiction","Thriller","War")
+
+  def checkAge(movie: Movie):Boolean={
+    if(ageWhiteList.contains(movie.age_rating))true
+    else false
+  }
+
+  def checkGenre(movie: Movie):Boolean={
+    val movieGenreList = movie.genres.split(",")
+    val checker = Array.fill[Boolean](movieGenreList.length)(true)
+    val results = movieGenreList.map(x=> genreWhiteList.contains(x))
+
+    if(results sameElements checker)true
+    else false
+  }
+
+  def checkMovie(movie: Movie):Boolean={
+    if(checkImages(movie)&&checkAge(movie)&&checkGenre(movie))true
+    else false
+  }
+
+
+  def checkExtension(string:String):Boolean={
+    if(string.endsWith(whiteList.head.toLowerCase) || string.endsWith(whiteList.last.toLowerCase))
+      true
+    else false
+  }
+
+
+  def checkPosterPath(movie:Movie):Boolean= {
+    checkExtension(movie.poster_path)
+  }
+
+  def checkImagesPath(movie: Movie):Boolean={
+    val checker = Array(true,true,true)
+    val imageExtensions = movie.images.split(",")
+    val results = imageExtensions.map(x=>checkExtension(x))
+    if(results sameElements checker ) true
+    else false
+  }
+
+  def checkLandscapePath(movie: Movie):Boolean={
+    checkExtension(movie.landscape)
+  }
+
+
+  def checkImages(movie: Movie):Boolean={
+    if(checkPosterPath(movie)&& checkImagesPath(movie)&&checkLandscapePath(movie))true
+    else false
+  }
+
 
 }
