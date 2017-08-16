@@ -12,12 +12,12 @@
         <tbody>
         @for(showing <- showings) {
 
-                <tr><td>@(showings.indexOf(showing))</td>
+                <tr><td>@showing.showingId</td>
                     <td>@showing.movieId</td>
                     <td>@showing.date</td>
                     <td>@showing.time</td>
-                    <td><a href="/updateShowings/@(showings.indexOf(showing))"> <button type="button" class="btn btn-primary">Edit</button></a></td>
-                    <td><a href="/deleteShowingPage/@(showings.indexOf(showing))"> <button type="button" class="btn btn-primary">Delete</button></a></td>
+                    <td><a href="/updateShowings/@showing.showingId"> <button type="button" class="btn btn-primary">Edit</button></a></td>
+                    <td><a href="/deleteShowingPage/@showing.showingId"> <button type="button" class="btn btn-primary">Delete</button></a></td>
 
                 </tr>
         }
