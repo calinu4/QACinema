@@ -50,7 +50,7 @@
                             <a href="@routes.Application.findUs">Find Us</a>
                         </li>
                         <li>
-                            <a href="@routes.Application.localStuff">Local Info</a>
+                            <a href="@routes.Application.localInfo()">Local Info</a>
 
                         </li>
                         <li>
@@ -61,19 +61,13 @@
                     <ul class="nav navbar-nav" style="padding-top: 0px;
                         padding-bottom: 0px;
                         position: relative;
-                        float:right">
-@*//                    @{*@
-@*//                        val thing = Http.Request.current().session.get("admin")*@
-@*//                        if(thing.isDefined) {*@
-                                <li>
-                                <a href="@routes.Application.sessionOut()">Logout</a>
-                                </li>
-@*//                        } else {*@
-                                <li>
-                                <a href="@routes.Application.sessionIn()">Login</a>
-                                </li>
-@*//                        }*@
-@*//                    }*@
+                        float: right">
+                        <li>
+                            <a href="@routes.Application.sessionOut()">Logout</a>
+                        </li>
+                        <li>
+                            <a href="@routes.Application.sessionIn()">Login</a>
+                        </li>
 
                     </ul>
 
@@ -82,7 +76,9 @@
         </nav>
             <!-- Page Content -->
         <div class="container background">
-        @content
+            <div class="logo">
+                <img src="@routes.Assets.at("images/qa-cinemas_c.png")" width="300" height=auto /></div><br/>
+            @content
         </div>
 
         <div class="container">
@@ -99,7 +95,7 @@
                         <a href="@routes.Application.contact"><ul>About us</ul></a>
                         <a href="@routes.Application.contact#contact-us"><ul>Contact us</ul></a>
                         <a href="@routes.Application.findUs"><ul>Locate us</ul></a>
-                        <a href="@routes.Application.localStuff"><ul>Local Info</ul></a>
+                        <a href="@routes.Application.localInfo()"><ul>Local Info</ul></a>
                         <a href="@routes.Application.screenInformation"><ul>Screen Info</ul></a>
 
                     </div>
@@ -109,8 +105,9 @@
                     </div>
                     <div class="col-sm-4 col-lg-4 col-md-4">
 
-                        <a href="https://twitter.com/QACinema" style="font-size: 400%;
+                        <ul><a href="https://twitter.com/QACinema" style="font-size: 400%;
                             color: #55ACEE" class="btn btn-social-icon btn-twitter" onclick="_gaq.push(['_trackEvent', 'btn-social-icon', 'click', 'btn-twitter']);"><span class="fa fa-twitter"></span></a>
+                        </ul>
 
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 package controllers
-
+import play.api.Logger._
 import java.sql.Timestamp
 import java.util.{Calendar, Date}
 import javax.inject.Inject
@@ -31,9 +31,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //Read from table movies
-  def moviecollection: Future[JSONCollection] = database.map(
-
-    _.collection[JSONCollection]("testMovie"))
+  def moviecollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("testMovie"))
 
 
   def showings: Future[JSONCollection] = database.map(
@@ -50,7 +48,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .cursor[Reservation]
     }
     val futureResList: Future[List[Reservation]] = cursor.flatMap(_.collect[List]())
-    Await.result(futureResList, Duration.Inf).head
+    Await.result(futureResList, Duration.Inf)(0)
   }
 
   def getshowing(showingId: Int): Showing = {
@@ -150,7 +148,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Movie]
     }
-    var futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val futureUsersList: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
     futureUsersList.map { movies =>
       movies.map(m => m.age_rating = replaceAgeRating(m.age_rating))
       val newmovies = for (i <- movies if (isFuture(dateParse(i.release_date)))) yield i
@@ -190,22 +188,28 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
 
   //adds Movies to database
-  def addMovie = Action {
+  def addMovie() = Action {
     implicit request =>
       request.session.get("admin").map { user =>
 
         val formValidationResult = Movie.createMovie.bindFromRequest
         formValidationResult.fold({
           errors =>
-            println(formValidationResult)
-
             BadRequest(views.html.addMovie(errors))
 
         }, { movie =>
-          val futureResult = moviecollection.flatMap(_.insert(movie))
+          if(checkMovie(movie)){
+            val futureResult = moviecollection.flatMap(_.insert(movie))
 
-          futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
-          Redirect(routes.MongoDBController.listMovies())
+            futureResult.map(_ => Ok("Added user " + movie.title + " " + movie.genres))
+
+            Redirect(routes.MongoDBController.adminPage())
+          }
+          else
+            Ok("Error,Invalid input.Please try again"+ "Image Path "+checkImagesPath(movie) +"Poster Path "+ checkPosterPath(movie)+"Landscape Path "+checkLandscapePath(movie)
+            +"Age rating "+ checkAge(movie)+"Genres "+ checkGenre(movie))
+           // TODO:find out how to redirect back a page
+
         })
 
       }.getOrElse {
@@ -243,9 +247,9 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         .sort(Json.obj("created" -> -1))
         .cursor[Showing]
     }
-    var seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
+    val seatsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
     seatsList.map { showing =>
-      val singleS = showing.head
+      val singleS = showing(0)
       Ok(views.html.seating(singleS, seatsNo)).withSession(request.session + ("total" -> total.toString) + ("adult" -> adult.toString) + ("child" -> child.toString) +
         ("concession" -> concession.toString) + ("seatsNo" -> seatsNo.toString) + ("moviename" -> singleS.movieId) + ("date" -> singleS.date) + ("time" -> singleS.time) +
         ("room" -> singleS.roomId.toString))
@@ -292,12 +296,17 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         formValidationResult.fold({ errors =>
           BadRequest(views.html.listings(getMovies()))
         }, { movies =>
-          val movieList = getMovies()
-          val selector = movieList(id)
-          val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
-          futureResult.map(_ => Ok("Added user " + movies.title))
-          Redirect(routes.MongoDBController.listMovies())
-
+            if(checkMovie(movies)){
+              val movieList = getMovies()
+              val selector = movieList(id)
+              val futureResult = moviecollection.map(_.findAndUpdate(selector, movies))
+              futureResult.map(_ => Ok("Added movie " + movies.title))
+              Redirect(routes.MongoDBController.listMovies())
+            }
+          else{
+              Ok("Error,Invalid input.Please try again "+ " Image Path ->"+checkImagesPath(movies) +" Poster Path ->"+ checkPosterPath(movies)+" Landscape Path ->"+checkLandscapePath(movies)
+                +" Age rating ->"+ checkAge(movies)+" Genres ->"+ checkGenre(movies))
+            }
         })
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
@@ -317,6 +326,8 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }
   }
+
+
 
   def deletePage(id: Int): Action[AnyContent] = Action {
     implicit request =>
@@ -377,6 +388,60 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       //the price in there that you want the checkout button to have
       Ok(views.html.payment(total.toString, reservation)).withSession(request.session + ("name" -> name) + ("email" -> email) + ("reservationId" -> currentTimestamp))
     )
+  }
+
+  val whiteList = List(".png",".jpg")
+  val ageWhiteList = List("12A","18","R","U","PG","15","12")
+  val genreWhiteList = Array("Action","Adult","Avant-gade/Experimental","Children's","Drama","Family","Comedy","Crime","Epic",
+  "Fantasy","Horror","Musical","Musical","Romance","Science Fiction","Thriller","War")
+
+  def checkAge(movie: Movie):Boolean={
+    if(ageWhiteList.contains(movie.age_rating))true
+    else false
+  }
+
+  def checkGenre(movie: Movie):Boolean={
+    val movieGenreList = movie.genres.split(",")
+    val checker = Array.fill[Boolean](movieGenreList.length)(true)
+    val results = movieGenreList.map(x=> genreWhiteList.contains(x))
+
+    if(results sameElements checker)true
+    else false
+  }
+
+  def checkMovie(movie: Movie):Boolean={
+    if(checkImages(movie)&&checkAge(movie)&&checkGenre(movie))true
+    else false
+  }
+
+
+  def checkExtension(string:String):Boolean={
+    if(string.endsWith(whiteList.head.toLowerCase) || string.endsWith(whiteList.last.toLowerCase))
+      true
+    else false
+  }
+
+
+  def checkPosterPath(movie:Movie):Boolean= {
+    checkExtension(movie.poster_path)
+  }
+
+  def checkImagesPath(movie: Movie):Boolean={
+    val checker = Array(true,true,true)
+    val imageExtensions = movie.images.split(",")
+    val results = imageExtensions.map(x=>checkExtension(x))
+    if(results sameElements checker ) true
+    else false
+  }
+
+  def checkLandscapePath(movie: Movie):Boolean={
+    checkExtension(movie.landscape)
+  }
+
+
+  def checkImages(movie: Movie):Boolean={
+    if(checkPosterPath(movie)&& checkImagesPath(movie)&&checkLandscapePath(movie))true
+    else false
   }
 
 

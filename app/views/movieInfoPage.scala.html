@@ -11,8 +11,8 @@
 
 
                     <div style="padding: 2em">
-                        <h5 class="pull-right"> Adult Ticket £14.99 <br/> Child Ticket £8.99 <br/>
-                            Concession Ticket £9.99
+                        <h5 class="pull-right"> Adult Ticket £15 <br/> Child Ticket £10 <br/>
+                            Concession Ticket £8
                             <hr/>
                             <p>Like the look of this movie?</p>
                             <a class="btn btn-primary " style="margin-outside: 10px" target="_blank" href="@routes.MongoDBController.showingsView()">
@@ -36,17 +36,15 @@
                         <p>Cast @movie.cast</p>
                         <p>Releaste date: @movie.release_date.split("-").reverse.mkString("/")</p>
                         <p>Overview: @movie.overview</p>
-                        <h4>Rating</h4>
-
-                    </div>
-
-                    <div style ="padding-top: 15px" class="ratings">
-                        <p>
+                        <h4>Rating</h4><div class="ratings">
                         @for(star <- 0 until movie.user_rating.toInt) {
                             <span class="glyphicon glyphicon-star"></span>
                         }
-                        </p>
                     </div>
+
+                    </div>
+
+
 
                     <div class="col-md-3"></div>
                     <div class="col-md-6">

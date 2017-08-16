@@ -37,12 +37,12 @@
                                 </a>
                             </div>
                             <div class="item">
-                                <a href="@routes.MongoDBController.movieInfo(movies(3).movie_id)">
-                                    <img class="slide-image" src="@movies(3).landscape" alt="">
+                                <a href="@routes.MongoDBController.movieInfo(movies(7).movie_id)">
+                                    <img class="slide-image" src="@movies(7).landscape" alt="">
                                     <div class="carousel-caption">
-                                        <h3>@movies(3).title</h3>
+                                        <h3>@movies(7).title</h3>
                                         <img style="max-height: 35px;
-                                            max-width: 35px" src ="@routes.Assets.at(movies(3).age_rating)" >
+                                            max-width: 35px" src ="@routes.Assets.at(movies(7).age_rating)" >
                                     </div>
                                 </a>
                             </div>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="row">
-            <h2>Now Showing</h2>
+            <h2>Now Showing <a href="@routes.MongoDBController.listMovies()" style="font-size: 75%">View All</a></h2>
             <br>
             <div class = "col-md-12">
             @for(m <- moviesCurrent) {
@@ -84,7 +84,7 @@
         </div>
 
         <div class="row">
-            <h2>Showing Soon</h2>
+            <h2>Showing Soon <a href="@routes.MongoDBController.upcomingMovies" style="font-size: 75%">View All</a></h2>
             <br>
             <div class = "col-md-12">
             @for(m <- moviesU) {
