@@ -228,19 +228,7 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
       }
   }
 
-  //Display all showings available to book
-  def showingsView: Action[AnyContent] = Action.async {
-    val cursor: Future[Cursor[Showing]] = showings.map {
-      _.find(Json.obj())
-        .sort(Json.obj("created" -> -1))
-        .cursor[Showing]
-    }
-    val showingsList: Future[List[Showing]] = cursor.flatMap(_.collect[List]())
-    showingsList.map { showing =>
 
-      Ok(views.html.showings(showing))
-    }
-  }
 
 
   def ticketSelection(id: Int) = Action {
@@ -351,13 +339,13 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
 
         val formValidationResult = ShowingObj.createShowing.bindFromRequest
         formValidationResult.fold({ errors =>
-          BadRequest(views.html.showings(getShowingAll()))
+          BadRequest("hello")
         }, { showingsShown =>
           val showingList = getShowingAll()
           val selector = showingList(id)
           val futureResult = showings.map(_.findAndUpdate(selector, showingsShown))
           futureResult.map(_ => Ok("Added user " + showingsShown.showingId + " at " + showingsShown.date + " " + showingsShown.time))
-          Redirect(routes.MongoDBController.showingsView())
+          Redirect(routes.Application.contact())
 
         })
       }.getOrElse {
