@@ -302,17 +302,6 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
         formValidationResult.fold({ errors =>
           BadRequest(views.html.listings(getMovies()))
         }, { movies =>
-            if(checkMovie(movies)){
-              val movieList = getMovies()
-              val selector = movieList(id)
-              val futureResult = movieCollection.map(_.findAndUpdate(selector, movies))
-              futureResult.map(_ => Ok("Added movie " + movies.title))
-              Redirect(routes.MongoDBController.listMovies())
-            }
-          else{
-              Ok("Error,Invalid input.Please try again "+ " Image Path ->"+checkImagesPath(movies) +" Poster Path ->"+ checkPosterPath(movies)+" Landscape Path ->"+checkLandscapePath(movies)
-                +" Age rating ->"+ checkAge(movies)+" Genres ->"+ checkGenre(movies))
-            }
           if (checkMovie(movies)) {
             val movieList = getMovies()
             val selector = movieList(id)
