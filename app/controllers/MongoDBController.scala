@@ -341,9 +341,10 @@ class MongoDBController @Inject()(val messagesApi: MessagesApi)(val reactiveMong
   def adminPage() = Action {
     implicit request =>
       request.session.get("admin").map { user =>
-
-        Ok(views.html.AdminControllerPage(user))
-
+        if(user =="admin"){Ok(views.html.AdminControllerPage(user))}
+        else{
+          Redirect(routes.MongoDBController.listIndexMovies())
+        }
       }.getOrElse {
         Unauthorized(views.html.messagePage("You are not logged in!"))
       }

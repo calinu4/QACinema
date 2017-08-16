@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 case class User(
                   email: String,
                   password: String,
-                  profile: String
+                  admin: String
                 )
 
 object User {
@@ -17,6 +17,6 @@ object User {
     mapping(
       "email" -> nonEmptyText,
       "password" -> nonEmptyText,
-      "profile" -> text
+      "admin" -> text
     )(User.apply)(User.unapply))
 }
