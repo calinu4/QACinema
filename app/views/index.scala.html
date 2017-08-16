@@ -3,7 +3,6 @@
 @main("QA Cinema") {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/listnings.css")">
     <div class="row">
-
         <div class="col-md-12">
 
             <div class="row carousel-holder">
@@ -37,12 +36,12 @@
                                 </a>
                             </div>
                             <div class="item">
-                                <a href="@routes.MongoDBController.movieInfo(movies(8).movie_id)">
-                                    <img class="slide-image" src="@movies(8).landscape" alt="">
+                                <a href="@routes.MongoDBController.movieInfo(movies(7).movie_id)">
+                                    <img class="slide-image" src="@movies(7).landscape" alt="">
                                     <div class="carousel-caption">
-                                        <h3>@movies(8).title</h3>
+                                        <h3>@movies(7).title</h3>
                                         <img style="max-height: 35px;
-                                            max-width: 35px" src ="@routes.Assets.at(movies(8).age_rating)" >
+                                            max-width: 35px" src ="@routes.Assets.at(movies(7).age_rating)" >
                                     </div>
                                 </a>
                             </div>

@@ -55,7 +55,11 @@ GET         /success                    controllers.MongoDBController.updateShow
 GET         /sessionIn                  controllers.Application.sessionIn()
 GET         /sessionOut                 controllers.Application.sessionOut()
 
-#GET         /successPage               controllers.Application.successPage
+
+GET         /login                      controllers.Application.loginGet
+POST        /login                      controllers.Application.login
+
+#GET        /successPage                controllers.Application.successPage
 
 
 GET         /addShowings                controllers.MongoDBController.seeAddShowings

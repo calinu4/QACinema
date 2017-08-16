@@ -43,7 +43,7 @@ object Movie{
     "overview"->nonEmptyText,
     "cast"->nonEmptyText,
     "director"->nonEmptyText,
-"screen"->nonEmptyText
+    "screen"->nonEmptyText
 
 )(Movie.apply)(Movie.unapply))
 }

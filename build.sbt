@@ -26,6 +26,8 @@ libraryDependencies += "com.typesafe.play" %% "play-mailer" % "6.0.1"
 
 libraryDependencies += "com.typesafe.play" %% "play-mailer-guice" % "6.0.1"
 
+libraryDependencies += "com.typesafe.play" % "play-json_2.11" % "2.5.16"
+
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
